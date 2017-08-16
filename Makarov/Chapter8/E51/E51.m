@@ -75,8 +75,8 @@ strge.Tracker       = [];
 
 strge.FileName{1}      = 'thin_csf_outer.mat';
 strge.FileName{2}      = 'gray_matter_inner.mat';
-strge.FileName{3}      = 'sphere1_4cm.mat';
-strge.FileName{4}      = 'sphere2_1cm.mat';
+strge.FileName{3}      = 'cylinder2_15cm_7cm.mat';
+strge.FileName{4}      = 'MIT_cyl_mesh_highD.mat';
 
 strge.DielConst     = ones(4, 1);
 strge.PositionX     = zeros(4, 1);
