@@ -16,6 +16,12 @@ function fig_hdl = E51_larryBox
 %   Low-Frequency Electromagnetic Modeling for Electrical and Biological
 %   Systems Using MATLAB, Sergey N. Makarov, Gregory M. Noetscher, and Ara
 %   Nazarian, Wiley, New York, 2105, 1st ed.
+%
+%   Including edits by David Caldwell of the Ojemann and Rao laboratories,
+%   and with help by Dr. Larry Sorensen
+%
+%
+
 
 %%  EM constants
 eps0        = 8.85418782e-012;                  %   dielectric permittivity of vacuum(~air)
@@ -73,8 +79,8 @@ strge.Indicator     = 0;
 strge.OuterSize     = 0;
 strge.Tracker       = [];
 
-strge.FileName{1}      = 'larry_025mm_csf_2000tri.mat';
-strge.FileName{2}      = 'larry_box_2000tri.mat';
+strge.FileName{1}      = 'larry_025mm_csf_1000tri.mat';
+strge.FileName{2}      = 'larry_box_1000tri.mat';
 strge.FileName{3}      = 'larry_16_csf.mat';
 strge.FileName{4}      = 'larry_4_csf.mat';
 
@@ -622,7 +628,7 @@ geometry(0);
             tempFields = multiplanes_simulate(vec(1),vec(2),vec(3),vec(4),vec(5),vec(6),vec(7),vec(8));
             
             totalFields{i} = tempFields;
-            fprintf('plane calculation # %i \n',i);
+            fprintf('plane calculation # %i out of %i \n',i,size(vec,1));
             i = i+1;
 
         end
@@ -1229,8 +1235,8 @@ geometry(0);
             params_int = [0.0,0.0,strop.planez,0.115,0.06525,divx_master,divy_master,3;...
                 0.005,0.0,strop.planez,0.115,0.06525,divx_master,divy_master,3;...
                 0.00,0.0,strop.planez,0.158,0.06525,divx_master,divy_master,2;...
-                0.0,0.0,0,0.158,0.115,1000,1000,1;...
-                0.000,0.0,strop.planez,0.158,0.115,1000,1000,1;...
+                0.0,0.0,0,0.158,0.115,1000,1000,1;... % DJC changed from 1000 to 100
+                0.000,0.0,strop.planez,0.158,0.115,1000,1000,1;... % DJC changed from 1000 to 100
                 ]';
             i = 1;
             for vec = params_int
@@ -1238,7 +1244,7 @@ geometry(0);
                 tempFields = multiplanes(vec(1),vec(2),vec(3),vec(4),vec(5),vec(6),vec(7),vec(8));
                 
                 totalFields{i} = tempFields;
-                fprintf('plane calculation # %i \n',i);
+                fprintf('plane calculation # %i out of %i \n',i,size(vec,1));
                 i = i+1;
 
             end

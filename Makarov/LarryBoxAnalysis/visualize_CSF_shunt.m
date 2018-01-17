@@ -20,13 +20,13 @@ vals_matrix = [0.4995,0.3758,0.2895,0.2292,0.1828,...
 0.1347,0.0922,0.0484,0.0370,0.0259
 ];
 
-csf_depths = unique(csf_depth);
+csf_depths = unique(csf_depth_matrix);
 unique_seps = unique(seps_matrix);
 
 figure
 hold on
 for inds = csf_depths
-plot(unique_seps,vals(csf_depth_matrix == inds),'-o','linewidth',2)
+plot(unique_seps,vals_matrix(csf_depth_matrix == inds),'-o','linewidth',2)
 
 end
 
