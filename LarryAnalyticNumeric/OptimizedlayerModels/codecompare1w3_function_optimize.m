@@ -34,8 +34,8 @@ sigma = 0.05; % this defines for huber loss the transition from squared
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
-rhoA_vec=[0.1:0.05:3.5];
-offset_vec=[-3e-3:0.5e-3:3e-3];
+rhoA_vec=[0.1:0.001:3.5];
+offset_vec=[-3e-3:1e-5:3e-3];
 cost_vec_1layer = zeros(length(sidVec),length(rhoA_vec),length(offset_vec));
 
 subject_min_rhoA_vec = zeros(length(sidVec),1);
@@ -101,10 +101,10 @@ end
 
 %% 3 layer
 % optimization for 3 layer
-rho1_vec = [0.4:0.2:1.2];
-rho2_vec= [0.4:0.2:6];
-rho3_vec = [0.4:0.2:6];
-offset_vec=[-3e-3:0.5e-3:3e-3];
+rho1_vec = [0.4:0.01:1.2];
+rho2_vec= [0.4:0.01:6];
+rho3_vec = [0.4:0.01:6];
+offset_vec=[-3e-3:1e-5:3e-3];
 sigma = 0.05; % sigma for huber loss
 cost_vec_3layer = zeros(length(sidVec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec));
 
@@ -179,7 +179,7 @@ end
 %% plotting
 % plot
 
-saveFigBool = false;
+saveFigBool = true;
 % setup global figure
 figTotal = figure('units','normalized','outerposition',[0 0 1 1]);
 figResid = figure('units','normalized','outerposition',[0 0 1 1]);
@@ -230,8 +230,8 @@ for i = 1:length(sidVec)
     % residuals-factor
     resid_l3{i} = l3-dataMeas;
     resid_l1{i} = l1-dataMeas;
-    R_factor1(i) = nansum(resid_l1{i});
-    R_factor3(i) = nansum(resid_l3{i});
+    R_factor1(i) = nansum(abs(resid_l1{i}));
+    R_factor3(i) = nansum(abs(resid_l3{i}));
     
     % linear fits 
     [yfit3,P3] = linearModelFit(dataMeas,l3);
@@ -394,3 +394,7 @@ figure
 surf(gridded_x,gridded_y ,squeeze(cost_vec_subj( param_slice_interest,:,:,1))')
 xlabel('rho2')
 ylabel('rho3')
+
+%%
+close all;
+save('fineResolution_optimized.mat','-v7.3')
