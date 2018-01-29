@@ -16,7 +16,7 @@ else
     if path(end) ~= '/' && path(end) ~= '\'
         path(end+1) = '/';
     end
-    destFile = ['c:/Tim/research/script/generated_figs/' path];
+    destFile = [path];
     TouchDir(destFile);
 end
 destFile = [destFile '/' filename '.'];
