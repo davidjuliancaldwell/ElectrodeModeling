@@ -40,7 +40,7 @@ cost_vec_1layer = zeros(length(sidVec),length(rhoA_vec),length(offset_vec));
 
 subject_min_rhoA_vec = zeros(length(sidVec),1);
 subject_min_offset1l_vec = zeros(length(sidVec),1);
-
+%%
 
 % loop through subjects
 for i = 1:length(sidVec)
@@ -163,16 +163,16 @@ for i = 1:length(sidVec)
 end
 %%
 for i = 1:length(sidVec)
-    cost_vec_subj = squeeze(cost_vec_3layer(i,:,:,:,:));
+    cost_vec_subj = squeeze(cost_vec_3layer(i,:,:,:,:,:));
     
     [value, index] = min(cost_vec_subj(:));
-    [ind1,ind2,ind3,ind4] = ind2sub(size(cost_vec_subj),index);
+    [ind1,ind2,ind3,ind4,ind5] = ind2sub(size(cost_vec_subj),index);
     
     subject_min_rho1_vec(i) = rho1_vec(ind1);
     subject_min_rho2_vec(i) = rho2_vec(ind2);
     subject_min_rho3_vec(i) = rho3_vec(ind3);
     subject_min_offset3l_vec(i) = offset_vec(ind4);
-    
+    subject_min_hw1_vec(i) = h1_vec(ind5);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -185,6 +185,8 @@ figTotal = figure('units','normalized','outerposition',[0 0 1 1]);
 figResid = figure('units','normalized','outerposition',[0 0 1 1]);
 figLinear = figure('units','normalized','outerposition',[0 0 1 1]);
 %
+l1_vec = zeros(size(dataTotal_8x8));
+l3_vec = zeros(size(dataTotal_8x8));
 
 for i = 1:length(sidVec)
     
@@ -197,84 +199,86 @@ for i = 1:length(sidVec)
     kp = kp_vec(i);
     jm = jm_vec(i);
     km = km_vec(i);
-   % rho1 = subject_min_rho1_vec(i);
-    %rho2 = subject_min_rho2_vec(i);
-    %rho3 = subject_min_rho3_vec(i);
+    rho1 = subject_min_rho1_vec(i);
+    rho2 = subject_min_rho2_vec(i);
+    rho3 = subject_min_rho3_vec(i);
     offset_1l = subject_min_offset1l_vec(i);
-   % offset_3l = subject_min_offset3l_vec(i);
+     offset_3l = subject_min_offset3l_vec(i);
     rhoA = subject_min_rhoA_vec(i);
-    
+    h1 = subject_min_h1_vec(i);
     % perform 1d optimization
-    %[alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
+    [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
     
     % extract measured data and calculate theoretical ones
     if i <= 7 % 8x8 cases
         dataMeas = dataTotal_8x8(:,i);
-     %   [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset_3l);
+           [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset_3l);
         [l1] = computePotentials_8x8_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset_1l);
         % c91479 was flipped l1 l3
         if strcmp(sid,'c91479')
-      %      l3 = -l3;
+                 l3 = -l3;
             l1 = -l1;
         end
     else % 8x4 case
         dataMeas = dataTotal_8x4(:,i-7);
-       % [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset_3l);
+         [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset_3l);
         [l1] = computePotentials_8x4_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset_1l);
         
     end
     
-    %l3 = l3';
+    l3 = l3';
     l1 = l1';
-    
-    % residuals-factor
-    %resid_l3{i} = l3-dataMeas;
+    l1_vec(:,i) = l1;
+     l3_vec(:,i) = l3;
+    %residuals-factor
+    resid_l3{i} = l3-dataMeas;
     resid_l1{i} = l1-dataMeas;
-    R_factor1(i) = nansum(abs(resid_l1{i}));
-    %R_factor3(i) = nansum(abs(resid_l3{i}));
+    R_factor1(i) = nansum(abs(resid_l1{i}))/nansum(abs(dataMeas(~isnan(l1))));
+    R_factor3(i) = nansum(abs(resid_l3{i}))/nansum(abs(dataMeas(~isnan(l1))));
     
-    % linear fits 
-    %[yfit3,P3] = linearModelFit(dataMeas,l3);
+    % linear fits
+    [yfit3,P3] = linearModelFit(dataMeas,l3);
     [yfit1,P1] = linearModelFit(dataMeas,l1);
-
-     %yfit3_cell{i} = yfit3;
-     yfit1_cell{i} = yfit1;
-     %P3_cell{i} = P3;
-     P1_cell{i} = P1;
+    
+    yfit3_cell{i} = yfit3;
+    yfit1_cell{i} = yfit1;
+    P3_cell{i} = P3;
+    P1_cell{i} = P1;
     
     
     % plot individual subjects for line plots
     figure(fig_ind(i));
     plot(dataMeas,'color',color1,'linewidth',2);hold on;
     plot(l1,'color',color2,'linewidth',2);hold on;
-    %plot(l3,'color',color3,'linewidth',2);hold on;
+    plot(l3,'color',color3,'linewidth',2);hold on;
     xlabel('Electrode Number')
     ylabel('Voltage (V)')
-    %legend('measured','single layer','3 layer');
-    legend('measured','single layer');
-
+    legend('measured','single layer','3 layer');
+  %  legend('measured','single layer');
+    
     dim = [0.2 0.2 0.5 0.5];
-  %  annotation(fig_ind(i), 'textbox', dim, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
-  %      ['rho1 = ' num2str(subject_min_rho1_vec(i))],['rho2 = ' num2str(subject_min_rho2_vec(i))],...
-  %      ['rho3 = ' num2str(subject_min_rho3_vec(i))], ['offset 3 layer = ' num2str(subject_min_offset3l_vec(i))]},...
-  %      'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
-      annotation(fig_ind(i), 'textbox', dim, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
-       },...
-        'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+     annotation(fig_ind(i), 'textbox', dim, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
+         ['rho1 = ' num2str(subject_min_rho1_vec(i))],['rho2 = ' num2str(subject_min_rho2_vec(i))],...
+         ['rho3 = ' num2str(subject_min_rho3_vec(i))], ['offset 3 layer = ' num2str(subject_min_offset3l_vec(i))],...
+         ['h1 = ' num2str(subject_min_h1_vec(i))]},...
+         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+%     annotation(fig_ind(i), 'textbox', dim, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
+%         },...
+%         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
     drawnow;
     title(sid)
     OUTPUT_DIR = pwd;
     if saveFigBool
-        SaveFig(OUTPUT_DIR, sprintf(['fit_ind_opt_subject_farAway_1l%s'], char(sid)), 'png', '-r300');
+        SaveFig(OUTPUT_DIR, sprintf(['fit_ind_opt_subject_farAway_3l_1l%s'], char(sid)), 'png', '-r300');
     end
     
-    % global figure of residuals 
+    % global figure of residuals
     figure(figResid);
     subplot_resid(i) = subplot(2,4,i);
     vectorPlot = [1:64];
     vectorPlot(isnan(resid_l1{i})) = nan;
     plot(vectorPlot,resid_l1{i},'o','color',color1,'markerfacecolor',color1); hold on;
-  %  plot(vectorPlot,resid_l3{i},'o','color',color2,'markerfacecolor',color2);
+     plot(vectorPlot,resid_l3{i},'o','color',color2,'markerfacecolor',color2);
     hline(0)
     title(sid)
     
@@ -285,19 +289,19 @@ for i = 1:length(sidVec)
     plot(dataMeas(~isnan(l1)),l1(~isnan(l1)),'o','color',color1,'markerfacecolor',color1);
     hold on;
     plot(l1(~isnan(l1)),yfit1,'color',color1,'linewidth',2);
-
-   % plot(dataMeas(~isnan(l3)),l3(~isnan(l3)),'o','color',color2,'markerfacecolor',color2);
-   % plot(l3(~isnan(l3)),yfit3,'color',color2,'linewidth',2);
-
+    
+    plot(dataMeas(~isnan(l3)),l3(~isnan(l3)),'o','color',color2,'markerfacecolor',color2);
+    plot(l3(~isnan(l3)),yfit3,'color',color2,'linewidth',2);
+    
     title(sid)
     
-    % global figure of linear line plots 
+    % global figure of linear line plots
     figure(figTotal)
     subplot_total(i) = subplot(2,4,i);
     plot(dataMeas,'color',color1,'linewidth',2);
     hold on;
     plot(l1,'color',color2,'linewidth',2);hold on;
-    %plot(l3,'color',color3,'linewidth',2);hold on;
+    plot(l3,'color',color3,'linewidth',2);hold on;
     title(sid)
 end
 %
@@ -305,8 +309,8 @@ figure(figTotal)
 
 xlabel('Electrode Number')
 ylabel('Voltage (V)')
-%legend('measured','single layer','three layer');
-legend('measured','single layer');
+legend('measured','single layer','three layer');
+% legend('measured','single layer');
 
 %
 arrayfun(@(x) pbaspect(x, [1 1 1]), subplot_total);
@@ -314,26 +318,27 @@ drawnow;
 pos = arrayfun(@plotboxpos, subplot_total, 'uni', 0);
 dim = cellfun(@(x) x.*[1 1 0.5 0.5], pos, 'uni',0);
 for i = 1:length(sidVec)
- %   annotation(figTotal, 'textbox', dim{i}, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
-  %      ['rho1 = ' num2str(subject_min_rho1_vec(i))],['rho2 = ' num2str(subject_min_rho2_vec(i))],...
-   %     ['rho3 = ' num2str(subject_min_rho3_vec(i))], ['offset 3 layer = ' num2str(subject_min_offset3l_vec(i))]},...
-    %    'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+      annotation(figTotal, 'textbox', dim{i}, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
+         ['rho1 = ' num2str(subject_min_rho1_vec(i))],['rho2 = ' num2str(subject_min_rho2_vec(i))],...
+        ['rho3 = ' num2str(subject_min_rho3_vec(i))], ['offset 3 layer = ' num2str(subject_min_offset3l_vec(i))],...
+              ['h1 = ' num2str(subject_min_h1_vec(i))]},...
+       'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
     
-        annotation(figTotal, 'textbox', dim{i}, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
-      },...
-        'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+%     annotation(figTotal, 'textbox', dim{i}, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
+%         },...
+%         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
 end
 OUTPUT_DIR = pwd;
 if saveFigBool
-    SaveFig(OUTPUT_DIR, ['fit_total_opt_farAway_1l'], 'png', '-r300');
+    SaveFig(OUTPUT_DIR, ['fit_total_opt_farAway_3l_1l'], 'png', '-r300');
 end
 
 
 figure(figResid);
 xlabel('Electrode Number')
 ylabel('Residual')
-%legend('single layer','three layer');
-legend('single layer');
+legend('single layer','three layer');
+% legend('single layer');
 
 %
 arrayfun(@(x) pbaspect(x, [1 1 1]), subplot_resid);
@@ -341,15 +346,15 @@ drawnow;
 pos = arrayfun(@plotboxpos, subplot_total, 'uni', 0);
 dim = cellfun(@(x) x.*[1 1 0.5 0.5], pos, 'uni',0);
 for i = 1:length(sidVec)
-    %annotation(figResid, 'textbox', dim{i}, 'String', {['R factor 1 layer = ' num2str(R_factor1(i))],['R factor 3 layer = ' num2str(R_factor3(i))]},...
-    %    'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
-    
-        annotation(figResid, 'textbox', dim{i}, 'String', {['R factor 1 layer = ' num2str(R_factor1(i))]},...
-        'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+    annotation(figResid, 'textbox', dim{i}, 'String', {['R factor 1 layer = ' num2str(R_factor1(i))],['R factor 3 layer = ' num2str(R_factor3(i))]},...
+       'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+%     
+%     annotation(figResid, 'textbox', dim{i}, 'String', {['R factor 1 layer = ' num2str(R_factor1(i))]},...
+%         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
 end
 OUTPUT_DIR = pwd;
 if saveFigBool
-    SaveFig(OUTPUT_DIR, ['fit_resid_farAway_l1'], 'png', '-r300');
+    SaveFig(OUTPUT_DIR, ['fit_resid_farAway_3l_l1'], 'png', '-r300');
 end
 
 figure(figLinear)
@@ -362,19 +367,45 @@ drawnow;
 pos = arrayfun(@plotboxpos, subplot_linear, 'uni', 0);
 dim = cellfun(@(x) x.*[1 1 0.5 0.5], pos, 'uni',0);
 for i = 1:length(sidVec)
-   % annotation(figLinear, 'textbox', dim{i}, 'String', {['slope 1 layer = ' num2str(P1_cell{i}(1))],['intercept 1 layer = ' num2str(P1_cell{i}(2))],...
-   %     ['slope 3 layer = ' num2str(P3_cell{i}(1))],['intercept 3 layer = ' num2str(P3_cell{i}(2))]},...
-   %     'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
-   
-        annotation(figLinear, 'textbox', dim{i}, 'String', {['slope 1 layer = ' num2str(P1_cell{i}(1))],['intercept 1 layer = ' num2str(P1_cell{i}(2))],...
-       },...
+    annotation(figLinear, 'textbox', dim{i}, 'String', {['slope 1 layer = ' num2str(P1_cell{i}(1))],['intercept 1 layer = ' num2str(P1_cell{i}(2))],...
+        ['slope 3 layer = ' num2str(P3_cell{i}(1))],['intercept 3 layer = ' num2str(P3_cell{i}(2))]},...
         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+    
+%     annotation(figLinear, 'textbox', dim{i}, 'String', {['slope 1 layer = ' num2str(P1_cell{i}(1))],['intercept 1 layer = ' num2str(P1_cell{i}(2))],...
+%         },...
+%         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
 end
 OUTPUT_DIR = pwd;
 if saveFigBool
-    SaveFig(OUTPUT_DIR, ['fit_linear_farAway_l1'], 'png', '-r300');
+    SaveFig(OUTPUT_DIR, ['fit_linear_farAway_3l_l1'], 'png', '-r300');
 end
 
+%% plot contours of interest
+%%
+figure('units','normalized','outerposition',[0 0 1 1]);
+%colormap('grayb')
+for i = 1:length(sidVec)
+    subplot_resid(i) = subplot(2,4,i);
+    sid = sidVec{i};
+    
+    cost_vec_subj = squeeze(cost_vec_1layer(i,:,:));
+    
+    
+    imagesc(rhoA_vec,offset_vec,log(cost_vec_subj))
+    set(gca,'Ydir','normal')
+    xlabel('rhoA vec')
+    ylabel('offset vector')
+    title([sid ' Log plot'])
+    colorbar()
+end
+set(gca,'fontsize',14)
+OUTPUT_DIR = pwd;
+%
+if saveFigBool
+    SaveFig(OUTPUT_DIR, ['contour_log_3l_1l'], 'png', '-r300');
+end
+
+%%
 % 3D slice
 %%
 %subject of interest - 0b5a2e
@@ -414,7 +445,10 @@ figure
 surf(gridded_x,gridded_y ,squeeze(cost_vec_subj( param_slice_interest,:,:,1))')
 xlabel('rho2')
 ylabel('rho3')
+%% prepare data for larry
 
-%%
+save('3_layer_1_layer_fit_vals.mat','l1_vec','l3_vec','dataTotal_8x8','sidVec')
+
+%% save all the data
 close all;
 save('fineResolution_optimized.mat','-v7.3')
