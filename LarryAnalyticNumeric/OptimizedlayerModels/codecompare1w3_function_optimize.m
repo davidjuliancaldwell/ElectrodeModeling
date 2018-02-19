@@ -282,7 +282,7 @@ for i = 1:length(sidVec)
     title(sid)
     OUTPUT_DIR = pwd;
     if saveFigBool
-        SaveFig(OUTPUT_DIR, sprintf(['fit_ind_opt_subject_farAway_ls%s'], char(sid)), 'png', '-r300');
+        SaveFig(OUTPUT_DIR, sprintf(['fit_ind_opt_subject_farAway_3s%s'], char(sid)), 'png', '-r300');
     end
     
     % global figure of residuals 
@@ -342,7 +342,7 @@ for i = 1:length(sidVec)
 end
 OUTPUT_DIR = pwd;
 if saveFigBool
-    SaveFig(OUTPUT_DIR, ['fit_total_opt_farAway_ls'], 'png', '-r300');
+    SaveFig(OUTPUT_DIR, ['fit_total_opt_farAway_3s'], 'png', '-r300');
 end
 
 
@@ -366,7 +366,7 @@ for i = 1:length(sidVec)
 end
 OUTPUT_DIR = pwd;
 if saveFigBool
-    SaveFig(OUTPUT_DIR, ['fit_resid_farAway_ls'], 'png', '-r300');
+    SaveFig(OUTPUT_DIR, ['fit_resid_farAway_3s'], 'png', '-r300');
 end
 
 figure(figLinear)
@@ -389,7 +389,7 @@ for i = 1:length(sidVec)
 end
 OUTPUT_DIR = pwd;
 if saveFigBool
-    SaveFig(OUTPUT_DIR, ['fit_linear_farAway_ls'], 'png', '-r300');
+    SaveFig(OUTPUT_DIR, ['fit_linear_farAway_3s'], 'png', '-r300');
 end
 
 % 3D slice
@@ -434,4 +434,4 @@ ylabel('rho3')
 
 %%
 close all;
-save('fineResolution_optimized_ls.mat','-v7.3')
+save('fineResolution_optimized_3s.mat','-v7.3')
