@@ -1,8 +1,8 @@
 load('theory2012.mat')
 load('m2012.mat')
+scale_factor = 0.0025/50;
 
 theory2012 = scale_factor*theory2012;
-scale_factor = 0.0025/50;
 P=polyfit(theory2012(theory2012~=inf & theory2012~=-inf),m2012(1,~isnan(m2012(1,:))),1);
 yfit=P(1)*theory2012(theory2012~=inf & theory2012~=-inf)+P(2);
 yresid = yfit - m2012(1,~isnan(m2012(1,:)));

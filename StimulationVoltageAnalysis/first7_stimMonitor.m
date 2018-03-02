@@ -21,7 +21,8 @@ for i = 1:length(SIDS)
     set(gca,'fontsize',14)
     xlim([0 4])
     title(['Subject ' num2str(i)])
-    
+    stim_data = stim1Epoched; 
+    save(fullfile(OUTPUT_DIR,[sid '_stimOutput.mat']),'stim_data')
 end
 
 xlabel('Time (ms)');

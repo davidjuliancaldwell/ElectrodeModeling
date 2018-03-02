@@ -1,5 +1,5 @@
-% DJC - 1/10/2018
-% script to extract the monitored stim output voltage for 20f8a3
+% DJC - 2/27/2018
+% script to extract the monitored waveforms
 
 dataStruct = struct('pair_21_20',struct('stim_current',[],'time_vec',[],'stim_data',[])...
     ,'pair_20_12',struct('stim_current',[],'time_vec',[],'stim_data',[])...

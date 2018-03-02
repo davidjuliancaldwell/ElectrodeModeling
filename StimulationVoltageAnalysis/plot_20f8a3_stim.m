@@ -4,7 +4,7 @@
 load('20f8a3_stimOutput.mat')
 
 %%
-pair_vec = {'pair_21_20','pair_20_12','pair_22_19','pair_23_18','pair_28_4'};
+pair_vec = {'pair_20_12','pair_21_20','pair_22_19','pair_23_18','pair_28_4'};
 % 21 20 pair
 figure
 i = 1;

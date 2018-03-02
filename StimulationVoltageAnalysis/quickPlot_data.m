@@ -1,5 +1,5 @@
 close all;clear all;clc
-Z_ConstantsLarryDavidStephen;
+Z_Constants_Resistivity;
 
 %sid = input('what is the SID?\n','s');
 
@@ -72,7 +72,7 @@ for i = 2:length(SIDS)-2
             t_max = 0.05;
             
     end
-    load(fullfile(META_DIR, [sid '_StimulationAndCCEPs']));
+    load(fullfile(SUBJECT_DIR, ['BetaStimulationDataSet\' sid '_StimulationAndCCEPs']));
     
     chans = goods;
     figure;
@@ -163,6 +163,6 @@ for i = 2:length(SIDS)-2
         
     end
     
-    clearvars -except SIDS i META_DIR OUTPUT_DIR
+    clearvars -except SUBJECT_DIR SIDS i META_DIR OUTPUT_DIR
     
 end

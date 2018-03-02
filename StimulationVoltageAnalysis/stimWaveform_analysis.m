@@ -43,14 +43,74 @@ legend('first phase','second phase')
 xlabel('electrode')
 ylabel('Voltage (V)')
 %% now go through the next 5 spacing
+dataStruct = struct('pair_21_20',struct('stim_current',[],'time_vec',[],'stim_data',[])...
+    ,'pair_20_12',struct('stim_current',[],'time_vec',[],'stim_data',[])...
+    ,'pair_22_19',struct('stim_current',[],'time_vec',[],'stim_data',[])...
+    ,'pair_23_18',struct('stim_current',[],'time_vec',[],'stim_data',[])...
+    ,'pair_28_4',struct('stim_current',[],'time_vec',[],'stim_data',[]));
 
+% vector to loop through
+stimChans = [ 20 12;21 20; 22 19; 23 18; 28 4];
+pair_vec = {'pair_20_12','pair_21_20','pair_22_19','pair_23_18','pair_28_4'};
+fs = 12207;
+preSamps = 3;
+postSamps = 3;
+figTotal = figure;
 
-for i = 1:5
+i = 1;
+for pair = pair_vec
     
+    switch(char(pair))
+        case 'pair_20_12'
+            load('G:\My Drive\GRIDLabDavidShared\20f8a3\StimulationSpacingChunked\stim_widePulse_20_12.mat')
+        case 'pair_21_20'
+            load('G:\My Drive\GRIDLabDavidShared\20f8a3\StimulationSpacingChunked\stim_widePulse_21_20.mat')
+        case 'pair_22_19'
+            load('G:\My Drive\GRIDLabDavidShared\20f8a3\StimulationSpacingChunked\stim_widePulse_22_19.mat')
+        case 'pair_23_18'
+            load('G:\My Drive\GRIDLabDavidShared\20f8a3\StimulationSpacingChunked\stim_widePulse_23_18.mat')
+        case 'pair_28_4'
+            load('G:\My Drive\GRIDLabDavidShared\20f8a3\StimulationSpacingChunked\stim_widePulse_28_4.mat')
+    end
     
+    stimChans_subj = stimChans(i,:);
+    ECoGData = dataEpoched;
+    [meanMat,stdMat,extractCell] = voltage_extract_avg(ECoGData,fs,preSamps,postSamps);
+    meanMat(stimChans_subj,:) = nan;
+    stdMat(stimChans_subj,:) = nan;
+    extractCell{stimChans_subj(1)}{1} = nan;
+    extractCell{stimChans_subj(1)}{2}= nan;
+    extractCell{stimChans_subj(2)}{1}= nan;
+    extractCell{stimChans_subj(2)}{2}= nan;
+    
+        
+    pair_inds = strsplit(char(pair),'_');
+    
+    %pair_title = strrep(pair,'_','\_');
+    
+    chanVec = [1:32];
+    figure
+    errorbar(chanVec,abs(meanMat(chanVec,1)),stdMat(chanVec,1),'linewidth',2)
+    hold on
+    errorbar(chanVec,abs(meanMat(chanVec,2)),stdMat(chanVec,2),'linewidth',2)
+    legend('first phase','second phase')
+    xlabel('electrode')
+    ylabel('Voltage (V)')
+    title(['Electrode Pair ' pair_inds{2} ' ' pair_inds{3}])
+    
+    figure(figTotal)
+    subplot(2,3,i)
+    errorbar(chanVec,abs(meanMat(chanVec,1)),stdMat(chanVec,1),'linewidth',2)
+    hold on
+    errorbar(chanVec,abs(meanMat(chanVec,2)),stdMat(chanVec,2),'linewidth',2)
+    
+    title(['Electrode Pair ' pair_inds{2} ' ' pair_inds{3}])
+    i = i + 1;
     
 end
-
+legend('first phase','second phase')
+xlabel('electrode')
+ylabel('Voltage (V)')
 %% try DBS subject 
 DBS_DIR = 'G:\My Drive\GRIDLabDavidShared\DBS\5e0cf';
 stimChans = [2 3];
