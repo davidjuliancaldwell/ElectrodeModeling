@@ -31,13 +31,18 @@ for chan = 1:size(waveformMatrix,2)
     if plotIt && ~isempty(begin_ind)
         figure
         ax = axes;
-        plot(signal_int,'linewidth',3)
-        beg = vline(begin_ind,'g');
-        trans = vline(transition_pt,'k');
-        en = vline(end_ind,'r');
-        high1 = highlight(ax,[begin_ind+preSamps,transition_pt-postSamps],[],[180 180 180]/256);
-        high2 = highlight(ax,[transition_pt+preSamps,end_ind-postSamps],[],[180 180 180]/256);
+        plot(1e3*t_samps/fs,signal_int,'linewidth',3)
+        ylim([-3e-3 3e-3])
+        beg = vline(1e3*begin_ind/fs,'g');
+        trans = vline(1e3*transition_pt/fs,'k');
+        en = vline(1e3*end_ind/fs,'r');
+        high1 = highlight(ax,[1e3*(begin_ind+preSamps)/fs,1e3*(transition_pt-postSamps)/fs],[],[180 180 180]/256);
+        high2 = highlight(ax,[1e3*(transition_pt+preSamps)/fs,1e3*(end_ind-postSamps)/fs],[],[180 180 180]/256);
         legend('signal','beginning','transition','end','extracted period')
+        xlabel('time (ms)');
+        ylabel(['Voltage (V)']);
+        title('Signal Extraction');
+        set(gca,'fontsize',14);
     end
     
     first_phase = signal_int(begin_ind+preSamps:transition_pt-postSamps);
