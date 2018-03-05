@@ -21,6 +21,7 @@ h1=0.001;
 a=0.00115;
 R=0.00115;
 d=0.0035;
+offset = 0;
 
 % setup global figure
 figTotal = figure();
@@ -50,12 +51,12 @@ for i = 1:length(sidVec)
     % extract measured data and calculate theoretical ones
     if i <= 7 % 8x8 cases
         dataMeas = dataTotal_8x8(:,i);
-        [l1] = computePotentials_8x8_l1(jp,kp,jm,km,rhoA,i0,stimChans);
-        [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans);
+        [l1] = computePotentials_8x8_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset);
+        [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
     else % 8x4 case
         dataMeas = dataTotal_8x4(:,i-7);
-        [l1] = computePotentials_8x4_l1(jp,kp,jm,km,rhoA,i0,stimChans);
-        [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans);
+        [l1] = computePotentials_8x4_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset);
+        [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
     end
     % c91479 was flipped l1 l3
     if strcmp(sid,'c91479')

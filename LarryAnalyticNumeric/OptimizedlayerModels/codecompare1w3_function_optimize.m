@@ -9,8 +9,13 @@ dataTotal_8x4 = [m2012(1,:)' m2804(1,:)' m2318(1,:)' m2219(1,:)' m2120(1,:)'];
 sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e'};
 
 currentMat = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175 0.0005 0.0005 0.0005 0.0005 0.0005] ;
-%stimChansVec = [22 30; 13 14; 11 12; 59 60; 55 56; 54 62; 56 64; 12 20; 4 28; 18 23; 19 22; 21 20];
-stimChansVec = {1:40; 1:33; 1:32; 40:64; [1,33:64]; 39:64; 25:64};
+
+% GLOBAL FIT
+stimChansVec = {22 30; 13 14; 11 12; 59 60; 55 56; 54 62; 56 64; 12 20; 4 28; 18 23; 19 22; 21 20};
+
+% LOCAL FIT 
+%stimChansVec = {1:40; 1:33; 1:32; 40:64; [1,33:64]; 39:64; 25:64};
+
 jp_vec = [3 2 2 8 7 7 7 3 4 3 3 3];
 kp_vec = [6 5 3 3 7 6 8 4 4 7 6 5];
 jm_vec = [4 2 2 8 7 8 8 2 1 3 3 3];
@@ -35,7 +40,8 @@ sigma = 0.05; % this defines for huber loss the transition from squared
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
 rhoA_vec=[0.1:0.001:3.5];
-offset_vec=[-3e-3:1e-5:3e-3];
+%offset_vec=[-3e-3:1e-5:3e-3];
+offset_vec = [0,1];
 cost_vec_1layer = zeros(length(sidVec),length(rhoA_vec),length(offset_vec));
 
 subject_min_rhoA_vec = zeros(length(sidVec),1);
@@ -43,7 +49,8 @@ subject_min_offset1l_vec = zeros(length(sidVec),1);
 %%
 
 % loop through subjects
-for i = 1:length(sidVec)
+%for i = 1:length(sidVec)
+    for i = 1
     
     % select particular values for constants
     i0 = currentMat(i);
@@ -75,6 +82,10 @@ for i = 1:length(sidVec)
             
             % use a huber loss functiin
             [h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l1,sigma);
+            
+            % use sum sqaured
+            h_loss = nansum((dataMeas' - l1).^2);
+
             cost_vec_1layer(i,j,k) = h_loss;
             fprintf(['complete for subject ' num2str(i) ' rhoA = ' num2str(rhoA) ' offset = ' num2str(offset) ' \n ']);
             k = k + 1;
@@ -87,7 +98,8 @@ end
 %[~,index_min] = min(cost_vec_1layer,[],2);
 %subject_min_rho = rhoA_vec(index_min);
 %%
-for i = 1:length(sidVec)
+%for i = 1:length(sidVec)
+for i = 1
     cost_vec_subj = squeeze(cost_vec_1layer(i,:,:));
     
     [value, index] = min(cost_vec_subj(:));
@@ -148,7 +160,12 @@ for i = 1:length(sidVec)
                         [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
                     end
                     
-                    [h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l3,sigma);
+                    % use huber loss 
+                   % [h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l3,sigma);
+                    
+                    % use mean square loss 
+                    h_loss = nansum((dataMeas - l1).^2);
+
                     cost_vec_3layer(i,j,k,l,m) = h_loss;
                     m = m + 1;
                     fprintf(['complete for subject ' num2str(i) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);

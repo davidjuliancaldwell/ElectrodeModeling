@@ -25,11 +25,13 @@ for i = 1:length(SIDS)
     figure
     errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)
     hold on
-    errorbar(chanVec,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
+    errorbar(chanVec+0.3,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
-    title(['Subject ' num2str(i)])
+   % title(['Subject ' num2str(i)])
+   title(['Mean and Standard Deviation for Recorded Biphasic Pulse'])
+    set(gca,'fontsize',16)
     
     figure(figTotal)
     subplot(4,2,i)

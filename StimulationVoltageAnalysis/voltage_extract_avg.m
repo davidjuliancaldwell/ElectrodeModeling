@@ -32,7 +32,7 @@ for chan = 1:size(waveformMatrix,2)
         figure
         ax = axes;
         plot(1e3*t_samps/fs,signal_int,'linewidth',3)
-        ylim([-3e-3 3e-3])
+        ylim([-3e-2 3e-2])
         beg = vline(1e3*begin_ind/fs,'g');
         trans = vline(1e3*transition_pt/fs,'k');
         en = vline(1e3*end_ind/fs,'r');
