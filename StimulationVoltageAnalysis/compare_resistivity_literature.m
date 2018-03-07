@@ -85,7 +85,7 @@ subaxis(1,2,2,'SpacingHoriz',0.02)
 
 % hold on;semilogy(larryrhos,'r')
 % hold on;semilogy(stephenrhos,'k')
-%ylabel('Apparent Resistivity (ohm - m)')
+ylabel('Apparent Resistivity (ohm - m)')
 %xlabel('Subject number')
 %xlabel('Measurent')
 
@@ -139,10 +139,15 @@ csfLine.HandleVisibility = 'on';
 % 
 
 
- legend({'Calculated from data fits for adjacent stimulation pairs (7 subjects)','Calculated from spacing pairs (1 subject)',...,
-     'Resistivity from contact resistance for adjacent stimulation pairs','Resistivity from contact resistance from spacing pairs',...,
-     'gray matter (literature)','white matter (literature)','csf (literature'})
+%  legend({'Calculated from data fits for adjacent stimulation pairs (7 subjects)','Calculated from spacing pairs (1 subject)',...,
+%      'Resistivity from contact resistance for adjacent stimulation pairs','Resistivity from contact resistance from spacing pairs',...,
+%      'gray matter (literature)','white matter (literature)','csf (literature'})
 
+
+
+ legend({'\rho_a for first seven subjects','\rho_a for eighth subject',...,
+     '\rho_c for first seven subjects','\rho_c for eighth subject',...,
+     'literature values for \rho_{gray matter}','literature values for \rho_{white matter}','literature values for \rho_{csf}'})
 
 grayLine2 = hline(gray(2:end),'k-');
 whiteLine2 = hline(white(2:end),'-m');
@@ -151,5 +156,5 @@ set(gca,'fontsize',14)
 
  ax1.XTick = 1:7;
  ax1.XTickLabel = 1:7;
- subtitle('Apparent Resistivities compared to Reported Literature Values')
+ subtitle('Our Apparent Resistivities compared to Reported Literature Values')
 

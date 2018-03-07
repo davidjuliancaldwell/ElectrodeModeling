@@ -1,6 +1,4 @@
-%% 6-23-2016 - David Caldwell - script to look at stim spacing
-% starting with subject 3f2113
-
+%% 3-5-2018 - look at converted MATLAB files 
 %% initialize output and meta dir
 % clear workspace
 close all; clear all; clc
