@@ -1,4 +1,4 @@
-function [meanMatrix,stdMatrix,extractCell] = voltage_extract_avg(waveformMatrix,fs,preSamps,postSamps)
+function [meanMatrix,stdMatrix,extractCell,numTrials] = voltage_extract_avg(waveformMatrix,fs,preSamps,postSamps)
 % expects time x channels x trials
 % average across trials, and find the average stimulation waveform during
 % each phase of a stimulus
@@ -8,6 +8,7 @@ function [meanMatrix,stdMatrix,extractCell] = voltage_extract_avg(waveformMatrix
 [~,chanMax] = max(max(mean(waveformMatrix,3),[],1));
 t_samps = [1:size(waveformMatrix,1)];
 plotIt = 0;
+numTrials = size(waveformMatrix,3);
 
 for chan = 1:size(waveformMatrix,2)
     signal_int = mean(waveformMatrix(:,chan,:),3);

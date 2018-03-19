@@ -1,6 +1,6 @@
 %% 6-23-2016 - David Caldwell - script to look at stim spacing
 % starting with subject 3f2113
-
+% updated 3-15-2018 
 %% initialize output and meta dir
 % clear workspace
 %close all; clear all; clc
@@ -16,7 +16,6 @@ SUB_DIR = fullfile(myGetenv('subject_dir'));
 % this is from my z_constants
 
 sid = SIDS{5};
-
 
 % ui box for input for stimulation channels
 prompt = {'how many channels did we record from? e.g 48 ', 'what were the stimulation channels? e.g 28 29 ',...,
@@ -328,7 +327,4 @@ end
 legend(s,legLabels);
 
 %%
-%save(fullfile(OUTPUT_DIR, ['stim_constantV',num2str(stim_chans(1)),'_',num2str(stim_chans(2))]), 'data_info','dataEpoched','dataEpochedHigh','dataEpochedLow','dataEpochedMid','fs_data','fs_sing','fs_stim','Sing','Sing_info','stim','stim_chans','stim_info','t');
-% save(fullfile(OUTPUT_DIR, ['stim_',num2str(stim_chans(1)),'_',num2str(stim_chans(2))]), 'data_info','dataEpoched','dataEpochedHigh','dataEpochedLow','dataEpochedMid','fs_data','fs_sing','fs_stim','Sing','Sing_info','stim','stim_chans','stim_info','t');
-% save(fullfile(OUTPUT_DIR, ['stim_widePulse',num2str(stim_chans(1)),'_',num2str(stim_chans(2))]), 'data_info','dataEpoched','dataEpochedHigh','dataEpochedLow','dataEpochedMid','fs_data','fs_sing','fs_stim','Sing','Sing_info','stim','stim_chans','stim_info','t');
-% save(fullfile(OUTPUT_DIR, ['stim_widePulse',num2str(stim_chans(1)),'_',num2str(stim_chans(2))]), 'data_info','dataEpoched','dataEpochedHigh','dataEpochedLow','dataEpochedMid','fs_data','fs_sing','fs_stim','Sing','Sing_info','stim','stim_chans','stim_info','t');
+%save(fullfile(OUTPUT_DIR, ['stim_',stim_1,'_',stim_2]), 'data_info','dataEpoched','dataEpochedHigh','dataEpochedLow','dataEpochedMid','fs_data','fs_sing','fs_stim','Sing','Sing_info','stim','stim_chans','stim_info','t');

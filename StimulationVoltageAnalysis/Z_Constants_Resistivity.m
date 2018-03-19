@@ -9,3 +9,4 @@ META_DIR = fullfile(myGetenv('OUTPUT_DIR'), 'Resistivity', 'meta');
 TouchDir(META_DIR);
 SUBJECT_DIR = 'G:\My Drive\GRIDLabDavidShared\SharedForDavidLarryStephen';
 FIVE_SUBJECT_DIR = 'G:\My Drive\GRIDLabDavidShared\20f8a3\StimulationSpacingChunked';
+DBS_DIR = 'G:\My Drive\GRIDLabDavidShared\DBS\5e0cf';
