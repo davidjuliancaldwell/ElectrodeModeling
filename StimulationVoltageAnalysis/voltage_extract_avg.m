@@ -1,4 +1,4 @@
-function [meanMatrix,stdMatrix,stdCellEveryPoint,extractCell,numTrials] = voltage_extract_avg(waveformMatrix,fs,preSamps,postSamps)
+function [meanMatrix,stdMatrix,stdCellEveryPoint,extractCell,numTrials] = voltage_extract_avg(waveformMatrix,varargin)
 % expects time x channels x trials
 % average across trials, and find the average stimulation waveform during
 % each phase of a stimulus
@@ -7,9 +7,26 @@ function [meanMatrix,stdMatrix,stdCellEveryPoint,extractCell,numTrials] = voltag
 % the std deviation in time at each point is also calculated by looking at
 % the stimulation waveform once the onset and offset are detected
 
-[~,chanMax] = max(max(mean(waveformMatrix,3),[],1));
+defaultFs = 12207;
+defaultPreSamps = 3;
+defaultPostSamps = 3;
+defaultPlotIt = 1;
+
+p = inputParser;
+addRequired(p,'waveformMatrix')
+addParameter(p,'fs',defaultFs);
+addParameter(p,'preSamps',defaultPreSamps);
+addParameter(p,'postSamps',defaultPostSamps);
+addParameter(p,'plotIt',defaultPlotIt);
+
+parse(p,waveformMatrix,varargin{:});
+
+fs = p.Results.fs;
+preSamps = p.Results.preSamps;
+postSamps = p.Results.postSamps;
+plotIt = p.Results.plotIt;
+
 tSamps = [1:size(waveformMatrix,1)];
-plotIt = 0;
 numTrials = size(waveformMatrix,3);
 stdCellEveryPoint = {};
 
@@ -25,16 +42,16 @@ for chan = 1:size(waveformMatrix,2)
     channelSig = squeeze(waveformMatrix(:,chan,:));
     
     % find beginning and end of stimulation waveform
-    beginInd = find(abs(zscore(diffSig))>3,1,'first');
-    endInd = find(abs(zscore(diffSig))>3,1,'last');
+    beginInd = find(abs(zscore(diffSig))>2,1,'first');
+    endInd = find(abs(zscore(diffSig))>2,1,'last');
     
     % look after the onset of the pulse reliably should have begun to
     % figure out whether or not it's upward or downward going
     sign_begin = signalInt(beginInd+10);
-    zDiff = zscore(diffSig); % zscore the diff of the sig 
+    zDiff = zscore(diffSig); % zscore the diff of the sig
     % check if its positive first
     % if so, figure out the transition, point where it goes from positive
-    % to negative 
+    % to negative
     if sign_begin>0
         [~,transitionPt] = max(-1* zDiff);
         [~,beginInd] = max( zDiff(tSamps<transitionPt-3));
@@ -75,7 +92,7 @@ for chan = 1:size(waveformMatrix,2)
     stdMatrix(chan,2) = std(secondPhase);
     
     % now get the standard deviation at every point in the recorded
-    % waveform 
+    % waveform
     stdCellEveryPoint{chan}{1} = std(channelSig(beginInd+preSamps:transitionPt-postSamps,:),[],2);
     stdCellEveryPoint{chan}{2} = std(channelSig(transitionPt+preSamps:endInd-postSamps,:),[],2);
     

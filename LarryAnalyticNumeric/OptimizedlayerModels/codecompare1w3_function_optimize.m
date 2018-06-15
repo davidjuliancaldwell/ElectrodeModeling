@@ -13,7 +13,7 @@ currentMat = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175 0.0005 0.0005 
 % GLOBAL FIT
 stimChansVec = {22 30; 13 14; 11 12; 59 60; 55 56; 54 62; 56 64; 12 20; 4 28; 18 23; 19 22; 21 20};
 
-% LOCAL FIT 
+% LOCAL FIT
 %stimChansVec = {1:40; 1:33; 1:32; 40:64; [1,33:64]; 39:64; 25:64};
 
 jp_vec = [3 2 2 8 7 7 7 3 4 3 3 3];
@@ -50,7 +50,7 @@ subject_min_offset1l_vec = zeros(length(sidVec),1);
 
 % loop through subjects
 %for i = 1:length(sidVec)
-    for i = 1
+for i = 1
     
     % select particular values for constants
     i0 = currentMat(i);
@@ -85,7 +85,7 @@ subject_min_offset1l_vec = zeros(length(sidVec),1);
             
             % use sum sqaured
             h_loss = nansum((dataMeas' - l1).^2);
-
+            
             cost_vec_1layer(i,j,k) = h_loss;
             fprintf(['complete for subject ' num2str(i) ' rhoA = ' num2str(rhoA) ' offset = ' num2str(offset) ' \n ']);
             k = k + 1;
@@ -160,12 +160,12 @@ for i = 1:length(sidVec)
                         [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
                     end
                     
-                    % use huber loss 
-                   % [h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l3,sigma);
+                    % use huber loss
+                    % [h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l3,sigma);
                     
-                    % use mean square loss 
+                    % use mean square loss
                     h_loss = nansum((dataMeas - l1).^2);
-
+                    
                     cost_vec_3layer(i,j,k,l,m) = h_loss;
                     m = m + 1;
                     fprintf(['complete for subject ' num2str(i) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
@@ -220,7 +220,7 @@ for i = 1:length(sidVec)
     rho2 = subject_min_rho2_vec(i);
     rho3 = subject_min_rho3_vec(i);
     offset_1l = subject_min_offset1l_vec(i);
-     offset_3l = subject_min_offset3l_vec(i);
+    offset_3l = subject_min_offset3l_vec(i);
     rhoA = subject_min_rhoA_vec(i);
     h1 = subject_min_h1_vec(i);
     % perform 1d optimization
@@ -229,16 +229,16 @@ for i = 1:length(sidVec)
     % extract measured data and calculate theoretical ones
     if i <= 7 % 8x8 cases
         dataMeas = dataTotal_8x8(:,i);
-           [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset_3l);
+        [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset_3l);
         [l1] = computePotentials_8x8_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset_1l);
         % c91479 was flipped l1 l3
         if strcmp(sid,'c91479')
-                 l3 = -l3;
+            l3 = -l3;
             l1 = -l1;
         end
     else % 8x4 case
         dataMeas = dataTotal_8x4(:,i-7);
-         [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset_3l);
+        [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset_3l);
         [l1] = computePotentials_8x4_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset_1l);
         
     end
@@ -246,7 +246,7 @@ for i = 1:length(sidVec)
     l3 = l3';
     l1 = l1';
     l1_vec(:,i) = l1;
-     l3_vec(:,i) = l3;
+    l3_vec(:,i) = l3;
     %residuals-factor
     resid_l3{i} = l3-dataMeas;
     resid_l1{i} = l1-dataMeas;
@@ -271,17 +271,17 @@ for i = 1:length(sidVec)
     xlabel('Electrode Number')
     ylabel('Voltage (V)')
     legend('measured','single layer','3 layer');
-  %  legend('measured','single layer');
+    %  legend('measured','single layer');
     
     dim = [0.2 0.2 0.5 0.5];
-     annotation(fig_ind(i), 'textbox', dim, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
-         ['rho1 = ' num2str(subject_min_rho1_vec(i))],['rho2 = ' num2str(subject_min_rho2_vec(i))],...
-         ['rho3 = ' num2str(subject_min_rho3_vec(i))], ['offset 3 layer = ' num2str(subject_min_offset3l_vec(i))],...
-         ['h1 = ' num2str(subject_min_h1_vec(i))]},...
-         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
-%     annotation(fig_ind(i), 'textbox', dim, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
-%         },...
-%         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+    annotation(fig_ind(i), 'textbox', dim, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
+        ['rho1 = ' num2str(subject_min_rho1_vec(i))],['rho2 = ' num2str(subject_min_rho2_vec(i))],...
+        ['rho3 = ' num2str(subject_min_rho3_vec(i))], ['offset 3 layer = ' num2str(subject_min_offset3l_vec(i))],...
+        ['h1 = ' num2str(subject_min_h1_vec(i))]},...
+        'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+    %     annotation(fig_ind(i), 'textbox', dim, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
+    %         },...
+    %         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
     drawnow;
     title(sid)
     OUTPUT_DIR = pwd;
@@ -295,7 +295,7 @@ for i = 1:length(sidVec)
     vectorPlot = [1:64];
     vectorPlot(isnan(resid_l1{i})) = nan;
     plot(vectorPlot,resid_l1{i},'o','color',color1,'markerfacecolor',color1); hold on;
-     plot(vectorPlot,resid_l3{i},'o','color',color2,'markerfacecolor',color2);
+    plot(vectorPlot,resid_l3{i},'o','color',color2,'markerfacecolor',color2);
     hline(0)
     title(sid)
     
@@ -335,15 +335,15 @@ drawnow;
 pos = arrayfun(@plotboxpos, subplot_total, 'uni', 0);
 dim = cellfun(@(x) x.*[1 1 0.5 0.5], pos, 'uni',0);
 for i = 1:length(sidVec)
-      annotation(figTotal, 'textbox', dim{i}, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
-         ['rho1 = ' num2str(subject_min_rho1_vec(i))],['rho2 = ' num2str(subject_min_rho2_vec(i))],...
+    annotation(figTotal, 'textbox', dim{i}, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
+        ['rho1 = ' num2str(subject_min_rho1_vec(i))],['rho2 = ' num2str(subject_min_rho2_vec(i))],...
         ['rho3 = ' num2str(subject_min_rho3_vec(i))], ['offset 3 layer = ' num2str(subject_min_offset3l_vec(i))],...
-              ['h1 = ' num2str(subject_min_h1_vec(i))]},...
-       'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+        ['h1 = ' num2str(subject_min_h1_vec(i))]},...
+        'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
     
-%     annotation(figTotal, 'textbox', dim{i}, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
-%         },...
-%         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+    %     annotation(figTotal, 'textbox', dim{i}, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
+    %         },...
+    %         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
 end
 OUTPUT_DIR = pwd;
 if saveFigBool
@@ -364,10 +364,10 @@ pos = arrayfun(@plotboxpos, subplot_total, 'uni', 0);
 dim = cellfun(@(x) x.*[1 1 0.5 0.5], pos, 'uni',0);
 for i = 1:length(sidVec)
     annotation(figResid, 'textbox', dim{i}, 'String', {['R factor 1 layer = ' num2str(R_factor1(i))],['R factor 3 layer = ' num2str(R_factor3(i))]},...
-       'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
-%     
-%     annotation(figResid, 'textbox', dim{i}, 'String', {['R factor 1 layer = ' num2str(R_factor1(i))]},...
-%         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+        'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+    %
+    %     annotation(figResid, 'textbox', dim{i}, 'String', {['R factor 1 layer = ' num2str(R_factor1(i))]},...
+    %         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
 end
 OUTPUT_DIR = pwd;
 if saveFigBool
@@ -388,9 +388,9 @@ for i = 1:length(sidVec)
         ['slope 3 layer = ' num2str(P3_cell{i}(1))],['intercept 3 layer = ' num2str(P3_cell{i}(2))]},...
         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
     
-%     annotation(figLinear, 'textbox', dim{i}, 'String', {['slope 1 layer = ' num2str(P1_cell{i}(1))],['intercept 1 layer = ' num2str(P1_cell{i}(2))],...
-%         },...
-%         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
+    %     annotation(figLinear, 'textbox', dim{i}, 'String', {['slope 1 layer = ' num2str(P1_cell{i}(1))],['intercept 1 layer = ' num2str(P1_cell{i}(2))],...
+    %         },...
+    %         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
 end
 OUTPUT_DIR = pwd;
 if saveFigBool

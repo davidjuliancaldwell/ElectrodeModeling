@@ -74,21 +74,21 @@ for i = 2:length(SIDS)-2
     end
     load(fullfile(SUBJECT_DIR, ['BetaStimulationDataSet\' sid '_StimulationAndCCEPs']));
     
-    chans = goods;
-    figure;
-    subplot_dim = length(goods);
-    
-    i = 1;
-    for chan = goods
-        subplot(subplot_dim,1,i)
-        plot(t(t>0.005 & t<0.05),ECoGDataAverage((t>0.005 & t<0.05),chan))
-        title(['Channel ',num2str(chan)])
-        ylim([-200e-6 200e-6])
-        i = i +1;
-        
-    end
-    subtitle(['sid ',sid])
-    
+%     chans = goods;
+%     figure;
+%     subplot_dim = length(goods);
+%     
+%     i = 1;
+%     for chan = goods
+%         subplot(subplot_dim,1,i)
+%         plot(t(t>0.005 & t<0.05),ECoGDataAverage((t>0.005 & t<0.05),chan))
+%         title(['Channel ',num2str(chan)])
+%         ylim([-200e-6 200e-6])
+%         i = i +1;
+%         
+%     end
+%     subtitle(['sid ',sid])
+%     
     %% Plot AVERAGE
     
     figure

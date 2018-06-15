@@ -21,7 +21,7 @@ for i = 1:length(SIDS)
     stimChans_subj = stimChans(i,:);
     load(fullfile([sid '_StimulationAndCCEPs.mat']))
     ECoGData = permute(ECoGData,[1 3 2]);
-    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,fs,preSamps,postSamps);
+    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
     meanMat(stimChans_subj,:) = nan;
     stdMat(stimChans_subj,:) = nan;
     extractCell{stimChans_subj(1)}{1} = nan;
@@ -148,7 +148,7 @@ for pair = pair_vec
     ECoGData = dataEpoched;
     ECoGData = ECoGData(:,chansVec,:);
     
-    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,fs,preSamps,postSamps);
+    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
     meanMat(stimChans_subj,:) = nan;
     stdMat(stimChans_subj,:) = nan;
     extractCell{stimChans_subj(1)}{1} = nan;
@@ -269,7 +269,7 @@ for stimChans = stimChansVec
     dataEpoched = dataEpoched/1e6; % the data was stored in uV, convert this to volts
     
     % calculate metrics of interest
-    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(dataEpoched,fs,preSamps,postSamps);
+    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(dataEpoched,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
     chanVec = [1:size(dataEpoched,2)];
     
     meanMat(stimChans,:) = nan;
