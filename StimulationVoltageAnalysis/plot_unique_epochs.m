@@ -14,7 +14,6 @@ if strcmp(scaling,'y')
     minVal = min(dataEpoched(:));
 end
 
-
 % plot each condition separately e.g. 1000 uA, 2000 uA, and so on
 
 for i=uniqueLabels
@@ -79,12 +78,10 @@ for k = 1:length(dataAvgs)
         hold on;
         xlim([min(t) max(t)]);
         
-        
         % change y axis scaling if necessary
         if strcmp(scaling,'y')
             ylim([minVal maxVal]);
         end
-        
         
         if ismember(j,stimChans)
             ax = gca;
