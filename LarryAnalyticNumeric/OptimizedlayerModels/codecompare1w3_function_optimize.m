@@ -164,7 +164,7 @@ for i = 1:length(sidVec)
                     % [h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l3,sigma);
                     
                     % use mean square loss
-                    h_loss = nansum((dataMeas - l1).^2);
+                    h_loss = nansum((dataMeas - l3).^2);
                     
                     cost_vec_3layer(i,j,k,l,m) = h_loss;
                     m = m + 1;
