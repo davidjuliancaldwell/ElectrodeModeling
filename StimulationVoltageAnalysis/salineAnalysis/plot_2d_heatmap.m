@@ -12,12 +12,12 @@ x = x';
 y= y';
 meanMatAll(isnan(meanMatAll)) = 0;
 
-valScale = squeeze(max((abs(meanMatAll(:,1,:)))));
+valScale = 1000*squeeze(max((abs(meanMatAll(:,1,:)))));
 
 for i = 1:length(uniqueLabels)
     figure
     % plot first phase
-    imagesc(transpose(reshape(meanMatAll(:,1,i),8,8)));
+    imagesc(1000*transpose(reshape(meanMatAll(:,1,i),8,8)));
     % color map
     
     hStrings = text(x(:),y(:),textStrings(:),...      %# Plot the strings
@@ -28,7 +28,8 @@ for i = 1:length(uniqueLabels)
     load('america.mat')
     colormap(cm)
     axis off
-    colorbar
+    c = colorbar;
+    c.Label.String = 'voltage (mV)';
     caxis([-valScale(i) valScale(i)])
     
     title({['2D plot of recorded voltages ',num2str(uniqueLabels(i)),' \muA'],['stimulation channels ' num2str(stimChans)]});

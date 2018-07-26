@@ -10,7 +10,7 @@
 
 %% initialize output and meta dir
 % clear workspace, get rid of extraneous information
-%close all; clear all; clc
+close all; clear all; clc
 
 % load in the datafile of interest!
 % have to have a value assigned to the file to have it wait to finish
@@ -40,80 +40,86 @@ preSamps = round(preTime/1000 * fsData); % pre time in sec
 postSamps = round(postTime/1000 * fsData); % post time in sec,
 
 %%
-% get sampling rates
-fsStim = Stim.info.SamplingRateHz;
-fsSing = Sing.info.SamplingRateHz;
 
-% stim data
-stim = Stim.data;
-
-% current data
-sing = Sing.data;
-
-% for stim geometry 6, stim pair 3 and 4
-% sing = sing(1:4.5e6,:);
-% stim = stim(1:4.5e6,:);
-% Sing.data = Sing.data(1:4.5e6,:);
-% Stim.data = Stim.data(1:4.5e6,:);
-% data = data(1:(4.5e6/2),:);
-
-
-%% stimulation voltage monitor
-plotIt = 0;
-savePlot = 0;
-[stim1Epoched,t,fs,labels,uniqueLabels] = voltage_monitor(Stim,Sing,plotIt,savePlot,'','','');
-
-%% extract average signals
-
-[sts,bursts] = get_epoch_indices(sing,fsData,fsSing);
-
-dataEpoched = squeeze(getEpochSignal(data,sts-preSamps,sts+postSamps+1));
-% set the time vector to be set by the pre and post samps
-t = (-preSamps:postSamps)*1e3/fsData;
-
-%% plot epoched signals
-scaling = 'y';
-plot_unique_epochs(dataEpoched,t,uniqueLabels,labels,stimChans,scaling)
-
-
-%% extract averages, means, and standard deviations
-count = 1;
-
-preSampsExtract = 3;
-postSampsExtract = 3;
-plotIt = 0;
-
-for i = uniqueLabels
-    dataEpochedInt = dataEpoched(:,:,labels==i);
-    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(dataEpochedInt,'fs',fsData,'preSamps',preSampsExtract,'postSamps',postSampsExtract,'plotIt',plotIt);
+for reref = 0:0
+    % get sampling rates
+    fsStim = Stim.info.SamplingRateHz;
+    fsSing = Sing.info.SamplingRateHz;
     
-    meanMat(stimChans,:) = nan;
-    stdMat(stimChans,:) = nan;
-    extractCell{stimChans(1)}{1} = nan;
-    extractCell{stimChans(1)}{2}= nan;
-    extractCell{stimChans(2)}{1}= nan;
-    extractCell{stimChans(2)}{2}= nan;
-    stdCellEveryPoint{stimChans(1)} = {nan,nan};
-    stdCellEveryPoint{stimChans(2)} =  {nan,nan};
+    % stim data
+    stim = Stim.data;
     
-    meanMatAll(:,:,count) = meanMat;
-    stdMatAll(:,:,count) = stdMat;
-    numberStimsAll(count) = numberStims;
-    stdEveryPoint{count} = stdCellEveryPoint;
+    % current data
+    sing = Sing.data;
+    %%
+    % deal with rereferencing
+    
+    if reref
+        rerefChans = data(:,65:67);
+        rerefChans = mean(rerefChans,2);
+        data = data - repmat(rerefChans,1,numChans);
+    end
     
     
-    count = count + 1;
+    %% stimulation voltage monitor
+    plotIt = 0;
+    savePlot = 0;
+    [stim1Epoched,t,fs,labels,uniqueLabels] = voltage_monitor(Stim,Sing,plotIt,savePlot,'','','');
+    
+    %% extract average signals
+    
+    [sts,bursts] = get_epoch_indices(sing,fsData,fsSing);
+    
+    dataEpoched = squeeze(getEpochSignal(data,sts-preSamps,sts+postSamps+1));
+    % set the time vector to be set by the pre and post samps
+    t = (-preSamps:postSamps)*1e3/fsData;
+    
+    %% plot epoched signals
+    scaling = 'y';
+    plot_unique_epochs(dataEpoched,t,uniqueLabels,labels,stimChans,scaling)
+    
+    
+    %% extract averages, means, and standard deviations
+    count = 1;
+    
+    preSampsExtract = 3;
+    postSampsExtract = 3;
+    plotIt = 0;
+    
+    for i = uniqueLabels
+        dataEpochedInt = dataEpoched(:,:,labels==i);
+        [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(dataEpochedInt,'fs',fsData,'preSamps',preSampsExtract,'postSamps',postSampsExtract,'plotIt',plotIt);
+        
+        meanMat(stimChans,:) = nan;
+        stdMat(stimChans,:) = nan;
+        extractCell{stimChans(1)}{1} = nan;
+        extractCell{stimChans(1)}{2}= nan;
+        extractCell{stimChans(2)}{1}= nan;
+        extractCell{stimChans(2)}{2}= nan;
+        stdCellEveryPoint{stimChans(1)} = {nan,nan};
+        stdCellEveryPoint{stimChans(2)} =  {nan,nan};
+        
+        meanMatAll(:,:,count) = meanMat;
+        stdMatAll(:,:,count) = stdMat;
+        numberStimsAll(count) = numberStims;
+        stdEveryPoint{count} = stdCellEveryPoint;
+        
+        
+        count = count + 1;
+    end
+    
+    
+    %% 2d plot
+    plot_2d_heatmap(meanMatAll(1:64,:,:),64,uniqueLabels,stimChans)
+    %%
+    saveIt = 1;
+    if saveIt
+        if reref
+            save(['salineAnalysis_' regexprep(num2str(stimChans),'  ','_','emptymatch'),'_reref'],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t','uniqueLabels')
+        else
+            save(['salineAnalysis_' regexprep(num2str(stimChans),'  ','_','emptymatch')],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t','uniqueLabels')
+            
+        end
+    end
 end
-
-
-%% 2d plot
-saveIt = 0;
-plot_2d_heatmap(meanMatAll,numChans,uniqueLabels,stimChans)
-%%
-saveIt = 0;
-if saveIt
-    save(['salineAnalysis_' regexprep(num2str(stimChans),' ','_','emptymatch') '_v2'],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t')
-end
-
-return
 

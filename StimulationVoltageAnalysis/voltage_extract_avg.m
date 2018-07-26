@@ -45,14 +45,20 @@ for chan = 1:size(waveformMatrix,2)
     beginInd = find(abs(zscore(diffSig))>2,1,'first');
     endInd = find(abs(zscore(diffSig))>2,1,'last');
     
+    % make sure signal "begin" isn't too close to the end
     % look after the onset of the pulse reliably should have begun to
     % figure out whether or not it's upward or downward going
-    sign_begin = signalInt(beginInd+10);
+    if beginInd+10 >= length(signalInt)
+        signBegin = signalInt(beginInd);
+    else
+    signBegin = signalInt(beginInd+10);
+    end
+    
     zDiff = zscore(diffSig); % zscore the diff of the sig
     % check if its positive first
     % if so, figure out the transition, point where it goes from positive
     % to negative
-    if sign_begin>0
+    if signBegin>0
         [~,transitionPt] = max(-1* zDiff);
         [~,beginInd] = max( zDiff(tSamps<transitionPt-3));
         [~,endInd] = max( zDiff(tSamps>transitionPt+3));
