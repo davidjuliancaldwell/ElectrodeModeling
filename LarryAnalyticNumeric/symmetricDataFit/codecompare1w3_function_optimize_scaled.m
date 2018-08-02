@@ -5,6 +5,7 @@
 clear all;close all;clc
 load('all12.mat')
 load('the_data.mat')
+symmetric = 4.*symmetric;
 symmetricFlat = reshape(symmetric',1,[]);
 symmetric(symmetric==0) = NaN;
 symmetricFlat(symmetricFlat==0) = NaN;
@@ -15,7 +16,6 @@ indices = sub2ind(sizeMatrix,row,col);
 
 % perform optimization for the 1 layer case
 
-h1=0.001;
 a=0.00115;
 R=0.00115;
 d=0.0035;
@@ -24,9 +24,9 @@ sigma = 0.05; % this defines for huber loss the transition from squared
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
-rhoA_vec=[0.1:0.001:3.5];
+rhoA_vec=[0.1:0.001:5];
 %offset_vec=[-3e-3:1e-5:3e-3];
-offset_vec = [0,1];
+offset_vec = [0];
 cost_vec_1layer = zeros(length(rhoA_vec),length(offset_vec));
 
 min_rhoA_vec = zeros(1);
@@ -49,7 +49,7 @@ for rhoA = rhoA_vec
     k = 1;
     for offset = offset_vec
         
-        [l1,tp] = computePotentials_1Layer(jp,kp,jm,km,rhoA,i0,stimChans,offset,10,13);
+        [l1,tp] = computePotentials_1Layer_symmetric(jp,kp,jm,km,rhoA,i0,stimChans,offset,10,13);
         % use sum sqaured
         sqLoss = (symmetric-tp).^2;
         h_loss = nansum(sqLoss(:));
@@ -73,14 +73,16 @@ min_offset1l_vec= offset_vec(ind2);
 
 %% 3 layer
 % optimization for 3 layer
-rho1_vec = [0.4:0.01:1.2];
+rho1_vec = [0.4:0.05:0.6];
 rho1_vec = 0.55;
-rho2_vec= [0.6:0.05:3];
-rho3_vec = [0.6:0.05:3];
+rho2_vec= [3:0.05:7];
+rho3_vec = [3.6:0.05:7];
 %offset_vec=[-3e-3:1e-5:3e-3];
 offset_vec = [0];
+height_vec = [0.0001:0.0001:0.005];
+%height_vec = [0.0001]
 sigma = 0.05; % sigma for huber loss
-cost_vec_3layer = zeros(length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec));
+cost_vec_3layer = zeros(length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec));
 
 min_rho1_vec = zeros(1);
 min_rho2_vec = zeros(1);
@@ -95,49 +97,88 @@ jp=5;
 kp=7;
 jm=6;
 km=7;
+%h1=0.001;
 
 % perform 3d optimization
-j = 1;
-for rho1 = rho1_vec
-    k = 1;
-    for rho2 = rho2_vec
-        l = 1;
-        for rho3 = rho3_vec
-            m = 1;
-            for offset = offset_vec
-                [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
-                
-                [l3,t3] = computePotentials_3Layer(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset,10,13);
-                
-                % use sum sqaured
-                sqLoss = (symmetric-t3).^2;
-                h_loss = nansum(sqLoss(:));
-                
-                cost_vec_3layer(j,k,l,m) = h_loss;
-                m = m + 1;
-                fprintf([' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
+
+h = 1;
+for h1 = height_vec
+    j = 1;
+    for rho1 = rho1_vec
+        k = 1;
+        for rho2 = rho2_vec
+            l = 1;
+            for rho3 = rho3_vec
+                m = 1;
+                for offset = offset_vec
+                    [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
+                    [l3,t3] = computePotentials_3Layer_symmetric(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset,10,13);
+                    
+                    % use sum sqaured
+                    sqLoss = (symmetric-t3).^2;
+                    h_loss = nansum(sqLoss(:));
+                    cost_vec_3layer(h,j,k,l,m) = h_loss;
+                    m = m + 1;
+                    fprintf(['h1 = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
+                end
+                l = l + 1;
             end
-            l = l + 1;
+            k = k + 1;
         end
-        k = k + 1;
+        j = j + 1;
+        
     end
-    j = j + 1;
-    
+    h = h+1;
 end
 %%
-
-[ind1,ind2,ind3,ind4,ind5] = ind2sub(size(cost_vec_3layer),index);
-
-min_rho1_vec = rho1_vec(ind1);
-min_rho2_vec = rho2_vec(ind2);
-min_rho3_vec = rho3_vec(ind3);
-min_offset3l_vec = offset_vec(ind4);
-%min_hw1_vec = h1_vec(ind5);
+h = 1;
+for h1 = height_vec
+    [value, index] = min(squeeze((cost_vec_3layer(h,:))));
+    
+    [ind1,ind2] = ind2sub(size(squeeze(cost_vec_3layer(h,:,:,:))),index);
+    
+    %min_height_vec = height_vec(ind1);
+   % min_rho1_vec(h) = rho1_vec(ind1);
+    min_rho2_vec(h) = rho2_vec(ind1);
+    min_rho3_vec(h) = rho3_vec(ind2);
+    %min_offset3l_vec = offset_vec(ind5);
+    h = h + 1;
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%
+
+
+figure;plot(1e3*height_vec,min_rho2_vec,'o-','linewidth',2)
+hold on;plot(1e3*height_vec,min_rho3_vec,'o-','color','r','linewidth',2)
+h1 = hline(min_rhoA_vec,'k','one layer point electrode');
+h1.LineWidth = 2;
+xlabel('Assumed csf thickness (mm)')
+ylabel('resistivity (ohm-m)')
+legend({'gray matter','white matter'})
+set(gca,'fontsize',14)
+title('The best fit resistivity values as a function of CSF thickness')
+
+
+figure;plot(1e3*height_vec,1./min_rho2_vec,'o-','linewidth',2)
+hold on;plot(1e3*height_vec,1./min_rho3_vec,'o-','color','r','linewidth',2)
+h1 = hline(1./min_rhoA_vec,'k','one layer point electrode');
+h1.LineWidth = 2;
+xlabel('Assumed csf thickness (mm)')
+ylabel('conductivity (S/m)')
+legend({'gray matter','white matter'})
+set(gca,'fontsize',14)
+title('The best fit conductivity values as a function of CSF thickness')
+
+return
 
 %% plotting
 % plot
+% define colors for lines
 
+color1 = [27,201,127]/256;
+color2 = [190,174,212]/256;
+color3 = [ 253,192,134]/256;
 saveFigBool = false;
 % setup global figure
 figTotal = figure('units','normalized','outerposition',[0 0 1 1]);
@@ -145,8 +186,8 @@ figResid = figure('units','normalized','outerposition',[0 0 1 1]);
 figLinear = figure('units','normalized','outerposition',[0 0 1 1]);
 %
 
-
-fig_ind = figure('units','normalized','outerposition',[0 0 1 1]);
+fig_ind = figure;
+%fig_ind = figure('units','normalized','outerposition',[0 0 1 1]);
 % select particular values for constants
 
 rho1 = min_rho1_vec;

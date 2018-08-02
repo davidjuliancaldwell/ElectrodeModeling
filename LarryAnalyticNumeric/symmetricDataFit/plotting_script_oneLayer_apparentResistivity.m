@@ -1,6 +1,6 @@
 
 load('the_data.mat')
-combined = symmetric./symthy2;
+combined = 4*symmetric./symthy2;
 combined(combined == 0) = nan;
 
 
@@ -16,14 +16,14 @@ title('Apparent resistivity across electrodes')
 ax = gca;
 ax.Visible = 'off';
 c = colorbar;
-caxis([0 1.5])
+caxis([0 6])
 c.Label.String = 'apparent resistivity (Ohm/m)';
 
 figure;
 h1 = histogram(combined);
 h1.Normalization = 'probability';
 h1.BinWidth = 0.05;
-xlim([0 1.8])
+xlim([0 6])
 xlabel('apparent resistivity (Ohm/m)')
 set(gca,'fontsize',14);
 title('histogram of apparent resistivity values across electrodes')
@@ -40,14 +40,14 @@ ax.XTick = '';
 ax.Title.String = 'Apparent resistivity across electrodes';
 
 c = colorbar;
-caxis([0.5 1.5])
+caxis([0 6])
 c.Label.String = 'apparent resistivity (Ohm/m)';
 
 subplot(1,2,2)
 h1 = histogram(combined);
 h1.Normalization = 'probability';
 h1.BinWidth = 0.05;
-xlim([0 1.8])
+xlim([0 6])
 xlabel('apparent resistivity (Ohm/m)')
 title('histogram of apparent resistivity values across electrodes')
 set(gca,'fontsize',14);

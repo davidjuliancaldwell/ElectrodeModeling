@@ -1,4 +1,4 @@
-function [l3,thy] = computePotentials_3Layer(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset,jLength,kLength)
+function [l3,thy] = computePotentials_3Layer_symmetric(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset,jLength,kLength)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -26,7 +26,7 @@ for j=1:jLength;
         A=scale*(1.+2*theta1).*beta;
         integral=sum(A.*besselj(0,alpha*x).*sin(alpha*a));
         Vm=-step*integral;
-        thy(j,k)=1000*Vp+Vm;
+        thy(j,k)=1000*(Vp+Vm);
     end;
 end;
 

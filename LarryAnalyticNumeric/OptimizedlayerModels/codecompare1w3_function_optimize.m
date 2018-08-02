@@ -1,12 +1,12 @@
 %% initialize workspace
-clear all
+%clear all; close all;clc
 load('all12.mat')
 
 % define matrices to iterate over
-dataTotal_8x8 = [m0b5a2e m702d24 m7dbdec m9ab7ab mc91479 md5cd55 mecb43e];
-dataTotal_8x4 = [m2012(1,:)' m2804(1,:)' m2318(1,:)' m2219(1,:)' m2120(1,:)'];
-%sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e','m2012','m2804','m2318','m2219','m2120'};
-sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e'};
+dataTotal_8x8 = 4.*[m0b5a2e m702d24 m7dbdec m9ab7ab mc91479 md5cd55 mecb43e];
+dataTotal_8x4 = 4.*[m2012(1,:)' m2804(1,:)' m2318(1,:)' m2219(1,:)' m2120(1,:)'];
+sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e','m2012','m2804','m2318','m2219','m2120'};
+%sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e'};
 
 currentMat = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175 0.0005 0.0005 0.0005 0.0005 0.0005] ;
 
@@ -39,9 +39,9 @@ sigma = 0.05; % this defines for huber loss the transition from squared
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
-rhoA_vec=[0.1:0.001:3.5];
+rhoA_vec=[2:0.01:6];
 %offset_vec=[-3e-3:1e-5:3e-3];
-offset_vec = [0,1];
+%offset_vec = [0,1];
 cost_vec_1layer = zeros(length(sidVec),length(rhoA_vec),length(offset_vec));
 
 subject_min_rhoA_vec = zeros(length(sidVec),1);
@@ -49,8 +49,8 @@ subject_min_offset1l_vec = zeros(length(sidVec),1);
 %%
 
 % loop through subjects
-%for i = 1:length(sidVec)
-for i = 1
+for i = 1:length(sidVec)
+    %for i = 1
     
     % select particular values for constants
     i0 = currentMat(i);
@@ -81,7 +81,7 @@ for i = 1
             end
             
             % use a huber loss functiin
-            [h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l1,sigma);
+            %[h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l1,sigma);
             
             % use sum sqaured
             h_loss = nansum((dataMeas' - l1).^2);
@@ -98,32 +98,35 @@ end
 %[~,index_min] = min(cost_vec_1layer,[],2);
 %subject_min_rho = rhoA_vec(index_min);
 %%
-%for i = 1:length(sidVec)
-for i = 1
+for i = 1:length(sidVec)
+    %for i = 1
     cost_vec_subj = squeeze(cost_vec_1layer(i,:,:));
     
     [value, index] = min(cost_vec_subj(:));
-    [ind1,ind2] = ind2sub(size(cost_vec_subj),index);
+    %[ind1,ind2] = ind2sub(size(cost_vec_subj),index);
+    [ind1] = ind2sub(size(cost_vec_subj),index);
     
     subject_min_rhoA_vec(i) = rhoA_vec(ind1);
-    subject_min_offset1l_vec(i) = offset_vec(ind2);
+    %subject_min_offset1l_vec(i) = offset_vec(ind2);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% 3 layer
 % optimization for 3 layer
-rho1_vec = [0.4:0.01:1.2];
-rho2_vec= [0.4:0.01:6];
-rho3_vec = [0.4:0.01:6];
-offset_vec=[-3e-3:1e-5:3e-3];
+rho1_vec = [0.55];
+rho2_vec= [2.5:0.05:6.5];
+rho3_vec = [2.5:0.05:6.5];
+height_vec = [0.0001:0.0001:0.002];
+%offset_vec=[-3e-3:1e-5:3e-3];
+offset_vec = 0;
 sigma = 0.05; % sigma for huber loss
-cost_vec_3layer = zeros(length(sidVec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec));
+cost_vec_3layer = zeros(length(sidVec),length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec));
 
-subject_min_rho1_vec = zeros(length(sidVec),1);
-subject_min_rho2_vec = zeros(length(sidVec),1);
-subject_min_rho3_vec = zeros(length(sidVec),1);
-subject_min_offset3l_vec = zeros(length(sidVec),1);
+%subject_min_rho1_vec = zeros(length(sidVec),1);
+%subject_min_rho2_vec = zeros(length(sidVec),1);
+%subject_min_rho3_vec = zeros(length(sidVec),1);
+%subject_min_offset3l_vec = zeros(length(sidVec),1);
 
 for i = 1:length(sidVec)
     
@@ -136,67 +139,134 @@ for i = 1:length(sidVec)
     jm = jm_vec(i);
     km = km_vec(i);
     
-    % perform 3d optimization
-    j = 1;
-    for rho1 = rho1_vec
-        k = 1;
-        for rho2 = rho2_vec
-            l = 1;
-            for rho3 = rho3_vec
-                m = 1;
-                for offset = offset_vec
-                    [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
-                    
-                    if i <= 7 % 8x8 cases
-                        dataMeas = dataTotal_8x8(:,i);
-                        [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
-                        % c91479 was flipped l1 l3
-                        if strcmp(sid,'c91479')
-                            l3 = -l3;
+    h = 1;
+    for h1 = height_vec
+        % perform 3d optimization
+        j = 1;
+        for rho1 = rho1_vec
+            k = 1;
+            for rho2 = rho2_vec
+                l = 1;
+                for rho3 = rho3_vec
+                    m = 1;
+                    for offset = offset_vec
+                        [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
+                        
+                        if i <= 7 % 8x8 cases
+                            dataMeas = dataTotal_8x8(:,i);
+                            [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
+                            % c91479 was flipped l1 l3
+                            if strcmp(sid,'c91479')
+                                l3 = -l3;
+                            end
+                            
+                        else % 8x4 case
+                            dataMeas = dataTotal_8x4(:,i-7);
+                            [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
                         end
                         
-                    else % 8x4 case
-                        dataMeas = dataTotal_8x4(:,i-7);
-                        [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
+                        % use huber loss
+                        % [h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l3,sigma);
+                        
+                        % use mean square loss
+                        h_loss = nansum((dataMeas' - l3).^2);
+                        
+                        cost_vec_3layer(i,h,j,k,l,m) = h_loss;
+                        m = m + 1;
+                        fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
                     end
-                    
-                    % use huber loss
-                    % [h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l3,sigma);
-                    
-                    % use mean square loss
-                    h_loss = nansum((dataMeas - l3).^2);
-                    
-                    cost_vec_3layer(i,j,k,l,m) = h_loss;
-                    m = m + 1;
-                    fprintf(['complete for subject ' num2str(i) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
+                    l = l + 1;
                 end
-                l = l + 1;
+                k = k + 1;
             end
-            k = k + 1;
+            j = j + 1;
         end
-        j = j + 1;
+        h = h + 1;
     end
-    
 end
 %%
 for i = 1:length(sidVec)
-    cost_vec_subj = squeeze(cost_vec_3layer(i,:,:,:,:,:));
-    
-    [value, index] = min(cost_vec_subj(:));
-    [ind1,ind2,ind3,ind4,ind5] = ind2sub(size(cost_vec_subj),index);
-    
-    subject_min_rho1_vec(i) = rho1_vec(ind1);
-    subject_min_rho2_vec(i) = rho2_vec(ind2);
-    subject_min_rho3_vec(i) = rho3_vec(ind3);
-    subject_min_offset3l_vec(i) = offset_vec(ind4);
-    subject_min_hw1_vec(i) = h1_vec(ind5);
+    for ii = 1:length(height_vec)
+        cost_vec_subj = squeeze(cost_vec_3layer(i,ii,:,:,:,:));
+        
+        [value, index] = min(cost_vec_subj(:));
+        [ind1,ind2] = ind2sub(size(cost_vec_subj),index);
+        
+        
+        % subject_min_rho1_vec(i) = rho1_vec(ind1);
+        subject_min_rho2_vec(i,ii) = rho2_vec(ind1);
+        subject_min_rho3_vec(i,ii) = rho3_vec(ind2);
+        %  subject_min_offset3l_vec(i) = offset_vec(ind4);
+    end
 end
+
+%%
+% for i = 1:length(sidVec)
+%     cost_vec_subj = squeeze(cost_vec_3layer(i,:,:,:,:,:));
+%
+%     [value, index] = min(cost_vec_subj(:));
+%     [ind1,ind2,ind3] = ind2sub(size(cost_vec_subj),index);
+%
+%     subject_min_height_vec(i) = height_vec(ind1);
+%
+%     % subject_min_rho1_vec(i) = rho1_vec(ind1);
+%     subject_min_rho2_vec(i) = rho2_vec(ind2);
+%     subject_min_rho3_vec(i) = rho3_vec(ind3);
+%     %  subject_min_offset3l_vec(i) = offset_vec(ind4);
+% end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%
+saveFigBool = true;
+
+for i = 1:length(sidVec)
+    
+    figure;
+    set(gcf, 'position', [1.0003e+03 779.6667 732 558.6667]);
+    
+    plot(1e3*height_vec,subject_min_rho2_vec(i,:),'o-','linewidth',2)
+    hold on;plot(1e3*height_vec,subject_min_rho3_vec(i,:),'o-','color','r','linewidth',2)
+    h1 = hline(subject_min_rhoA_vec(i),'k','one layer point electrode');
+    h1.LineWidth = 2;
+    xlabel('csf thickness (mm)')
+    ylabel('resistivity (ohm-m)')
+    legend({'gray matter','white matter'})
+    set(gca,'fontsize',14)
+    title(['Subject ' num2str(i) ' Resistivity of cortical layers as a function of CSF thickness'])
+    
+    
+    OUTPUT_DIR = pwd;
+    if saveFigBool
+        SaveFig(OUTPUT_DIR, sprintf(['subject_%s_bestFitRestivity'], num2str(i)), 'png', '-r300');
+    end
+    
+    
+    
+    figure;
+    set(gcf, 'position', [1.0003e+03 779.6667 732 558.6667]);
+    plot(1e3*height_vec,1./subject_min_rho2_vec(i,:),'o-','linewidth',2)
+    hold on;plot(1e3*height_vec,1./subject_min_rho3_vec(i,:),'o-','color','r','linewidth',2)
+    h1 = hline(1./subject_min_rhoA_vec(i),'k','one layer point electrode');
+    h1.LineWidth = 2;
+    xlabel('csf thickness (mm)')
+    ylabel('conductivity (S/m)')
+    legend({'gray matter','white matter'})
+    set(gca,'fontsize',14)
+    title(['Subject ' num2str(i) ' Conductivity of cortical layers as a function of CSF thickness'])
+    
+    OUTPUT_DIR = pwd;
+    if saveFigBool
+        SaveFig(OUTPUT_DIR, sprintf(['subject_%s_bestFitConductivity'], num2str(i)), 'png', '-r300');
+    end
+    
+    
+    
+end
 
 %% plotting
 % plot
 
-saveFigBool = true;
+saveFigBool = false;
 % setup global figure
 figTotal = figure('units','normalized','outerposition',[0 0 1 1]);
 figResid = figure('units','normalized','outerposition',[0 0 1 1]);
