@@ -19,7 +19,7 @@ load('the_data.mat')
 symmetric= symmetric*4;
 three_layer_Thy_vs_exp
 curves
-ContourPlots
+ContourPlots_v2
 
 %% apparent resistivity 7-9
 apparent_resistivity

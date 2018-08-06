@@ -73,13 +73,13 @@ min_offset1l_vec= offset_vec(ind2);
 
 %% 3 layer
 % optimization for 3 layer
-rho1_vec = [0.4:0.05:0.6];
+%rho1_vec = [0.4:0.05:0.6];
 rho1_vec = 0.55;
-rho2_vec= [3:0.05:7];
-rho3_vec = [3.6:0.05:7];
+rho2_vec= [2:0.05:7.75];
+rho3_vec = [2:0.05:7.5];
 %offset_vec=[-3e-3:1e-5:3e-3];
 offset_vec = [0];
-height_vec = [0.0001:0.0001:0.005];
+height_vec = [0:0.0001:0.002];
 %height_vec = [0.0001]
 sigma = 0.05; % sigma for huber loss
 cost_vec_3layer = zeros(length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec));
@@ -146,8 +146,8 @@ for h1 = height_vec
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%
-
+%% plot conductivity and resistivity as a function of CSF thickness
+saveFigBool = false;
 
 figure;plot(1e3*height_vec,min_rho2_vec,'o-','linewidth',2)
 hold on;plot(1e3*height_vec,min_rho3_vec,'o-','color','r','linewidth',2)
@@ -158,7 +158,13 @@ ylabel('resistivity (ohm-m)')
 legend({'gray matter','white matter'})
 set(gca,'fontsize',14)
 title('The best fit resistivity values as a function of CSF thickness')
-
+    OUTPUT_DIR = pwd;
+    if saveFigBool
+        SaveFig(OUTPUT_DIR, sprintf(['symmetric_bestFitRestivity_v2'], num2str(i)), 'png', '-r300');
+    end
+    
+    
+    
 
 figure;plot(1e3*height_vec,1./min_rho2_vec,'o-','linewidth',2)
 hold on;plot(1e3*height_vec,1./min_rho3_vec,'o-','color','r','linewidth',2)
@@ -169,6 +175,128 @@ ylabel('conductivity (S/m)')
 legend({'gray matter','white matter'})
 set(gca,'fontsize',14)
 title('The best fit conductivity values as a function of CSF thickness')
+
+    if saveFigBool
+        SaveFig(OUTPUT_DIR, sprintf(['symmetric_bestFitConductivity_v2'], num2str(i)), 'png', '-r300');
+    end
+    
+
+%% plot contour lines of interest
+
+
+h = 1;
+for h1 = height_vec
+    [value, index] = min(squeeze((cost_vec_3layer(h,:))));
+    
+    [ind1,ind2] = ind2sub(size(squeeze(cost_vec_3layer(h,:,:,:))),index);
+    
+    %min_height_vec = height_vec(ind1);
+    % min_rho1_vec(h) = rho1_vec(ind1);
+    min_rho2_vec(h) = rho2_vec(ind1);
+    min_rho3_vec(h) = rho3_vec(ind2);
+    %min_offset3l_vec = offset_vec(ind5);
+    
+    figure;
+    contour(rho2_vec,rho3_vec,squeeze(cost_vec_3layer(h,:,:,:))',100);
+    hold on
+    h2 = plot(rho2_vec(ind1),rho3_vec(ind2),'*');
+    legend([h2],{'best fit point'})
+    set(gca,'fontsize',14)
+    title({'Best fit values for gray matter and white matter',[' resistivities for CSF thickness = ' num2str(1000*h1) ' mm']})
+    xlabel('gray matter resistivity (ohm-m)')
+    ylabel('white matter resistivity (ohm-m)')
+    colormap('hot')
+    c = colorbar;
+    c.Label.String = 'mean square error (mV^2)';
+    
+    
+    h = h + 1;
+end
+%%
+makeMovie = false;
+if makeMovie
+    figure
+    v = VideoWriter('contourVideo.mp4','MPEG-4');
+    v.FrameRate = 1;
+        v.Quality = 100;
+    open(v)
+    h = 1;
+
+    for h1 = height_vec
+        [value, index] = min(squeeze((cost_vec_3layer(h,:))));
+        
+        [ind1,ind2] = ind2sub(size(squeeze(cost_vec_3layer(h,:,:,:))),index);
+        
+        %min_height_vec = height_vec(ind1);
+        % min_rho1_vec(h) = rho1_vec(ind1);
+        min_rho2_vec(h) = rho2_vec(ind1);
+        min_rho3_vec(h) = rho3_vec(ind2);
+        %min_offset3l_vec = offset_vec(ind5);
+        
+        contour(rho2_vec,rho3_vec,squeeze(cost_vec_3layer(h,:,:,:))',100);
+        hold on
+        h2 = plot(rho2_vec(ind1),rho3_vec(ind2),'*');
+        legend([h2],{'best fit point'})
+        set(gca,'fontsize',14)
+        title({'Best fit values for gray matter and white matter',[' resistivities for CSF thickness = ' num2str(1000*h1) ' mm']})
+        xlabel('gray matter resistivity (ohm-m)')
+        ylabel('white matter resistivity (ohm-m)')
+        colormap('hot')
+        c = colorbar;
+        c.Label.String = 'mean square error (mV^2)';
+        hold off
+        frame = getframe(gcf);
+        writeVideo(v,frame);
+        
+        
+        h = h + 1;
+    end
+    close(v)
+end
+
+if makeMovie
+    figure
+    v = VideoWriter('contourVideo.avi');
+    v.FrameRate = 1;
+    v.Quality = 100;
+    open(v)
+    h = 1;
+
+    for h1 = height_vec
+        [value, index] = min(squeeze((cost_vec_3layer(h,:))));
+        
+        [ind1,ind2] = ind2sub(size(squeeze(cost_vec_3layer(h,:,:,:))),index);
+        
+        %min_height_vec = height_vec(ind1);
+        % min_rho1_vec(h) = rho1_vec(ind1);
+        min_rho2_vec(h) = rho2_vec(ind1);
+        min_rho3_vec(h) = rho3_vec(ind2);
+        %min_offset3l_vec = offset_vec(ind5);
+        
+        contour(rho2_vec,rho3_vec,squeeze(cost_vec_3layer(h,:,:,:))',100);
+        hold on
+        h2 = plot(rho2_vec(ind1),rho3_vec(ind2),'*');
+        legend([h2],{'best fit point'})
+        set(gca,'fontsize',14)
+        title({'Best fit values for gray matter and white matter',[' resistivities for CSF thickness = ' num2str(1000*h1) ' mm']})
+        xlabel('gray matter resistivity (ohm-m)')
+        ylabel('white matter resistivity (ohm-m)')
+        colormap('hot')
+        c = colorbar;
+        c.Label.String = 'mean square error (mV^2)';
+        hold off
+        frame = getframe(gcf);
+        writeVideo(v,frame);
+        
+        
+        h = h + 1;
+    end
+    close(v)
+end
+
+%% save it
+save('symmetric_optimized_8_3_2018.mat','-v7.3')
+
 
 return
 

@@ -30,7 +30,6 @@ color3 = [ 253,192,134]/256;
 
 % perform optimization for the 1 layer case
 
-h1=0.001;
 a=0.00115;
 R=0.00115;
 d=0.0035;
@@ -42,6 +41,7 @@ sigma = 0.05; % this defines for huber loss the transition from squared
 rhoA_vec=[2:0.01:6];
 %offset_vec=[-3e-3:1e-5:3e-3];
 %offset_vec = [0,1];
+offset_vec = [0];
 cost_vec_1layer = zeros(length(sidVec),length(rhoA_vec),length(offset_vec));
 
 subject_min_rhoA_vec = zeros(length(sidVec),1);
@@ -115,9 +115,9 @@ end
 %% 3 layer
 % optimization for 3 layer
 rho1_vec = [0.55];
-rho2_vec= [2.5:0.05:6.5];
-rho3_vec = [2.5:0.05:6.5];
-height_vec = [0.0001:0.0001:0.002];
+rho2_vec= [1.5:0.05:7.5];
+rho3_vec = [1.5:0.05:7.5];
+height_vec = [0:0.0001:0.002];
 %offset_vec=[-3e-3:1e-5:3e-3];
 offset_vec = 0;
 sigma = 0.05; % sigma for huber loss
@@ -237,7 +237,7 @@ for i = 1:length(sidVec)
     
     OUTPUT_DIR = pwd;
     if saveFigBool
-        SaveFig(OUTPUT_DIR, sprintf(['subject_%s_bestFitRestivity'], num2str(i)), 'png', '-r300');
+        SaveFig(OUTPUT_DIR, sprintf(['subject_%s_bestFitRestivity_v2'], num2str(i)), 'png', '-r300');
     end
     
     
@@ -256,12 +256,14 @@ for i = 1:length(sidVec)
     
     OUTPUT_DIR = pwd;
     if saveFigBool
-        SaveFig(OUTPUT_DIR, sprintf(['subject_%s_bestFitConductivity'], num2str(i)), 'png', '-r300');
+        SaveFig(OUTPUT_DIR, sprintf(['subject_%s_bestFitConductivity_v2'], num2str(i)), 'png', '-r300');
     end
     
     
     
 end
+
+return
 
 %% plotting
 % plot
