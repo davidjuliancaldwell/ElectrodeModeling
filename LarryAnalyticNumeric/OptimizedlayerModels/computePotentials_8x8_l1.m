@@ -28,6 +28,7 @@ l1(1+48:8+48)=tp(7,1:8);
 l1(1+56:8+56)=tp(8,1:8);
 l1 = l1 + offset; 
 l1(stimChans)=NaN;
+l1(isinf(l1)) = NaN;
 
 
 end

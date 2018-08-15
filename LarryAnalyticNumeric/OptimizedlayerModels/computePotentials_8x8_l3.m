@@ -1,4 +1,4 @@
-function [l3] = computePotentials_8x8(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset)
+function [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
