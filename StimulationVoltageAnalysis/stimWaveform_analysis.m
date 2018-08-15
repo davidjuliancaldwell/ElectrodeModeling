@@ -393,7 +393,7 @@ for stimChans = stimChansVec
     end
     
     % calculate metrics of interest
-    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(dataEpoched,fs,preSamps,postSamps);
+    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(dataEpoched,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
     chanVec = [1:size(dataEpoched,2)];
     
     meanMat(stimChans,:) = nan;
@@ -493,7 +493,7 @@ end
 
 saveIt = 1;
 if saveIt
-    save('meansStds_3_28_2018.mat','meanMatAll_DBS_5e0cf','stdMatAll_DBS_5e0cf','numberStimsAll_DBS_5e0cf',...
+    save('meansStds_8_14_2018.mat','meanMatAll_DBS_5e0cf','stdMatAll_DBS_5e0cf','numberStimsAll_DBS_5e0cf',...
         'meanMatAll_DBS_b26b7','stdMatAll_DBS_b26b7','numberStimsAll_DBS_b26b7',...
         'meanMatAll_2nd5','stdMatAll_2nd5','numberStimsAll_2nd5',...
         'meanMatAll_1st7','stdMatAll_1st7','numberStimsAll_1st7',...

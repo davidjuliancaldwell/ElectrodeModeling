@@ -42,8 +42,8 @@ for chan = 1:size(waveformMatrix,2)
     channelSig = squeeze(waveformMatrix(:,chan,:));
     
     % find beginning and end of stimulation waveform
-    beginInd = find(abs(zscore(diffSig))>2,1,'first');
-    endInd = find(abs(zscore(diffSig))>2,1,'last');
+    beginInd = find(abs(zscore(diffSig))>1.5,1,'first'); % was 2 before 8.14.2018
+    endInd = find(abs(zscore(diffSig))>1.5,1,'last'); % was 2 before 8.14.2018
     
     % make sure signal "begin" isn't too close to the end
     % look after the onset of the pulse reliably should have begun to
@@ -83,7 +83,7 @@ for chan = 1:size(waveformMatrix,2)
         legend('signal','beginning','transition','end','extracted period')
         xlabel('time (ms)');
         ylabel(['Voltage (V)']);
-        title('Signal Extraction');
+        title(['Signal Extraction - channel ' num2str(chan)]);
         set(gca,'fontsize',14);
     end
     

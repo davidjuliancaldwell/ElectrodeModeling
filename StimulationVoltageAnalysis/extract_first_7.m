@@ -2,10 +2,18 @@ close all;clear all;clc
 
 Z_Constants_VoltageMonitoring
 SUB_DIR = fullfile(myGetenv('subject_dir'));
-
-for i = 2:length(SIDS)-1
+%%
+for i = 1:2
     sid = SIDS{i};
     switch sid
+        case '8adc5c'
+            tp = strcat(SUB_DIR,'\8adc5c\data\D6\8adc5c_BetaTriggeredStim');
+            block = 'Block-67';
+
+        case '0a8cf'
+            tp = strcat(SUB_DIR,'\0a80cf\data\d10\0a80cf_BetaStim\0a80cf_BetaStim');
+            block = 'BetaPhase-4';
+
         case '9ab7ab'
             tp = strcat(SUB_DIR,'\9ab7ab\data\d7\9ab7ab_BetaTriggeredStim');
             block = 'BetaPhase-3';
@@ -13,9 +21,6 @@ for i = 2:length(SIDS)-1
             tp = strcat(SUB_DIR,'\ecb43e\data\d7\BetaStim');
             block = 'BetaPhase-3';
             
-        case '8adc5c'
-            tp = strcat(SUB_DIR,'\8adc5c\data\D6\8adc5c_BetaTriggeredStim');
-            block = 'Block-67';
             
         case 'd5cd55'
             tp = strcat(SUB_DIR,'\d5cd55\data\D8\d5cd55_BetaTriggeredStim');

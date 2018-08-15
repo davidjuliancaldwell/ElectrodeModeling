@@ -36,6 +36,7 @@ l3(1+16:8+16)=thy(3,1:8);
 l3(1+24:8+24)=thy(4,1:8);
 l3 = l3 + offset;
 l3(stimChans)=NaN;
+l3(isinf(l3)) = NaN;
 
 
 end

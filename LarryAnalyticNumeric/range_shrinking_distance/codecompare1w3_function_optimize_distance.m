@@ -33,8 +33,6 @@ color3 = [ 253,192,134]/256;
 a=0.00115;
 R=0.00115;
 d=0.0035;
-sigma = 0.05; % this defines for huber loss the transition from squared
-% to linear loss behavior
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
@@ -216,42 +214,7 @@ end
 % end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% overall plot with subplots
-% 8.13.2018
-saveFigBool = true;
-
-figure;
-
-for i = 1:7
-    subplot(2,4,i)
-    
-    plot(1e3*height_vec,subject_min_rho2_vec(i,:),'o-','linewidth',2)
-    hold on;plot(1e3*height_vec,subject_min_rho3_vec(i,:),'o-','color','r','linewidth',2)
-    
-    if i ==7
-        h1 = hline(subject_min_rhoA_vec(i),'k','one layer point electrode');
-        
-    else
-        h1 = hline(subject_min_rhoA_vec(i),'k');
-        
-    end
-    h1.LineWidth = 2;
-    ylim([1 8])
-    title(['Subject ' num2str(i) ])
-    set(gca,'fontsize',16)
-    
-end
-
-xlabel('csf thickness (mm)')
-ylabel('resistivity (ohm-m)')
-legend({'gray matter','white matter'})
-
-subtitle('Resistivity of cortical layers as a function of presumed CSF thickness')
 %%
-if saveFigBool
-    SaveFig(OUTPUT_DIR, sprintf(['total_bestFitConductivity_v2'], num2str(i)), 'png', '-r300');
-end
-%% individual subject plots
 saveFigBool = true;
 
 for i = 1:length(sidVec)
