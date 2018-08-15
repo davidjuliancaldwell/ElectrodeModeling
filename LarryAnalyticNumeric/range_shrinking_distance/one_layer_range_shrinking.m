@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
-rhoA_vec=[2:0.01:6];
+rhoA_vec=[0:0.001:7];
 %offset_vec=[-3e-3:1e-5:3e-3];
 %offset_vec = [0,1];
 offset_vec = [0];
@@ -81,7 +81,7 @@ subplot(2,4,i)
 plot([1:length(subject_min_rhoA_vec{i})],fliplr(subject_min_rhoA_vec{i}))
 
 set(gca,'fontsize',14)
-ylim([2 6])
+ylim([0 7])
 title(['Subject ' num2str(i)])
 end
 xlabel('number of data points fit')

@@ -216,7 +216,7 @@ end
 % end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% overall plot with subplots
+%% overall resistivity plot with subplots
 % 8.13.2018
 saveFigBool = true;
 
@@ -247,10 +247,54 @@ ylabel('resistivity (ohm-m)')
 legend({'gray matter','white matter'})
 
 subtitle('Resistivity of cortical layers as a function of presumed CSF thickness')
+
+%%
+if saveFigBool
+    SaveFig(OUTPUT_DIR, sprintf(['total_bestFitResistivity_v2'], num2str(i)), 'png', '-r300');
+end
+
+%% overall conductivity plot with subplots
+% 8.13.2018
+saveFigBool = true;
+
+figure;
+
+for i = 1:7
+    subplot(2,4,i)
+    
+    plot(1e3*height_vec,1./subject_min_rho2_vec(i,:),'o-','linewidth',2)
+    hold on;plot(1e3*height_vec,1./subject_min_rho3_vec(i,:),'o-','color','r','linewidth',2)
+    
+    if i ==7
+        h1 = hline(1./subject_min_rhoA_vec(i),'k','one layer point electrode');
+        
+    else
+        h1 = hline(1./subject_min_rhoA_vec(i),'k');
+        
+    end
+    h1.LineWidth = 2;
+    ylim([0 1])
+    title(['Subject ' num2str(i) ])
+    set(gca,'fontsize',16)
+    
+end
+
+xlabel('csf thickness (mm)')
+ylabel('conductivity (S/m)')
+legend({'gray matter','white matter'})
+
+subtitle('Conductivity of cortical layers as a function of presumed CSF thickness')
+
+subject_min_sigA_vec = 1./subject_min_rhoA_vec;
+subject_min_sig2_vec = 1./subject_min_rho2_vec;
+subject_min_sig3_vec = 1./subject_min_rho3_vec;
+
+
 %%
 if saveFigBool
     SaveFig(OUTPUT_DIR, sprintf(['total_bestFitConductivity_v2'], num2str(i)), 'png', '-r300');
 end
+
 %% individual subject plots
 saveFigBool = true;
 

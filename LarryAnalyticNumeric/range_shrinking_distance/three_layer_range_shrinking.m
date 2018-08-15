@@ -31,15 +31,13 @@ for i = 1:length(sidVec)
     jm = jm_vec(i);
     km = km_vec(i);
     
-        if i <= 7
+    if i <= 7
         dataMeas = dataTotal_8x8(:,i);
     else
         dataMeas = dataTotal_8x4(:,i-7);
-        end
-        
-            [vals,indices,numberNonNaN] = sort_voltage_data(dataMeas);
-
+    end
     
+    [vals,indices,numberNonNaN] = sort_voltage_data(dataMeas);
     
     h = 1;
     for h1 = height_vec
@@ -57,7 +55,7 @@ for i = 1:length(sidVec)
                         if i <= 7 % 8x8 cases
                             [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
                             % c91479 was flipped l1 l3
-                if strcmp(sid,'c91479') || strcmp(sid,'ecb43e')
+                            if strcmp(sid,'c91479') || strcmp(sid,'ecb43e')
                                 l3 = -l3;
                             end
                             
@@ -65,8 +63,8 @@ for i = 1:length(sidVec)
                             [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
                         end
                         
-                      [MSE,subjectResiduals] = range_shrinking(dataMeas',l3,vals,indices,numberNonNaN);
-            cost_vec_3layer{i}{h,j,k,l,m,:} = MSE';
+                        [MSE,subjectResiduals] = range_shrinking(dataMeas',l3,vals,indices,numberNonNaN);
+                        cost_vec_3layer{i}{h,j,k,l,m,:} = MSE';
                         m = m + 1;
                         fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
                     end
@@ -79,6 +77,8 @@ for i = 1:length(sidVec)
         h = h + 1;
     end
 end
+
+save('8_15_2018_3layer_vals.mat')
 %%
 for i = 1:length(sidVec)
     for ii = 1:length(height_vec)
