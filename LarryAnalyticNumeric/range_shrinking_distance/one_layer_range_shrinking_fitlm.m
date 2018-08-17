@@ -67,3 +67,4 @@ for i=1:length(sidVec)
 end
 xlabel('number of data points fit')
 ylabel('apparent resistivity (Ohm-m)')
+subtitle('range shrinking by sorted values - fitlm, no intercept')

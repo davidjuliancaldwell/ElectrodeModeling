@@ -20,7 +20,7 @@ one_layer_range_shrinking_fitlm_larry
 one_layer_range_shrinking_fitlm_larry_data
 
 %% 3 layer constant voltage circular electrodes range shrinking
-three_layer_range_shrinking 
+%three_layer_range_shrinking 
 % 
 % %% plot range shrinking
 % 

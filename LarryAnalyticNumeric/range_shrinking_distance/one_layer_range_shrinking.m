@@ -86,3 +86,4 @@ title(['Subject ' num2str(i)])
 end
 xlabel('number of data points fit')
 ylabel('apparent resistivity (Ohm-m)')
+subtitle('one layer grid search, range shrinking by sorted values')

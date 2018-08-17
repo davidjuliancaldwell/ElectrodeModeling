@@ -4,8 +4,8 @@ MSE = zeros(numberNonNaN,1);
 subjectResiduals = zeros(numberNonNaN,64);
 
 count = 1;
-dlm=fitlm(theory,data);
-rhoA(count)=dlm.Coefficients{2,1};
+dlm=fitlm(theory,data,'intercept',false);
+rhoA(count)=dlm.Coefficients{1,1};
 
 MSE(count) = dlm.RMSE;
 count = count + 1;

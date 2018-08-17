@@ -51,10 +51,10 @@ for i = 1:length(sidVec)
                 data(j)=NaN;
             end
         end
-        dlm=fitlm(l1,data);
+        dlm=fitlm(l1,data,'intercept',false);
         OUT(:,:,k)=dlm.Coefficients{:,:};
     end
-    rhoA_vec(:,i)=squeeze(OUT(2,1,:));
+    rhoA_vec(:,i)=squeeze(OUT(1,1,:));
     
     fprintf(['complete for subject ' num2str(i) '\n']);
     
@@ -75,3 +75,4 @@ for i=1:length(sidVec)
 end
 xlabel('limit in V')
 ylabel('apparent resistivity (Ohm-m)')
+subtitle('range shrinking on data rather than theory - fitlm, no intercept')
