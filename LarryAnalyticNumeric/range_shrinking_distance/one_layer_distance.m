@@ -1,10 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
-rhoA_vec=[0:0.001:7];
-%offset_vec=[-3e-3:1e-5:3e-3];
+rhoA_vec=[1:0.001:7];
+offset_vec=[-5e-2:1e-4:5e-2];
 %offset_vec = [0,1];
-offset_vec = [0];
+%offset_vec = [0];
 cost_vec_1layer = {};
+gridSize = [8,8];
+bins = (repmat([1:7],2,1)+[0;1])';
 
 subject_min_rhoA_vec = {};
 subject_residuals = {};
@@ -28,10 +30,13 @@ for i = 1:length(sidVec)
     if i <= 8
         dataMeas = dataTotal_8x8(:,i);
     else
-        dataMeas = dataTotal_8x4(:,i-7);
+        dataMeas = dataTotal_8x4(:,i-8);
     end
     
-    [vals,indices,numberNonNaN] = sort_voltage_data(dataMeas);
+    % [distancesPosNeg] = distance_electrodes_pos_neg(stimChans,gridSize);
+    [distances] = distance_electrodes_center(stimChans,gridSize);
+    
+    %[sortedDistances,distanceIndices] = sort_distance_data(distances);
     
     % perform 1d optimization
     j = 1;
@@ -49,9 +54,10 @@ for i = 1:length(sidVec)
             else % 8x4 case
                 [l1] = computePotentials_8x4_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset);
             end
+                     
             
-            [MSE,subjectResiduals] = range_shrinking(dataMeas',l1,vals,indices,numberNonNaN);
-            cost_vec_1layer{i}{j,k,:} = MSE';
+            [MSE,subjectResiduals] = distance_selection_MSE_bins(dataMeas',l1,bins,distances,stimChans);
+            cost_vec_1layer{i}(j,k,:) = MSE';
             fprintf(['complete for subject ' num2str(i) ' rhoA = ' num2str(rhoA) ' offset = ' num2str(offset) ' \n ']);
             k = k + 1;
         end
@@ -60,16 +66,35 @@ for i = 1:length(sidVec)
     
 end
 
-%%
-for i = 1:length(sidVec)
-    cost_vec_subj = cell2mat(cost_vec_1layer{i});
-    
-    [value, index] = min(cost_vec_subj,[],1);
-    %[ind1,ind2] = ind2sub(size(cost_vec_subj),index);
-    [ind1] = ind2sub(size(cost_vec_subj),index);
-        subject_min_rhoA_vec{i} = rhoA_vec(index);
+%% find minimum apparent resistivities for different distance bins
+subject_min_rhoA_vec = {};
 
-    %subject_min_offset1l_vec(i) = offset_vec(ind2);
+for i = 1:length(sidVec)
+    
+    % if offset vector
+    if length(offset_vec)~=1
+        cost_vec_subj = cost_vec_1layer{i};
+        %cost_vec_subj = reshape(cost_vec_subj,size(bins,1),length(rhoA_vec),length(offset_vec));
+        
+        for ii = 1:size(bins,1)
+            binCost = squeeze(cost_vec_subj(:,:,ii));
+            [value, index] = min(binCost(:));
+            [ind1,ind2] = ind2sub(size(binCost),index);
+            subject_min_rhoA_vec{i}(ii) = rhoA_vec(ind1);
+        end
+        
+        % if no offset vector
+    else
+        cost_vec_subj = cost_vec_1layer{i};
+        [value, index] = min(cost_vec_subj,[],1);
+        [ind1] = ind2sub(size(cost_vec_subj),index);
+        subject_min_rhoA_vec{i} = rhoA_vec(index);
+        figure
+        plot(log(cost_vec_subj))
+        title(['subject ' num2str(i)])
+        legend
+    end
+    
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,13 +102,12 @@ end
 %%
 figure
 for i=1:length(sidVec)
-subplot(2,4,i)
-plot([1:length(subject_min_rhoA_vec{i})],fliplr(subject_min_rhoA_vec{i}))
-
-set(gca,'fontsize',14)
-ylim([0 7])
-title(['Subject ' num2str(i)])
+    subplot(2,4,i)
+    plot((bins(:,1)+bins(:,2))/2,subject_min_rhoA_vec{i})
+    set(gca,'fontsize',14)
+    ylim([0 7])
+    title(['Subject ' num2str(i)])
 end
-xlabel('number of data points fit')
+xlabel('binned values (cm) ')
 ylabel('apparent resistivity (Ohm-m)')
-subtitle('one layer grid search, range shrinking by sorted values')
+subtitle('one layer grid search, distance values binned, intercept')

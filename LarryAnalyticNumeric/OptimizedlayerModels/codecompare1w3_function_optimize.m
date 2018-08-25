@@ -1,25 +1,26 @@
-%% initialize workspace
-%clear all; close all;clc
-load('all12.mat')
-
-% define matrices to iterate over
-dataTotal_8x8 = 4.*[m0b5a2e m702d24 m7dbdec m9ab7ab mc91479 md5cd55 mecb43e];
-dataTotal_8x4 = 4.*[m2012(1,:)' m2804(1,:)' m2318(1,:)' m2219(1,:)' m2120(1,:)'];
-sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e','m2012','m2804','m2318','m2219','m2120'};
-%sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e'};
-
-currentMat = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175 0.0005 0.0005 0.0005 0.0005 0.0005] ;
-
-% GLOBAL FIT
-stimChansVec = {22 30; 13 14; 11 12; 59 60; 55 56; 54 62; 56 64; 12 20; 4 28; 18 23; 19 22; 21 20};
-
-% LOCAL FIT
-%stimChansVec = {1:40; 1:33; 1:32; 40:64; [1,33:64]; 39:64; 25:64};
-
-jp_vec = [3 2 2 8 7 7 7 3 4 3 3 3];
-kp_vec = [6 5 3 3 7 6 8 4 4 7 6 5];
-jm_vec = [4 2 2 8 7 8 8 2 1 3 3 3];
-km_vec = [6 6 4 4 8 6 8 4 4 2 3 4];
+% %% initialize workspace
+% %clear all; close all;clc
+% load('all12.mat')
+% 
+% % define matrices to iterate over
+% dataTotal_8x8 = 4.*[m0b5a2e m702d24 m7dbdec m9ab7ab mc91479 md5cd55 mecb43e];
+% dataTotal_8x4 = 4.*[m2012(1,:)' m2804(1,:)' m2318(1,:)' m2219(1,:)' m2120(1,:)'];
+% sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e','m2012','m2804','m2318','m2219','m2120'};
+% %sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e'};
+% 
+% currentMat = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175 0.0005 0.0005 0.0005 0.0005 0.0005] ;
+% 
+% % GLOBAL FIT
+% stimChansVec = {22 30; 13 14; 11 12; 59 60; 55 56; 54 62; 56 64; 12 20; 4 28; 18 23; 19 22; 21 20};
+% 
+% % LOCAL FIT
+% %stimChansVec = {1:40; 1:33; 1:32; 40:64; [1,33:64]; 39:64; 25:64};
+% 
+% jp_vec = [3 2 2 8 7 7 7 3 4 3 3 3];
+% kp_vec = [6 5 3 3 7 6 8 4 4 7 6 5];
+% jm_vec = [4 2 2 8 7 8 8 2 1 3 3 3];
+% km_vec = [6 6 4 4 8 6 8 4 4 2 3 4];
+prepare_data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % define colors for lines
@@ -55,7 +56,7 @@ for i = 1:length(sidVec)
     % select particular values for constants
     i0 = currentMat(i);
     sid = sidVec(i);
-    stimChans = stimChansVec{i};
+    stimChans = [(stimChansVec{:})];
     jp = jp_vec(i);
     kp = kp_vec(i);
     jm = jm_vec(i);
@@ -67,7 +68,7 @@ for i = 1:length(sidVec)
         % extract measured data and calculate theoretical ones
         k = 1;
         for offset = offset_vec
-            if i <= 7 % 8x8 cases
+            if i <= 8 % 8x8 cases
                 dataMeas = dataTotal_8x8(:,i);
                 [l1] = computePotentials_8x8_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset);
                 % c91479 was flipped l1 l3
@@ -152,7 +153,7 @@ for i = 1:length(sidVec)
                     for offset = offset_vec
                         [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
                         
-                        if i <= 7 % 8x8 cases
+                        if i <= 8 % 8x8 cases
                             dataMeas = dataTotal_8x8(:,i);
                             [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
                             % c91479 was flipped l1 l3
@@ -222,7 +223,7 @@ saveFigBool = true;
 
 figure;
 
-for i = 1:7
+for i = 1:8
     subplot(2,4,i)
     
     plot(1e3*height_vec,subject_min_rho2_vec(i,:),'o-','linewidth',2)
@@ -259,7 +260,7 @@ saveFigBool = true;
 
 figure;
 
-for i = 1:7
+for i = 1:8
     subplot(2,4,i)
     
     plot(1e3*height_vec,1./subject_min_rho2_vec(i,:),'o-','linewidth',2)

@@ -18,13 +18,13 @@ for i = 1:length(sidVec)
     % select particular values for constants
     i0 = currentMat(i);
     sid = sidVec(i);
-    stimChans = stimChansVec{i};
+    stimChans = [(stimChansVec{i})];
     jp = jp_vec(i);
     kp = kp_vec(i);
     jm = jm_vec(i);
     km = km_vec(i);
     
-    if i <= 7
+    if i <= 8
         dataMeas = dataTotal_8x8(:,i);
     else
         dataMeas = dataTotal_8x4(:,i-7);
@@ -36,7 +36,7 @@ for i = 1:length(sidVec)
     rhoA = 1;
     offset = 0;
     % extract measured data and calculate theoretical ones
-    if i <= 7 % 8x8 cases
+    if i <= 8 % 8x8 cases
         [l1] = computePotentials_8x8_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset);
         % c91479 was flipped l1 l3
         if strcmp(sid,'c91479') || strcmp(sid,'ecb43e')

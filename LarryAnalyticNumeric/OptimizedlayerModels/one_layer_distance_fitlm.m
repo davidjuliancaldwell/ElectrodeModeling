@@ -1,7 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% optimization for 1 layer
+rhoA_vec=[0:0.001:7];
+%offset_vec=[-3e-3:1e-5:3e-3];
+%offset_vec = [0,1];
+offset_vec = [0];
+cost_vec_1layer = {};
+gridSize = [8,8];
+bins = (repmat([1:7],2,1)+[0;1])';
 
-rhoA_vec = [];
-
+cost_vec_1layer = {};
+rhoA = 1;
+subject_min_rhoA_vec = {};
+subject_residuals = {};
 %%
 
 % loop through subjects
@@ -23,13 +33,16 @@ for i = 1:length(sidVec)
         dataMeas = dataTotal_8x4(:,i-7);
     end
     
-    [vals,indices,numberNonNaN] = sort_voltage_data(dataMeas);
+    % [distancesPosNeg] = distance_electrodes_pos_neg(stimChans,gridSize);
+    [distances] = distance_electrodes_center(stimChans,gridSize);
+    
+    %[sortedDistances,distanceIndices] = sort_distance_data(distances);
     
     % perform 1d optimization
     rhoA = 1;
     offset = 0;
     % extract measured data and calculate theoretical ones
-    if i <= 8 % 8x8 cases
+    if i <= 9 % 8x8 cases
         [l1] = computePotentials_8x8_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset);
         % c91479 was flipped l1 l3
         if strcmp(sid,'c91479') || strcmp(sid,'ecb43e')
@@ -40,24 +53,11 @@ for i = 1:length(sidVec)
         [l1] = computePotentials_8x4_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset);
     end
     
-    for k=1:100
-        thy=l1;
-        Limit=2e-4*k;
-        for j=1:64
-            if thy(j)>=Limit
-                thy(j)=NaN;
-            end
-            if thy(j)<=-Limit
-                thy(j)=NaN;
-            end
-        end
-        dlm=fitlm(thy,dataMeas,'intercept',false);
-        OUT(:,:,k)=dlm.Coefficients{:,:};
-    end
-    rhoA_vec(:,i)=squeeze(OUT(1,1,:));
+    [rhoA,MSE,subjectResiduals] = distance_selection_MSE_bins_fitlm(dataMeas,l1,bins,distances,stimChans);
     
-    fprintf(['complete for subject ' num2str(i) '\n']);
-    
+    cost_vec_1layer{i}{:} = MSE';
+    rhoA_cell{i} = rhoA;
+    fprintf(['complete for subject ' num2str(i) ' rhoA = ' num2str(rhoA) ' offset = ' num2str(offset) ' \n ']);
     
     
 end
@@ -67,12 +67,11 @@ end
 figure
 for i=1:length(sidVec)
     subplot(2,4,i)
-    plot(2e-4*(1:100),fliplr(rhoA_vec(:,i)))
-    
+    plot((bins(:,1)+bins(:,2))/2,rhoA_cell{i})
     set(gca,'fontsize',14)
     ylim([0 7])
     title(['Subject ' num2str(i)])
 end
-xlabel('limit in V')
+xlabel('binned values (cm) ')
 ylabel('apparent resistivity (Ohm-m)')
-subtitle('range shrinking by voltage - fitlm, no intercept')
+subtitle('one layer fitlm, distance binning, fitlm with intercept')

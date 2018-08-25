@@ -1,10 +1,10 @@
 close all;clear all;clc
 Z_Constants_Resistivity;
 
-%sid = input('what is the SID?\n','s');
+sid = input('what is the SID?\n','s');
 
-for i = 2:length(SIDS)-2
-    sid = SIDS{i};
+%for i = 2:length(SIDS)-2
+    %sid = SIDS{i};
     switch(sid)
         case 'd5cd55'
             stims = [54 62];
@@ -103,6 +103,7 @@ for i = 2:length(SIDS)-2
         plot(1e3*t, 1e6*ECoGDataAverage(:,i));
         
         xlim(1e3*[min(t) max(t)]);
+        xlim([0 5])
         %     yl = ylim;
         %     yl(1) = min(-10, max(yl(1),-120));
         %     yl(2) = max(10, min(yl(2),100));
@@ -165,4 +166,4 @@ for i = 2:length(SIDS)-2
     
     clearvars -except SUBJECT_DIR SIDS i META_DIR OUTPUT_DIR
     
-end
+%end
