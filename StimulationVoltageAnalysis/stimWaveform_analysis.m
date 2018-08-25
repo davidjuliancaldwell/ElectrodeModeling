@@ -11,10 +11,10 @@ figTotal = figure;
 plotIt = 1;
 
 % data for further analysis
-meanMatAll_1st7 = zeros(64,2,7);
-stdMatAll_1st7 = zeros(64,2,7);
-numberStimsAll_1st7 = zeros(7,1);
-stdEveryPoint_1st7 = {};
+meanMatAll_1st8 = zeros(64,2,8);
+stdMatAll_1st8 = zeros(64,2,8);
+numberStimsAll_1st8 = zeros(8,1);
+stdEveryPoint_1st8 = {};
 
 for i = 1:length(SIDS)
     sid = SIDS{i};
@@ -31,10 +31,10 @@ for i = 1:length(SIDS)
     stdCellEveryPoint{stimChans_subj(1)} = {nan,nan};
     stdCellEveryPoint{stimChans_subj(2)} =  {nan,nan};
     
-    meanMatAll_1st7(:,:,i) = meanMat;
-    stdMatAll_1st7(:,:,i) = stdMat;
-    numberStimsAll_1st7(i) = numberStims;
-    stdEveryPoint_1st7{i} = stdCellEveryPoint;
+    meanMatAll_1st8(:,:,i) = meanMat;
+    stdMatAll_1st8(:,:,i) = stdMat;
+    numberStimsAll_1st8(i) = numberStims;
+    stdEveryPoint_1st8{i} = stdCellEveryPoint;
     
     if plotIt
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -493,9 +493,9 @@ end
 
 saveIt = 1;
 if saveIt
-    save('meansStds_8_14_2018.mat','meanMatAll_DBS_5e0cf','stdMatAll_DBS_5e0cf','numberStimsAll_DBS_5e0cf',...
+    save('meansStds_8_25_2018.mat','meanMatAll_DBS_5e0cf','stdMatAll_DBS_5e0cf','numberStimsAll_DBS_5e0cf',...
         'meanMatAll_DBS_b26b7','stdMatAll_DBS_b26b7','numberStimsAll_DBS_b26b7',...
         'meanMatAll_2nd5','stdMatAll_2nd5','numberStimsAll_2nd5',...
-        'meanMatAll_1st7','stdMatAll_1st7','numberStimsAll_1st7',...
-        'stdEveryPoint_DBS_b26b7','stdEveryPoint_1st7','stdEveryPoint_2nd5','stdEveryPoint_DBS_b26b7');
+        'meanMatAll_1st8','stdMatAll_1st8','numberStimsAll_1st8',...
+        'stdEveryPoint_DBS_b26b7','stdEveryPoint_1st8','stdEveryPoint_2nd5','stdEveryPoint_DBS_b26b7');
 end

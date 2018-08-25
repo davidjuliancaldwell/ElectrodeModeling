@@ -1,13 +1,13 @@
-function [MSE,subjectResiduals] = range_shrinking(data,theory,vals,indices,numberNonNaN)
+function [MSE,subjectResiduals] = distance_selection_MSE(data,theory,stimChans,distancesSorted,indicesSorted)
 
-MSE = zeros(numberNonNaN,1);
-subjectResiduals = zeros(numberNonNaN,64);
+MSE = zeros(sum(~isnan(data)),1);
+subjectResiduals = zeros(sum(~isnan(data)),length(data));
 count = 1;
 MSE(count) = (nansum((data - theory).^2))/sum(~isnan(data));
     count = count + 1;
 
 
-for i=indices(~isnan(vals))'
+for i=indicesSorted(all(indicesSorted~=stimChans,2))'
     data(i) = NaN;
     
     % use MSE
@@ -16,6 +16,7 @@ for i=indices(~isnan(vals))'
     count = count + 1;
     
 end
+
 
 
 end
