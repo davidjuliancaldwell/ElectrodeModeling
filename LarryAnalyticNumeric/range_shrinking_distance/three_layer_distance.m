@@ -80,7 +80,7 @@ for i = 1:length(sidVec)
     end
 end
 
-save('8_25_2018_3layer_vals.mat')
+save('8_25_2018_3layer_vals_distance.mat')
 %%
 
 %% find minimum apparent resistivities for different distance bins

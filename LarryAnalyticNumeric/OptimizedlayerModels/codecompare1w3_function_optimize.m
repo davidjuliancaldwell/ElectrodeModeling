@@ -185,6 +185,9 @@ for i = 1:length(sidVec)
         h = h + 1;
     end
 end
+
+save('8_25_2018_3layer_vals.mat')
+
 %%
 for i = 1:length(sidVec)
     for ii = 1:length(height_vec)
