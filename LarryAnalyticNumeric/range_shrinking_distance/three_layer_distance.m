@@ -5,6 +5,7 @@ rho2_vec= [1.5:0.05:7.5];
 rho3_vec = [1.5:0.05:7.5];
 height_vec = [0:0.0001:0.002];
 offset_vec=[-5e-2:1e-3:5e-2];
+offset_vec = [0];
 %subject_residuals = zeros(length(sidVec),length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec),64);
 
 cost_vec_3layer = {};
