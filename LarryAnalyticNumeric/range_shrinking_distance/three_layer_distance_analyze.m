@@ -1,9 +1,11 @@
 %% load in data
-close all;clear all;clc
-load('8_25_2018_3layer_vals_distance.mat')
+%close all;clear all;clc
+%load('8_25_2018_3layer_vals_distance.mat')
 
 subject_min_rho2_vec = [];
 subject_min_rho3_vec = [];
+subject_min_rho1_vec = [];
+subject_min_offset_vec = [];
 
 %% find minimum apparent resistivities for different distance bins
 subject_min_rhoA_vec = {};
@@ -17,9 +19,15 @@ for i = 1:length(sidVec)
         for iii = 1:size(bins,1)
             binCost = (cost_vec_subj(ii,:,:,:,:,iii));
             [value, index] = min(binCost(:));
+            
+            % without offset, this would be 5-D, need ind5
             [ind1,ind2,ind3,ind4] = ind2sub(size(binCost),index);
             subject_min_rho2_vec(i,iii,ii) = rho2_vec(ind3);
             subject_min_rho3_vec(i,iii,ii) = rho3_vec(ind4);
+            subject_min_rho1_vec(i,iii,ii) = rho1_vec(ind2);
+            
+            % without offset, would need to change above !!
+           subject_min_offset_vec(i,iii,ii) = 0;
         end
     end
     
@@ -94,10 +102,10 @@ for i = 1:8
     kp = kp_vec(i);
     jm = jm_vec(i);
     km = km_vec(i);
-    rho1 = subject_min_rho1_vec(i);
+    rho1 = subject_min_rho2_vec(i);
     rho2 = subject_min_rho2_vec(i);
     rho3 = subject_min_rho3_vec(i);
-    offset_3l = 0;
+    offset_3l = subject_min_offset_vec(i,iii,ii);
     h1 = subject_min_h1_vec(i);
     % perform 1d optimization
     [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
