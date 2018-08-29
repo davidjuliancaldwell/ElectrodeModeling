@@ -23,7 +23,7 @@
 
 ## working directory for this job
 
-#SBATCH --workdir=gscratch/gridlab/djcald/SharedCode/ElectrodeModeling/LarryAnalyticNumeric/range_shrinking_distance
+#SBATCH --workdir=/gscratch/gridlab/djcald/SharedCode/ElectrodeModeling/LarryAnalyticNumeric/range_shrinking_distance
 
 ## turn on e mail
 #SBATCH --mail-type=ALL

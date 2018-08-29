@@ -1,5 +1,5 @@
 %% prepare work space
-close all;clear all;clc
+%close all;clear all;clc
 
 %% add everything to path that is necessary
 addpath(genpath('/gscratch/gridlab/djcald/SharedCode/ElectrodeModeling'))
