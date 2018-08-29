@@ -19,6 +19,11 @@ one_layer_distance_fitlm
 three_layer_distance
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% now interpret three layer distance
+
+three_layer_distance_analyze
+
 % below this is range shrinking
 %% one layer apparent resistivity range shrinking
 one_layer_range_shrinking
