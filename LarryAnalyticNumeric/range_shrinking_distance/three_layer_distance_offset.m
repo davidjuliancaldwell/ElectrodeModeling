@@ -1,11 +1,10 @@
 %% 3 layer
 % optimization for 3 layer
 rho1_vec = [0.55];
-rho2_vec= [1.5:0.05:7.5];
-rho3_vec = [1.5:0.05:7.5];
+rho2_vec= [1.5:0.01:7.5];
+rho3_vec = [1.5:0.01:7.5];
 height_vec = [0:0.0001:0.002];
-offset_vec=[-5e-2:1e-3:5e-2];
-offset_vec = [0];
+offset_vec_bracketed=[-1e-2:5e-4:1e-2];
 %subject_residuals = zeros(length(sidVec),length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec),64);
 
 cost_vec_3layer = {};
@@ -32,56 +31,69 @@ for i = 1:length(sidVec)
     jm = jm_vec(i);
     km = km_vec(i);
     
-    if i <= 8
-        dataMeas = dataTotal_8x8(:,i);
-    else
-        dataMeas = dataTotal_8x4(:,i-8);
-    end
+    %     if i <= 8
+    dataMeas = dataTotal_8x8(:,i);
+    %     else
+    %     dataMeas = dataTotal_8x4(:,i-8);
+    %     end
     
     [distances] = distance_electrodes_center(stimChans,gridSize);
     
-    h = 1;
-    for h1 = height_vec
+    cost_vec_temp = zeros(length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec),size(bins,1));
+    offset_vec_temp = zeros(length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec),size(bins,1));
+    offset_repped = repmat(offset_vec{i},length(offset_vec_bracketed),1) + repmat(offset_vec_bracketed,length(offset_vec{i}),1)';
+    
+    for h = 1
+        h1 = height_vec(h);
         % perform 3d optimization
-        j = 1;
-        for rho1 = rho1_vec
-            k = 1;
-            for rho2 = rho2_vec
-                l = 1;
-                for rho3 = rho3_vec
-                    m = 1;
-                    for offset = offset_vec
+        for j = 1:length(rho1_vec)
+            rho1 = rho1_vec(j);
+            
+            for k = 1:length(rho2_vec)
+                rho2 = rho2_vec(k);
+                
+                for l = 1:length(rho3_vec)
+                    rho3 = rho3_vec(l);
+                    
+                    for m = 1:length(offset_vec_bracketed)
+                        tic
+                        offset_selected = offset_repped(m,:);
                         [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
                         
-                        if i <= 8 % 8x8 cases
-                            [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
-                            % c91479 was flipped l1 l3
-                            if strcmp(sid,'c91479') || strcmp(sid,'ecb43e')
-                                l3 = -l3;
-                            end
-                            
-                        else % 8x4 case
-                            [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
+                        %                         if i <= 8 % 8x8 cases
+                        [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,0);
+                        % c91479 was flipped l1 l3
+                        if strcmp(sid,'c91479') || strcmp(sid,'ecb43e')
+                            l3 = -l3;
                         end
                         
-                        [MSE,subjectResiduals] = distance_selection_MSE_bins(dataMeas',l3,bins,distances,stimChans);
-                        cost_vec_3layer{i}(h,j,k,l,m,:) = MSE';
-                        m = m + 1;
-                  %      fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
+                        %                         else % 8x4 case
+                        %                             [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
+                        %                         end
+                        
+                        [MSE,subjectResiduals] = distance_selection_MSE_bins_offsets(dataMeas',l3,bins,distances,stimChans,offset_selected);
+                        cost_vec_temp(h,j,k,l,m,:) = MSE';
+                        offset_vec_temp(h,j,k,l,m,:) = offset_selected;
+                        
+                        %      fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
                     end
-                    l = l + 1;
+                    tic
+                    fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' \n']);
+                    toc
+                    
                 end
-                k = k + 1;
             end
-            j = j + 1;
         end
-        h = h + 1;
- fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
-
+        
+        cost_vec_subj{i} = cost_vec_temp;
+        offset_vec_subj{i} = offset_vec_temp;
+        %  fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
+        
     end
 end
 
-save('8_25_2018_3layer_vals_distance.mat')
+save('9_5_2018_3layer_vals_distance.mat')
+return
 %%
 
 %% find minimum apparent resistivities for different distance bins
@@ -113,8 +125,8 @@ figure;
 for i = 1:8
     subplot(2,4,i)
     for ii = 1:size(bins,1)
-    plot(1e3*height_vec,subject_min_rho2_vec(i,ii,:),'o-','linewidth',2)
-    hold on;plot(1e3*height_vec,subject_min_rho3_vec(i,ii,:),'o-','color','r','linewidth',2)
+        plot(1e3*height_vec,subject_min_rho2_vec(i,ii,:),'o-','linewidth',2)
+        hold on;plot(1e3*height_vec,subject_min_rho3_vec(i,ii,:),'o-','color','r','linewidth',2)
     end
     if i ==8
         h1 = hline(subject_min_rhoA_vec(i),'k','one layer point electrode');

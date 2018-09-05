@@ -1,4 +1,4 @@
-function [MSE,subjectResiduals] = distance_selection_MSE_bins(data,theory,bins,distances,stimChans)
+function [MSE,subjectResiduals] = distance_selection_MSE_bins_offsets(data,theory,bins,distances,stimChans,offsets)
 
 MSE = zeros(size(bins,1),1);
 subjectResiduals = {};
@@ -9,9 +9,11 @@ for i=bins'
     
     indicesSelect = distances>=i(1) & distances<i(2);
     dataSelect = data(indicesSelect);
+    theorySelect = theory(indicesSelect);
+    theorySelect = theorySelect + offsets(count);
     
     % use MSE
-    MSE(count) = (nansum((dataSelect - theory(indicesSelect)).^2))/sum(~isnan(dataSelect));
+    MSE(count) = (nansum((dataSelect - theorySelect).^2))/sum(~isnan(dataSelect));
     subjectResiduals{count} = dataSelect - theory(indicesSelect);
     count = count + 1;
     
