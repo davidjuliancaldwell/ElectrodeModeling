@@ -56,7 +56,7 @@ for i = 1:length(sidVec)
     % select particular values for constants
     i0 = currentMat(i);
     sid = sidVec(i);
-    stimChans = [(stimChansVec{:})];
+    stimChans = [(stimChansVec{i})];
     jp = jp_vec(i);
     kp = kp_vec(i);
     jm = jm_vec(i);
@@ -134,7 +134,7 @@ for i = 1:length(sidVec)
     % select particular values for constants
     i0 = currentMat(i);
     sid = sidVec(i);
-    stimChans = [(stimChansVec{:})];
+    stimChans = [(stimChansVec{i})];
     jp = jp_vec(i);
     kp = kp_vec(i);
     jm = jm_vec(i);
@@ -366,7 +366,7 @@ for i = 1:length(sidVec)
     % select particular values for constants
     i0 = currentMat(i);
     sid = sidVec(i);
-    stimChans = stimChansVec{i};
+    stimChans = [(stimChansVec{i})];
     jp = jp_vec(i);
     kp = kp_vec(i);
     jm = jm_vec(i);
