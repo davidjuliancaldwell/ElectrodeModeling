@@ -51,7 +51,7 @@ for i = 1:length(sidVec)
                 data(j)=NaN;
             end
         end
-        dlm=fitlm(l1,data,'intercept',false);
+        dlm=fitlm(l1,data,'intercept',true);
         OUT(:,:,k)=dlm.Coefficients{:,:};
     end
     rhoA_vec(:,i)=squeeze(OUT(1,1,:));
