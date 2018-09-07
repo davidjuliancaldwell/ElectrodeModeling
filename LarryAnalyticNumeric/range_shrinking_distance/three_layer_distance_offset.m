@@ -1,10 +1,10 @@
 %% 3 layer
 % optimization for 3 layer
 rho1_vec = [0.55];
-rho2_vec= [1.5:0.01:7.5];
-rho3_vec = [1.5:0.01:7.5];
-height_vec = [0:0.0001:0.002];
-offset_vec_bracketed=[-1e-2:5e-4:1e-2];
+rho2_vec= [1.5:0.1:7.5];
+rho3_vec = [1.5:0.1:7.5];
+height_vec = [0:0.0001:0.0015];
+offset_vec_bracketed=[-1e-2:1e-3:1e-2];
 %subject_residuals = zeros(length(sidVec),length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec),64);
 
 cost_vec_3layer = {};
@@ -26,6 +26,7 @@ for i = 1:length(sidVec)
     i0 = currentMat(i);
     sid = sidVec(i);
     stimChans = [(stimChansVec{i})];
+    stimChansDistance = stimChans(1:2);
     jp = jp_vec(i);
     kp = kp_vec(i);
     jm = jm_vec(i);
@@ -37,7 +38,7 @@ for i = 1:length(sidVec)
     %     dataMeas = dataTotal_8x4(:,i-8);
     %     end
     
-    [distances] = distance_electrodes_center(stimChans,gridSize);
+    [distances] = distance_electrodes_center(stimChansDistance,gridSize);
     
     cost_vec_temp = zeros(length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec),size(bins,1));
     offset_vec_temp = zeros(length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec),size(bins,1));
@@ -49,14 +50,13 @@ for i = 1:length(sidVec)
         for j = 1:length(rho1_vec)
             rho1 = rho1_vec(j);
             
-            for k = 1:length(rho2_vec)
+            parfor k = 1:length(rho2_vec)
                 rho2 = rho2_vec(k);
                 
                 for l = 1:length(rho3_vec)
                     rho3 = rho3_vec(l);
                     
                     for m = 1:length(offset_vec_bracketed)
-                        tic
                         offset_selected = offset_repped(m,:);
                         [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
                         
@@ -75,21 +75,19 @@ for i = 1:length(sidVec)
                         cost_vec_temp(h,j,k,l,m,:) = MSE';
                         offset_vec_temp(h,j,k,l,m,:) = offset_selected;
                         
-                        %      fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
                     end
-                    tic
-                    fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' \n']);
-                    toc
-                    
                 end
             end
+       %    fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
+            
         end
         
-        cost_vec_subj{i} = cost_vec_temp;
-        offset_vec_subj{i} = offset_vec_temp;
+       
         %  fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
         
     end
+     cost_vec_subj{i} = cost_vec_temp;
+        offset_vec_subj{i} = offset_vec_temp;
 end
 
 save('9_5_2018_3layer_vals_distance.mat')
