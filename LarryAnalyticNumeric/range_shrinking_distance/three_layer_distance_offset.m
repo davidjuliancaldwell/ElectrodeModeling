@@ -3,13 +3,10 @@
 gcp()
 % optimization for 3 layer
 rho1_vec = [0.55];
-<<<<<<< HEAD
 rho2_vec= [2.5:0.1:7.5];
 rho3_vec = [2.5:0.1:7.5];
-=======
 rho2_vec= [1.5:0.1:7.5];
 rho3_vec = [1.5:0.1:7.5];
->>>>>>> c49577c64b871d199e970bf541eb4182027fd48b
 height_vec = [0:0.0001:0.0015];
 offset_vec_bracketed=[-1e-2:1e-3:1e-2];
 %subject_residuals = zeros(length(sidVec),length(height_vec),length(rho1_vec),length(rho2_vec),length(rho3_vec),length(offset_vec),64);
@@ -64,22 +61,15 @@ for i = 1:length(sidVec)
         for j = 1:len_rho1_vec
             rho1 = rho1_vec(j);
             
-<<<<<<< HEAD
             parfor k = 1:len_rho2_vec
-=======
-            parfor k = 1:length(rho2_vec)
->>>>>>> c49577c64b871d199e970bf541eb4182027fd48b
+                
                 rho2 = rho2_vec(k);
                 
                 for l = 1:len_rho3_vec
                     rho3 = rho3_vec(l);
                     
-<<<<<<< HEAD
-                   for m = 1:len_offset_vec_bracketed
+                    for m = 1:len_offset_vec_bracketed
                         
-=======
-                    for m = 1:length(offset_vec_bracketed)
->>>>>>> c49577c64b871d199e970bf541eb4182027fd48b
                         offset_selected = offset_repped(m,:);
                         [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
                         
@@ -99,32 +89,18 @@ for i = 1:length(sidVec)
                         offset_vec_temp(h,j,k,l,m,:) = offset_selected;
                         
                     end
-<<<<<<< HEAD
                     
                 end
             end
-		    fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' \n']);
+            fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' \n']);
         end
         
         %  fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
         
     end
-       cost_vec_subj{i} = cost_vec_temp;
-       offset_vec_subj{i} = offset_vec_temp;
-=======
-                end
-            end
-       %    fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
-            
-        end
-        
-       
-        %  fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
-        
-    end
-     cost_vec_subj{i} = cost_vec_temp;
-        offset_vec_subj{i} = offset_vec_temp;
->>>>>>> c49577c64b871d199e970bf541eb4182027fd48b
+    cost_vec_subj{i} = cost_vec_temp;
+    offset_vec_subj{i} = offset_vec_temp;
+    
 end
 
 save('9_5_2018_3layer_vals_distance.mat')
