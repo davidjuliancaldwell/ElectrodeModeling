@@ -1,5 +1,5 @@
 %%
-% script to quickly analyze recorded stimulation from saline stimulation
+% script to quickly analyze recorded stimulation
 % briefly, it takes output from the "stimGeometry" TDT project, and
 % generates plots and extracts the peak voltages in the waveforms
 %
@@ -11,6 +11,7 @@
 %% initialize output and meta dir
 % clear workspace, get rid of extraneous information
 close all; clear all; clc
+saveIt = 0;
 
 % load in the datafile of interest!
 % have to have a value assigned to the file to have it wait to finish
@@ -18,7 +19,7 @@ close all; clear all; clc
 
 structureData = uiimport('-file');
 %%
-data = [structureData.ECO1.data(1:end-1,:) structureData.ECO2.data(1:end-1,:) structureData.ECO3.data];
+data = [structureData.ECO1.data structureData.ECO2.data structureData.ECO3.data];
 fsData = structureData.ECO1.info.SamplingRateHz;
 Sing = structureData.Sing;
 Stim = structureData.Stim;
@@ -27,15 +28,19 @@ clearvars structureData
 
 %%
 % ui box for input for stimulation channels
-prompt = {'how many channels did we record from? e.g 64 ', 'what were the stimulation channels? e.g 28 29 ', 'how long before each stimulation do you want to look? in ms e.g. 1', 'how long after each stimulation do you want to look? in ms e.g 5'};
+prompt = {'how many channels did we record from? e.g 64 ', 'what were the stimulation channels? e.g 28 29 ',...
+    'how long before each stimulation do you want to look? in ms e.g. 1',...
+    'how long after each stimulation do you want to look? in ms e.g 5',...
+    'what is the subject ID?'};
 dlgTitle = 'StimChans';
 numLines = 1;
-defaultans = {'112','1 15 16 23 24 65 82 83 84','1','5'};
+defaultans = {'112','1 15 16 23 24 65 82 83 84','1','5',''};
 answer = inputdlg(prompt,dlgTitle,numLines,defaultans);
 numChans = str2num(answer{1});
 stimChans = str2num(answer{2});
 preTime = str2num(answer{3});
 postTime = str2num(answer{4});
+sid = answer{5};
 preSamps = round(preTime/1000 * fsData); % pre time in sec
 postSamps = round(postTime/1000 * fsData); % post time in sec,
 
@@ -75,8 +80,8 @@ for reref = 0:0
     t = (-preSamps:postSamps)*1e3/fsData;
     
     %% plot epoched signals
-    scaling = 'y';
-    plot_unique_epochs(dataEpoched,t,uniqueLabels,labels,stimChans,scaling)
+    scaling = 'n';
+    plot_unique_epochs(dataEpoched(:,1:64,:),t,uniqueLabels,labels,stimChans,scaling)
     
     
     %% extract averages, means, and standard deviations
@@ -112,13 +117,11 @@ for reref = 0:0
     %% 2d plot
     plot_2d_heatmap(meanMatAll(1:64,:,:),64,uniqueLabels,stimChans)
     %%
-    saveIt = 1;
     if saveIt
         if reref
-            save(['salineAnalysis_' regexprep(num2str(stimChans),'  ','_','emptymatch'),'_reref'],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t','uniqueLabels')
+            save([sid '_' regexprep(num2str(stimChans),'  ','_','emptymatch'),'_reref'],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t','uniqueLabels')
         else
-            save(['salineAnalysis_' regexprep(num2str(stimChans),'  ','_','emptymatch')],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t','uniqueLabels')
-            
+            save([sid '_' regexprep(num2str(stimChans),'  ','_','emptymatch')],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t','uniqueLabels')
         end
     end
 end

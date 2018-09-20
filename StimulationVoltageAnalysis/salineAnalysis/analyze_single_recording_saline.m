@@ -76,7 +76,7 @@ for reref = 0:0
     
     %% plot epoched signals
     scaling = 'y';
-    plot_unique_epochs(dataEpoched,t,uniqueLabels,labels,stimChans,scaling)
+    plot_unique_epochs(dataEpoched(:,:,1:64),t,uniqueLabels,labels,stimChans,scaling)
     
     
     %% extract averages, means, and standard deviations

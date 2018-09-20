@@ -25,6 +25,7 @@ for i = 1:length(sidVec)
     i0 = currentMat(i);
     sid = sidVec(i);
     stimChans = [(stimChansVec{i})];
+  stimChansDistance = stimChans(1:2);
     jp = jp_vec(i);
     kp = kp_vec(i);
     jm = jm_vec(i);
@@ -37,7 +38,7 @@ for i = 1:length(sidVec)
     end
     
     % [distancesPosNeg] = distance_electrodes_pos_neg(stimChans,gridSize);
-    [distances] = distance_electrodes_center(stimChans,gridSize);
+    [distances] = distance_electrodes_center(stimChansDistance,gridSize);
     
     %[sortedDistances,distanceIndices] = sort_distance_data(distances);
     

@@ -21,7 +21,7 @@ dmode(end-1) = dmode(end);
 bursts(2,:) = find(dmode==1);
 bursts(3,:) = find(dmode==-1);
 
-singEpoched = squeeze(getEpochSignal(Sing1,(bursts(2,:)-1),(bursts(3,:))+120));
+singEpoched = squeeze(getEpochSignal(Sing1,(bursts(2,:)-1),(bursts(3,:))+60));
 t = (0:size(singEpoched,1)-1)/fs_sing;
 t = t*1e3;
 
@@ -37,8 +37,8 @@ end
 
 %% Plot stims with info from above, and find the delay!
 
-stim1stChan = Stim.data(1,:)';
-stim1Epoched = squeeze(getEpochSignal(stim1stChan,(bursts(2,:)-1),(bursts(3,:))+120));
+stim1stChan = Stim.data(:,1);
+stim1Epoched = squeeze(getEpochSignal(stim1stChan,(bursts(2,:)-1),(bursts(3,:))+60));
 
 % put around 0 
 stim1Epoched = stim1Epoched - repmat(stim1Epoched(1,:),size(stim1Epoched,1),1);
