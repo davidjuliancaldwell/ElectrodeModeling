@@ -12,7 +12,7 @@ for i=bins'
     
     % use MSE
     MSE(count) = (nansum((dataSelect - theory(indicesSelect)).^2))/sum(~isnan(dataSelect));
-    subjectResiduals{count} = data - theory;
+    subjectResiduals{count} = dataSelect - theory(indicesSelect);
     count = count + 1;
     
 end

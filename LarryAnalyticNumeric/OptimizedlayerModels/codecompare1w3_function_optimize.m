@@ -1,21 +1,21 @@
 % %% initialize workspace
 % %clear all; close all;clc
 % load('all12.mat')
-% 
+%
 % % define matrices to iterate over
 % dataTotal_8x8 = 4.*[m0b5a2e m702d24 m7dbdec m9ab7ab mc91479 md5cd55 mecb43e];
 % dataTotal_8x4 = 4.*[m2012(1,:)' m2804(1,:)' m2318(1,:)' m2219(1,:)' m2120(1,:)'];
 % sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e','m2012','m2804','m2318','m2219','m2120'};
 % %sidVec = {'0b5a2e','702d24','7dbdec','9ab7ab','c91479','d5cd55','ecb43e'};
-% 
+%
 % currentMat = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175 0.0005 0.0005 0.0005 0.0005 0.0005] ;
-% 
+%
 % % GLOBAL FIT
 % stimChansVec = {22 30; 13 14; 11 12; 59 60; 55 56; 54 62; 56 64; 12 20; 4 28; 18 23; 19 22; 21 20};
-% 
+%
 % % LOCAL FIT
 % %stimChansVec = {1:40; 1:33; 1:32; 40:64; [1,33:64]; 39:64; 25:64};
-% 
+%
 % jp_vec = [3 2 2 8 7 7 7 3 4 3 3 3];
 % kp_vec = [6 5 3 3 7 6 8 4 4 7 6 5];
 % jm_vec = [4 2 2 8 7 8 8 2 1 3 3 3];
@@ -52,7 +52,7 @@ subject_min_offset1l_vec = zeros(length(sidVec),1);
 % loop through subjects
 for i = 1:length(sidVec)
     %for i = 1
-    
+
     % select particular values for constants
     i0 = currentMat(i);
     sid = sidVec(i);
@@ -61,7 +61,7 @@ for i = 1:length(sidVec)
     kp = kp_vec(i);
     jm = jm_vec(i);
     km = km_vec(i);
-    
+
     % perform 1d optimization
     j = 1;
     for rhoA = rhoA_vec
@@ -75,25 +75,25 @@ for i = 1:length(sidVec)
                 if strcmp(sid,'c91479')
                     l1 = -l1;
                 end
-                
+
             else % 8x4 case
                 dataMeas = dataTotal_8x4(:,i-7);
                 [l1] = computePotentials_8x4_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset);
             end
-            
+
             % use a huber loss functiin
             %[h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l1,sigma);
-            
+
             % use sum sqaured
             h_loss = nansum((dataMeas' - l1).^2);
-            
+
             cost_vec_1layer(i,j,k) = h_loss;
             fprintf(['complete for subject ' num2str(i) ' rhoA = ' num2str(rhoA) ' offset = ' num2str(offset) ' \n ']);
             k = k + 1;
         end
         j = j + 1;
     end
-    
+
 end
 
 %[~,index_min] = min(cost_vec_1layer,[],2);
@@ -102,11 +102,11 @@ end
 for i = 1:length(sidVec)
     %for i = 1
     cost_vec_subj = squeeze(cost_vec_1layer(i,:,:));
-    
+
     [value, index] = min(cost_vec_subj(:));
     %[ind1,ind2] = ind2sub(size(cost_vec_subj),index);
     [ind1] = ind2sub(size(cost_vec_subj),index);
-    
+
     subject_min_rhoA_vec(i) = rhoA_vec(ind1);
     %subject_min_offset1l_vec(i) = offset_vec(ind2);
 end
@@ -130,16 +130,16 @@ cost_vec_3layer = zeros(length(sidVec),length(height_vec),length(rho1_vec),lengt
 %subject_min_offset3l_vec = zeros(length(sidVec),1);
 
 for i = 1:length(sidVec)
-    
+
     % select particular values for constants
     i0 = currentMat(i);
     sid = sidVec(i);
-    stimChans = [(stimChansVec{i})];
+stimChans =  [(stimChansVec{i,:})];
     jp = jp_vec(i);
     kp = kp_vec(i);
     jm = jm_vec(i);
     km = km_vec(i);
-    
+
     h = 1;
     for h1 = height_vec
         % perform 3d optimization
@@ -152,7 +152,7 @@ for i = 1:length(sidVec)
                     m = 1;
                     for offset = offset_vec
                         [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
-                        
+
                         if i <= 8 % 8x8 cases
                             dataMeas = dataTotal_8x8(:,i);
                             [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
@@ -160,18 +160,18 @@ for i = 1:length(sidVec)
                             if strcmp(sid,'c91479')
                                 l3 = -l3;
                             end
-                            
+
                         else % 8x4 case
                             dataMeas = dataTotal_8x4(:,i-7);
                             [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
                         end
-                        
+
                         % use huber loss
                         % [h_loss,huber_all] = huber_loss_electrodeModel(dataMeas,l3,sigma);
-                        
+
                         % use mean square loss
                         h_loss = nansum((dataMeas' - l3).^2);
-                        
+
                         cost_vec_3layer(i,h,j,k,l,m) = h_loss;
                         m = m + 1;
                         fprintf(['complete for subject ' num2str(i) ' height = ' num2str(h1) ' rho1 = ' num2str(rho1) ' rho2 = ' num2str(rho2) ' rho3 = ' num2str(rho3) ' offset = ' num2str(offset) ' \n' ]);
@@ -192,11 +192,11 @@ save('8_25_2018_3layer_vals.mat')
 for i = 1:length(sidVec)
     for ii = 1:length(height_vec)
         cost_vec_subj = squeeze(cost_vec_3layer(i,ii,:,:,:,:));
-        
+
         [value, index] = min(cost_vec_subj(:));
         [ind1,ind2] = ind2sub(size(cost_vec_subj),index);
-        
-        
+
+
         % subject_min_rho1_vec(i) = rho1_vec(ind1);
         subject_min_rho2_vec(i,ii) = rho2_vec(ind1);
         subject_min_rho3_vec(i,ii) = rho3_vec(ind2);
@@ -228,22 +228,22 @@ figure;
 
 for i = 1:8
     subplot(2,4,i)
-    
+
     plot(1e3*height_vec,subject_min_rho2_vec(i,:),'o-','linewidth',2)
     hold on;plot(1e3*height_vec,subject_min_rho3_vec(i,:),'o-','color','r','linewidth',2)
-    
+
     if i ==7
         h1 = hline(subject_min_rhoA_vec(i),'k','one layer point electrode');
-        
+
     else
         h1 = hline(subject_min_rhoA_vec(i),'k');
-        
+
     end
     h1.LineWidth = 2;
     ylim([1 8])
     title(['Subject ' num2str(i) ])
     set(gca,'fontsize',16)
-    
+
 end
 
 xlabel('csf thickness (mm)')
@@ -265,22 +265,22 @@ figure;
 
 for i = 1:8
     subplot(2,4,i)
-    
+
     plot(1e3*height_vec,1./subject_min_rho2_vec(i,:),'o-','linewidth',2)
     hold on;plot(1e3*height_vec,1./subject_min_rho3_vec(i,:),'o-','color','r','linewidth',2)
-    
+
     if i ==7
         h1 = hline(1./subject_min_rhoA_vec(i),'k','one layer point electrode');
-        
+
     else
         h1 = hline(1./subject_min_rhoA_vec(i),'k');
-        
+
     end
     h1.LineWidth = 2;
     ylim([0 1])
     title(['Subject ' num2str(i) ])
     set(gca,'fontsize',16)
-    
+
 end
 
 xlabel('csf thickness (mm)')
@@ -303,10 +303,10 @@ end
 saveFigBool = true;
 
 for i = 1:length(sidVec)
-    
+
     figure;
     set(gcf, 'position', [1.0003e+03 779.6667 732 558.6667]);
-    
+
     plot(1e3*height_vec,subject_min_rho2_vec(i,:),'o-','linewidth',2)
     hold on;plot(1e3*height_vec,subject_min_rho3_vec(i,:),'o-','color','r','linewidth',2)
     h1 = hline(subject_min_rhoA_vec(i),'k','one layer point electrode');
@@ -316,15 +316,15 @@ for i = 1:length(sidVec)
     legend({'gray matter','white matter'})
     set(gca,'fontsize',14)
     title(['Subject ' num2str(i) ' Resistivity of cortical layers as a function of CSF thickness'])
-    
-    
+
+
     OUTPUT_DIR = pwd;
     if saveFigBool
         SaveFig(OUTPUT_DIR, sprintf(['subject_%s_bestFitRestivity_v2'], num2str(i)), 'png', '-r300');
     end
-    
-    
-    
+
+
+
     figure;
     set(gcf, 'position', [1.0003e+03 779.6667 732 558.6667]);
     plot(1e3*height_vec,1./subject_min_rho2_vec(i,:),'o-','linewidth',2)
@@ -336,14 +336,14 @@ for i = 1:length(sidVec)
     legend({'gray matter','white matter'})
     set(gca,'fontsize',14)
     title(['Subject ' num2str(i) ' Conductivity of cortical layers as a function of CSF thickness'])
-    
+
     OUTPUT_DIR = pwd;
     if saveFigBool
         SaveFig(OUTPUT_DIR, sprintf(['subject_%s_bestFitConductivity_v2'], num2str(i)), 'png', '-r300');
     end
-    
-    
-    
+
+
+
 end
 
 return
@@ -361,7 +361,7 @@ l1_vec = zeros(size(dataTotal_8x8));
 l3_vec = zeros(size(dataTotal_8x8));
 
 for i = 1:length(sidVec)
-    
+
     fig_ind(i) = figure('units','normalized','outerposition',[0 0 1 1]);
     % select particular values for constants
     i0 = currentMat(i);
@@ -380,7 +380,7 @@ for i = 1:length(sidVec)
     h1 = subject_min_h1_vec(i);
     % perform 1d optimization
     [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
-    
+
     % extract measured data and calculate theoretical ones
     if i <= 7 % 8x8 cases
         dataMeas = dataTotal_8x8(:,i);
@@ -395,9 +395,9 @@ for i = 1:length(sidVec)
         dataMeas = dataTotal_8x4(:,i-7);
         [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset_3l);
         [l1] = computePotentials_8x4_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset_1l);
-        
+
     end
-    
+
     l3 = l3';
     l1 = l1';
     l1_vec(:,i) = l1;
@@ -407,17 +407,17 @@ for i = 1:length(sidVec)
     resid_l1{i} = l1-dataMeas;
     R_factor1(i) = nansum(abs(resid_l1{i}))/nansum(abs(dataMeas(~isnan(l1))));
     R_factor3(i) = nansum(abs(resid_l3{i}))/nansum(abs(dataMeas(~isnan(l1))));
-    
+
     % linear fits
     [yfit3,P3] = linearModelFit(dataMeas,l3);
     [yfit1,P1] = linearModelFit(dataMeas,l1);
-    
+
     yfit3_cell{i} = yfit3;
     yfit1_cell{i} = yfit1;
     P3_cell{i} = P3;
     P1_cell{i} = P1;
-    
-    
+
+
     % plot individual subjects for line plots
     figure(fig_ind(i));
     plot(dataMeas,'color',color1,'linewidth',2);hold on;
@@ -427,7 +427,7 @@ for i = 1:length(sidVec)
     ylabel('Voltage (V)')
     legend('measured','single layer','3 layer');
     %  legend('measured','single layer');
-    
+
     dim = [0.2 0.2 0.5 0.5];
     annotation(fig_ind(i), 'textbox', dim, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
         ['rho1 = ' num2str(subject_min_rho1_vec(i))],['rho2 = ' num2str(subject_min_rho2_vec(i))],...
@@ -443,7 +443,7 @@ for i = 1:length(sidVec)
     if saveFigBool
         SaveFig(OUTPUT_DIR, sprintf(['fit_ind_opt_subject_farAway_3l_1l%s'], char(sid)), 'png', '-r300');
     end
-    
+
     % global figure of residuals
     figure(figResid);
     subplot_resid(i) = subplot(2,4,i);
@@ -453,20 +453,20 @@ for i = 1:length(sidVec)
     plot(vectorPlot,resid_l3{i},'o','color',color2,'markerfacecolor',color2);
     hline(0)
     title(sid)
-    
-    
+
+
     % global figure of linear fits
     figure(figLinear);
     subplot_linear(i) = subplot(2,4,i);
     plot(dataMeas(~isnan(l1)),l1(~isnan(l1)),'o','color',color1,'markerfacecolor',color1);
     hold on;
     plot(l1(~isnan(l1)),yfit1,'color',color1,'linewidth',2);
-    
+
     plot(dataMeas(~isnan(l3)),l3(~isnan(l3)),'o','color',color2,'markerfacecolor',color2);
     plot(l3(~isnan(l3)),yfit3,'color',color2,'linewidth',2);
-    
+
     title(sid)
-    
+
     % global figure of linear line plots
     figure(figTotal)
     subplot_total(i) = subplot(2,4,i);
@@ -495,7 +495,7 @@ for i = 1:length(sidVec)
         ['rho3 = ' num2str(subject_min_rho3_vec(i))], ['offset 3 layer = ' num2str(subject_min_offset3l_vec(i))],...
         ['h1 = ' num2str(subject_min_h1_vec(i))]},...
         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
-    
+
     %     annotation(figTotal, 'textbox', dim{i}, 'String', {['rhoA = ' num2str(subject_min_rhoA_vec(i))],['offset 1 layer = ' num2str(subject_min_offset1l_vec(i))]...
     %         },...
     %         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
@@ -542,7 +542,7 @@ for i = 1:length(sidVec)
     annotation(figLinear, 'textbox', dim{i}, 'String', {['slope 1 layer = ' num2str(P1_cell{i}(1))],['intercept 1 layer = ' num2str(P1_cell{i}(2))],...
         ['slope 3 layer = ' num2str(P3_cell{i}(1))],['intercept 3 layer = ' num2str(P3_cell{i}(2))]},...
         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
-    
+
     %     annotation(figLinear, 'textbox', dim{i}, 'String', {['slope 1 layer = ' num2str(P1_cell{i}(1))],['intercept 1 layer = ' num2str(P1_cell{i}(2))],...
     %         },...
     %         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
@@ -559,10 +559,10 @@ figure('units','normalized','outerposition',[0 0 1 1]);
 for i = 1:length(sidVec)
     subplot_resid(i) = subplot(2,4,i);
     sid = sidVec{i};
-    
+
     cost_vec_subj = squeeze(cost_vec_1layer(i,:,:));
-    
-    
+
+
     imagesc(rhoA_vec,offset_vec,log(cost_vec_subj))
     set(gca,'Ydir','normal')
     xlabel('rhoA vec')

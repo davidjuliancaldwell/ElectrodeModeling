@@ -18,7 +18,7 @@ close all; clear all; clc
 
 structureData = uiimport('-file');
 %%
-data = [structureData.ECO1.data structureData.ECO2.data(:,1:24)];
+data = [structureData.ECO1.data(1:end-1,:) structureData.ECO2.data(1:end-1,:) structureData.ECO3.data];
 fsData = structureData.ECO1.info.SamplingRateHz;
 Sing = structureData.Sing;
 Stim = structureData.Stim;
@@ -30,7 +30,7 @@ clearvars structureData
 prompt = {'how many channels did we record from? e.g 64 ', 'what were the stimulation channels? e.g 28 29 ', 'how long before each stimulation do you want to look? in ms e.g. 1', 'how long after each stimulation do you want to look? in ms e.g 5'};
 dlgTitle = 'StimChans';
 numLines = 1;
-defaultans = {'64','1 8','1','5'};
+defaultans = {'112','1 15 16 23 24 65 82 83 84','1','5'};
 answer = inputdlg(prompt,dlgTitle,numLines,defaultans);
 numChans = str2num(answer{1});
 stimChans = str2num(answer{2});
