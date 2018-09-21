@@ -24,7 +24,6 @@ end
 
 %% overall resistivity plot with subplots
 % 8.13.2018
-saveFigBool = true;
 
 figure;
 
@@ -148,23 +147,21 @@ for i = 1:length(sidVec)
     
 end
 
-return
-
 %% plot trajectory of MSE as function of CSF thickness
 figure
 for i = 1:7
-        cost_vec_subj = squeeze(cost_vec_3layer(i,:,:,:,:,:)); 
-        cost_vec_subj = reshape(cost_vec_subj,length(height_vec),[]);
-        subplot(2,4,i)
-        plot(1e3*height_vec,squeeze(min(cost_vec_subj,[],2)),'linewidth',2)
+    cost_vec_subj = squeeze(cost_vec_3layer(i,:,:,:,:,:));
+    cost_vec_subj = reshape(cost_vec_subj,length(height_vec),[]);
+    subplot(2,4,i)
+    plot(1e3*height_vec,squeeze(min(cost_vec_subj,[],2)),'linewidth',2)
     title(['Subject ' num2str(i)])
-            
-            h1 = hline(min(cost_vec_1layer(i,:)),'k','one layer point electrode');
+    
+    h1 = hline(min(cost_vec_1layer(i,:)),'k','one layer point electrode');
     h1.LineWidth = 2;
     set(gca,'fontsize',14)
     grid on
     grid minor
-
+    
 end
 xlabel('csf thickness (mm)')
 ylabel('squared error')
@@ -173,32 +170,31 @@ set(gca,'fontsize',14)
 subtitle('Error by subject as a function of presumed CSF thickness ')
 
 %% now find global minimum for each subject
-        % subject_min_rho1_vec(i) = rho1_vec(ind1);
-        subject_min_h1_vec_global = [];
-        subject_min_rho1_vec_global(i) = [];
-        subject_min_rho2_vec_global(i) = [];
-        subject_min_rho3_vec_global(i) = [];
-        %  subject_min_offset3l_vec(i) = offset_vec(ind4);
+% subject_min_rho1_vec(i) = rho1_vec(ind1);
+subject_min_h1_vec_global = [];
+subject_min_rho1_vec_global= [];
+subject_min_rho2_vec_global = [];
+subject_min_rho3_vec_global = [];
+%  subject_min_offset3l_vec(i) = offset_vec(ind4);
 for i = 1:7
-        cost_vec_subj = cost_vec_3layer(i,:,:,:,:,:);
-        
-        [value, index] = min(cost_vec_subj(:));
-        [ind1,ind2,ind3,ind4,ind5] = ind2sub(size(cost_vec_subj),index);
-        
-        
-        % subject_min_rho1_vec(i) = rho1_vec(ind1);
-        subject_min_h1_vec_global(i) = height_vec(ind2);
-        subject_min_rho1_vec_global(i) = rho1_vec(ind3);
-        subject_min_rho2_vec_global(i) = rho2_vec(ind4);
-        subject_min_rho3_vec_global(i) = rho3_vec(ind5);
-        %  subject_min_offset3l_vec(i) = offset_vec(ind4);
-
+    cost_vec_subj = cost_vec_3layer(i,:,:,:,:,:);
+    
+    [value, index] = min(cost_vec_subj(:));
+    [ind1,ind2,ind3,ind4,ind5] = ind2sub(size(cost_vec_subj),index);
+    
+    
+    % subject_min_rho1_vec(i) = rho1_vec(ind1);
+    subject_min_h1_vec_global(i) = height_vec(ind2);
+    subject_min_rho1_vec_global(i) = rho1_vec(ind3);
+    subject_min_rho2_vec_global(i) = rho2_vec(ind4);
+    subject_min_rho3_vec_global(i) = rho3_vec(ind5);
+    %  subject_min_offset3l_vec(i) = offset_vec(ind4);
+    
 end
 
 %% plotting
 % plot
 
-saveFigBool = false;
 % setup global figure
 figTotal = figure('units','normalized','outerposition',[0 0 1 1]);
 figResid = figure('units','normalized','outerposition',[0 0 1 1]);

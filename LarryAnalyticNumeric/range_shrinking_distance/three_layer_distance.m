@@ -22,7 +22,7 @@ bins = (repmat([1:7],2,1)+[0;1])';
 %subject_min_offset3l_vec = zeros(length(sidVec),1);
 %%
 for i = 1:length(sidVec)
-    
+
     % select particular values for constants
     i0 = currentMat(i);
     sid = sidVec(i);
@@ -31,15 +31,15 @@ for i = 1:length(sidVec)
     kp = kp_vec(i);
     jm = jm_vec(i);
     km = km_vec(i);
-    
+
     if i <= 8
         dataMeas = dataTotal_8x8(:,i);
     else
         dataMeas = dataTotal_8x4(:,i-8);
     end
-    
+
     [distances] = distance_electrodes_center(stimChans,gridSize);
-    
+
     h = 1;
     for h1 = height_vec
         % perform 3d optimization
@@ -52,18 +52,18 @@ for i = 1:length(sidVec)
                     m = 1;
                     for offset = offset_vec
                         [alpha,beta,eh1,eh2,ed,step,scale] = defineConstants(i0,a,R,rho1,rho2,rho3,d,h1);
-                        
+
                         if i <= 8 % 8x8 cases
                             [l3] = computePotentials_8x8_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
                             % c91479 was flipped l1 l3
                             if strcmp(sid,'c91479') || strcmp(sid,'ecb43e')
                                 l3 = -l3;
                             end
-                            
+
                         else % 8x4 case
                             [l3] = computePotentials_8x4_l3(jp,kp,jm,km,alpha,beta,eh1,eh2,step,ed,scale,a,stimChans,offset);
                         end
-                        
+
                         [MSE,subjectResiduals] = distance_selection_MSE_bins(dataMeas',l3,bins,distances,stimChans);
                         cost_vec_3layer{i}(h,j,k,l,m,:) = MSE';
                         m = m + 1;
@@ -92,7 +92,7 @@ for i = 1:length(sidVec)
         % if offset vector
         cost_vec_subj = cost_vec_3layer{i};
         %cost_vec_subj = reshape(cost_vec_subj,size(bins,1),length(rhoA_vec),length(offset_vec));
-        
+
         for iii = 1:size(bins,1)
             binCost = squeeze(cost_vec_subj(:,:,:,:,:,iii));
             [value, index] = min(binCost(:));
@@ -101,7 +101,7 @@ for i = 1:length(sidVec)
             subject_min_rho3_vec(i,iii,ii) = rho3_vec(ind2);
         end
     end
-    
+
 end
 
 %% overall resistivity plot with subplots
@@ -118,16 +118,16 @@ for i = 1:8
     end
     if i ==8
         h1 = hline(subject_min_rhoA_vec(i),'k','one layer point electrode');
-        
+
     else
         h1 = hline(subject_min_rhoA_vec(i),'k');
-        
+
     end
     h1.LineWidth = 2;
     ylim([1 8])
     title(['Subject ' num2str(i) ])
     set(gca,'fontsize',16)
-    
+
 end
 
 xlabel('csf thickness (mm)')
@@ -144,11 +144,11 @@ end
 for i = 1:length(sidVec)
     for ii = 1:length(height_vec)
         cost_vec_subj = squeeze(cost_vec_3layer(i,ii,:,:,:,:));
-        
+
         [value, index] = min(cost_vec_subj(:));
         [ind1,ind2] = ind2sub(size(cost_vec_subj),index);
-        
-        
+
+
         % subject_min_rho1_vec(i) = rho1_vec(ind1);
         subject_min_rho2_vec(i,ii) = rho2_vec(ind1);
         subject_min_rho3_vec(i,ii) = rho3_vec(ind2);
