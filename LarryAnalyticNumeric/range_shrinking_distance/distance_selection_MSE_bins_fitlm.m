@@ -1,6 +1,7 @@
-function [rhoA,MSE,subjectResiduals,offset] = distance_selection_MSE_bins_fitlm(data,theory,bins,distances,stimChans)
+function [rhoA,MSE,subjectResiduals,offset,bestVals] = distance_selection_MSE_bins_fitlm(data,theory,bins,distances,stimChans)
 
 MSE = zeros(size(bins,1),1);
+bestVals = nan(size(distances,1),1);
 subjectResiduals = {};
 
 count = 1;
@@ -24,6 +25,8 @@ for i=bins'
             offset(count) = dlm.Coefficients{1,1};
         end
         MSE(count) = dlm.RMSE;
+        bestVals(indicesSelect) = dlm.Fitted;
+
     else
         
         rhoA(count) = nan;

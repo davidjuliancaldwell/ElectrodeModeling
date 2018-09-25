@@ -92,7 +92,6 @@ end
 
 save('9_5_2018_3layer_vals_distance.mat')
 return
-%%
 
 %% find minimum apparent resistivities for different distance bins
 subject_min_rhoA_vec = {};
