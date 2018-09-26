@@ -19,7 +19,7 @@ currentMat = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175 0.002...
 
 % GLOBAL FIT including "bad Channels
 % stimulation channels as a linear index 
-stimChansVecOnly = {22 30; 13 14; 11 12; 59 60; 55 56; 54 62; 56 64; 28 27;...
+stimChansVecOnly = {22 30; 13 14; 11 12; 59 60; 56 55; 54 62; 64 56; 28 27;...
     12 20; 4 28; 18 23; 19 22; 21 20};
 
 stimChansVec = {};
@@ -36,15 +36,23 @@ stimChansVec{8} = [[stimChansVecOnly{8,:}] 49:64];
 %stimChansVec = {1:40; 1:33; 1:32; 40:64; [1,33:64]; 39:64; 25:64};
 
 % stimulation electrode locations, each column is a subject 
-jp_vec = [3 2 2 8 7 7 7 4 ...
+jp_vec = [3 2 2 8 7 7 8 4 ...
     3 4 3 3 3];
-kp_vec = [6 5 3 3 7 6 8 3 ...
+kp_vec = [6 5 3 3 8 6 8 3 ...
     4 4 7 6 5];
-jm_vec = [4 2 2 8 7 8 8 4 ...
+jm_vec = [4 2 2 8 7 8 7 4 ...
     2 1 3 3 3];
-km_vec = [6 6 4 4 8 6 8 4 ...
+km_vec = [6 6 4 4 7 6 8 4 ...
     4 4 2 3 4];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+stimChansIndices = [jp_vec; kp_vec; jm_vec; km_vec];
+
+numSubjs = 7;
+dataSelect = 4.*squeeze(meanMatAll_1st8(:,1,1:numSubjs));
+
+gridData = nan(15,15,numSubjs);
+mid = 8;
 
 % define colors for lines
 

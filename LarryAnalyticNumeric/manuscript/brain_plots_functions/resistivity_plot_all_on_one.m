@@ -50,7 +50,7 @@ for sid = SIDS
     
     weights = [1 -1];
     map = [.2 1 0; 1 1 1; 1 0 1];
-    
+    map = [0.5 0.5 1; 1 1 1; 1 0.5 0.5];
     locs = locs(stims,:);
     clims = [-1 1]; % we want the color limits to be the same for all sets of dots
     

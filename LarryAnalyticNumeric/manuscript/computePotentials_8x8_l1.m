@@ -1,4 +1,4 @@
-function [l1] = computePotentials_8x8_l1(jp,kp,jm,km,rhoA,i0,stimChans,offset)
+function [l1] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChans,offset,,jLength,kLength)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
