@@ -84,5 +84,5 @@ end
 leg = legend([objhl(stims(1)),objhl(stims(2))],...
     {['positive stimulation electrode '],['negative stimulation electrode']});
 
-s
+
 

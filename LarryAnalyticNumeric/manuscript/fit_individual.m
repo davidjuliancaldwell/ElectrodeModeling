@@ -8,21 +8,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
 
-cost_vec_1layer = {};
 gridSize = [8,8];
 bins = (repmat([1:7],2,1)+[0;1])';
+rhoAcalc = 1;
+offset = 0;
 
-cost_vec_1layer = {};
-rhoA = 1;
-subject_min_rhoA_vec = {};
-subject_residuals = {};
-
+costVec1layer = [];
+subject_residuals = [];
+rhoAOutput = [];
 jLength = 8;
 kLength = 8;
 %%
 for i = 1:numSubjs
     
     % select particular values for constants
+    dataInt = dataSelect(:,i);
     i0 = currentMat(i);
     sid = sidVec(i);
     stimChans = [(stimChansVec{i})];
@@ -35,24 +35,75 @@ for i = 1:numSubjs
     % [distancesPosNeg] = distance_electrodes_pos_neg(stimChans,gridSize);
     [distances] = distance_electrodes_center(stimChansDistance,gridSize);
     
-    
     % perform 1d optimization
-    rhoA = 1;
-    offset = 0;
     % extract measured data and calculate theoretical ones
     
-    [l1] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChans,offset,jLength,kLength);
+    [l1] = computePotentials_1layer(jp,kp,jm,km,rhoAcalc,i0,stimChans,offset,jLength,kLength);
     % c91479 was flipped l1 l3
     
-    [rhoA,MSE,subjectResiduals,offset] = distance_selection_MSE_bins_fitlm(dataMeas,l1,bins,distances,stimChans);
+    [rhoAoutput,MSE,subjectResiduals,offsetOutput,fitVals] = distance_selection_MSE_bins_fitlm(dataInt,l1,bins,distances,stimChans);
     
-    cost_vec_1layer{i}{:} = MSE';
-    rhoA_cell{i} = rhoA;
-    offset_vec{i} = offset;
-    fprintf(['complete for subject ' num2str(i) ' rhoA = ' num2str(rhoA) ' offset = ' num2str(offset) ' \n ']);
+    fitValsVec(:,i) = fitVals; 
+    
+    costVec1layer(i,:) = MSE;
+    rhoAVec(i,:) = rhoAoutput;
+    offsetVec = offsetOutput;
+    fprintf(['complete for subject ' num2str(i) ' rhoA = ' num2str(rhoAoutput) ' offset = ' num2str(offsetOutput) ' \n ']);
     
     
 end
 
+%% plot
 
+if plotIt
+    
+    figure
+    plot(rhoAVec','-o','linewidth',2)
+    legend({'1','2','3','4','5','6','7','8'})
+    xlabel('bin')
+    ylabel('rhoA (ohm-m)')
+    title('one layer apparent resistivity by subject and bin')
+    set(gca,'fontsize',18)
+    
+end
+
+%%
+
+if plotIt
+    
+    figure
+    
+    for i = 1:numSubjs
+        
+        subplot(2,4,i)
+        plot(rhoAVec(i,:),'-o','linewidth',2)
+        
+        title(['subject ' num2str(i)])
+        set(gca,'fontsize',18)
+        ylim([0 5])
+    end
+    xlabel('bin')
+    ylabel('rhoA (ohm-m)')
+    
+end
+
+%% if plotit
+if plotIt
+    
+    figure
+    
+    for i = 1:numSubjs
+        
+        subplot(2,4,i)
+        plot(dataSelect(:,i),'linewidth',2)
+             hold on
+        plot(fitValsVec(:,i),'linewidth',2)
+        plot(bestVals(:,i),'linewidth',2)
+        title(['subject ' num2str(i)])
+        set(gca,'fontsize',18)
+    end
+    ylabel('voltage (V)')
+    legend({'data','binned best fits','global best fits'})
+    
+end
 

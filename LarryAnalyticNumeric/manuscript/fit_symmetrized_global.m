@@ -7,9 +7,9 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
+dataInt = dataInt(:);
 
 cost_vec_1layer = [];
-gridSize = [8,8];
 rhoA = 1;
 cost_vec_1layer = [];
 rhoAcalc = 1;
@@ -18,11 +18,12 @@ subject_residuals = [];
 
 jLength = 15;
 kLength = 15;
+gridSize = [jLength,kLength];
+
 %%
 
-dataInt = gridDataAvg(:);
 % select particular values for constants
-i0 = 1e3;
+i0 = 1;
 stimChansSym(1) = sub2ind([jLength,kLength],8,8);
 stimChansSym(2) = sub2ind([jLength,kLength],8,9);
 
@@ -43,28 +44,27 @@ intercept = true;
 if ~isempty(dataInt)
     if ~intercept
         dlm=fitlm(l1,dataInt,'intercept',false);
-        rhoACalcSymSym(i)=dlm.Coefficients{1,1};
-        offsetSym(i) = 0;
+        rhoACalcSym =dlm.Coefficients{1,1};
+        offsetSym = 0;
     else
         dlm=fitlm(l1,dataInt);
         
-        rhoACalcSymSym(i)=dlm.Coefficients{2,1};
-        offsetSym(i) = dlm.Coefficients{1,1};
+        rhoACalcSym=dlm.Coefficients{2,1};
+        offsetSym = dlm.Coefficients{1,1};
     end
-    MSESym(i) = dlm.RMSE;
-    bestValsSym(:,i) = dlm.Fitted;
+    MSESym = dlm.RMSE;
+    fitValsSymVec = dlm.Fitted;
     
 else
     
-    rhoACalcSymSym(i) = nan;
-    MSESym(i) = nan;
-    offsetSym(i) = nan;
+    rhoACalcSym = nan;
+    MSESym = nan;
+    offsetSym = nan;
 end
 
 
-fprintf(['complete for symmetric  rhoA ='  num2str(rhoACalc(i)) ' offsetSym = ' num2str(offset(i)) ' \n ']);
-
-
+fprintf(['complete for symmetric  rhoA ='  num2str(rhoACalcSym) ' offsetSym = ' num2str(offsetSym) ' \n ']);
+%%
 
 
 

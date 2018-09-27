@@ -48,36 +48,31 @@ for index = 1:numSubjs
         case 3
             rotateDirect = 1;
             adjustNeg = [1 -1];
-            
         case 4
             rotateDirect = 1;
             adjustNeg = [1 -1];
-            
         case 5
             rotateDirect = 3;
             adjustNeg = [1 1];
-            
         case 6
             rotateDirect = 0;
             adjustNeg = [0 0];
-            
         case 7
             rotateDirect =  2;
             adjustNeg = [2 0];
-            
     end
     % rotate data
     
-    gridData(:,:,index) = 1e3*rot90(gridData(:,:,index),rotateDirect);
+    gridData(:,:,index) = rot90(gridData(:,:,index),rotateDirect);
     
     tempGrid = gridData(:,:,index);
-    tempGridLog = log(abs(tempGrid));
+    tempGridLog = log(abs(1e3*tempGrid));
     tempGridLog(tempGrid>0) = 1*tempGridLog(tempGrid>0);
     tempGridLog(tempGrid<0) = -1*tempGridLog(tempGrid<0);
     gridDataLog(:,:,index) = tempGridLog;
     
     if plotIt
-        figind;
+        figure(figind);
         subplot(2,4,index)
         imAlpha=ones(size(gridData(:,:,index)));
         imAlpha(isnan(gridData(:,:,index)))=0;
@@ -92,9 +87,11 @@ for index = 1:numSubjs
         set(gca,'xticklabel',[])
         set(gca,'ytick',[])
         set(gca,'yticklabel',[])
+        set(gca,'fontsize',18)
+        
         title(['subject ' num2str(index) ' aligned'])
         
-        figindLog
+        figure(figindLog)
         subplot(2,4,index)
         imAlpha=ones(size(gridData(:,:,index)));
         imAlpha(isnan(gridData(:,:,index)))=0;
@@ -110,13 +107,16 @@ for index = 1:numSubjs
         set(gca,'xticklabel',[])
         set(gca,'ytick',[])
         set(gca,'yticklabel',[])
+        set(gca,'fontsize',18)
+        
         title(['subject ' num2str(index) ' aligned'])
     end
 end
+
 if plotIt
-    figind
+    figure(figind)
     cbar = colorbar();
-    cbar.Label.String = 'Recorded Voltage/Stimulation Current';
+    cbar.Label.String = 'V/I';
     caxis([-max(abs(gridData(:))), max(abs(gridData(:)))])
     
     colormap(cmap)
@@ -124,9 +124,9 @@ if plotIt
         SaveFig(workingDirec,'individual','png','-r600');
     end
     
-    figindLog
+    figure(figindLog)
     cbar = colorbar();
-    cbar.Label.String = 'log(abs(Recorded Voltage/Stimulation Current)';
+    cbar.Label.String = '+/- log(abs(1e3 * V/I)';
     caxis([-max(abs(gridDataLog(:))), max(abs(gridDataLog(:)))])
     
     colormap(cmap)
@@ -150,7 +150,7 @@ if plotIt
     imAlpha(isnan(gridDataAvg))=0;
     figure
     imagesc(gridDataAvg,'AlphaData',imAlpha,[-max(abs(gridDataAvg(:))), max(abs(gridDataAvg(:)))])
-    set(gca,'color',1*[0.5 0.5 0.5]);
+    set(gca,'color',1*[0.7 0.7 0.7]);
     
     textStrings = {'+','-'};  %# Create strings from the matrix values
     textStrings = strtrim(cellstr(textStrings));  %# Remove any space padding
@@ -162,9 +162,11 @@ if plotIt
     set(gca,'xticklabel',[])
     set(gca,'ytick',[])
     set(gca,'yticklabel',[])
+    set(gca,'fontsize',18)
+    
     title('averaged - no symmetry')
     cbar = colorbar();
-    cbar.Label.String = 'Recorded Voltage/Stimulation Current';
+    cbar.Label.String = 'V/I';
     caxis([-max(abs(gridDataAvg(:))), max(abs(gridDataAvg(:)))])
     colormap(cmap)
     
@@ -174,7 +176,7 @@ if plotIt
 end
 
 % take average, no symmetry
-gridDataAvgLog = log(abs(gridDataAvg));
+gridDataAvgLog = log(abs(1e3*gridDataAvg));
 gridDataAvgLog(gridDataAvg>0) = 1*gridDataAvgLog(gridDataAvg>0);
 gridDataAvgLog(gridDataAvg<0) = -1*gridDataAvgLog(gridDataAvg<0);
 
@@ -183,7 +185,7 @@ if plotIt
     imAlpha(isnan(gridDataAvg))=0;
     figure
     imagesc(gridDataAvgLog,'AlphaData',imAlpha,[-max(abs(gridDataAvgLog(:))), max(abs(gridDataAvgLog(:)))])
-    set(gca,'color',1*[0.5 0.5 0.5]);
+    set(gca,'color',1*[0.7 0.7 0.7]);
     
     textStrings = {'+','-'};  %# Create strings from the matrix values
     textStrings = strtrim(cellstr(textStrings));  %# Remove any space padding
@@ -195,9 +197,11 @@ if plotIt
     set(gca,'xticklabel',[])
     set(gca,'ytick',[])
     set(gca,'yticklabel',[])
+    set(gca,'fontsize',18)
+    
     title('averaged - no symmetry')
     cbar = colorbar();
-    cbar.Label.String = 'log(abs(Recorded Voltage/Stimulation Current)';
+    cbar.Label.String = '+/- log(abs(1e3 * V/I)';
     caxis([-max(abs(gridDataAvgLog(:))), max(abs(gridDataAvgLog(:)))])
     colormap(cmap)
     
@@ -211,7 +215,7 @@ end
 gridDataExpandLR = cat(2,gridData,nan(15,1,numSubjs));
 gridDataLRavg =  nanmean(cat(3,-fliplr(gridDataExpandLR),gridDataExpandLR),3);
 % now shrink
-gridDataLRavg = gridDataLRavg(1:end-1,1:end-1,:);
+gridDataLRavg = gridDataLRavg(:,1:end-1,:);
 
 if plotIt
     imAlpha=ones(size(gridDataLRavg));
@@ -219,7 +223,7 @@ if plotIt
     
     figure
     imagesc(gridDataLRavg,'AlphaData',imAlpha,[-max(abs(gridDataLRavg(:))), max(abs(gridDataLRavg(:)))])
-    set(gca,'color',1*[0.5 0.5 0.5]);
+    set(gca,'color',1*[0.7 0.7 0.7]);
     
     textStrings = {'+','-'};  %# Create strings from the matrix values
     textStrings = strtrim(cellstr(textStrings));  %# Remove any space padding
@@ -230,10 +234,12 @@ if plotIt
     set(gca,'xticklabel',[])
     set(gca,'ytick',[])
     set(gca,'yticklabel',[])
+    set(gca,'fontsize',18)
+    
     title('averaged - LR symmetry')
     colormap(cmap)
     cbar = colorbar();
-    cbar.Label.String = 'Recorded Voltage/Stimulation Current';
+    cbar.Label.String = 'V/I';
     caxis([-max(abs(gridDataLRavg(:))), max(abs(gridDataLRavg(:)))])
     
     if saveIt
@@ -241,7 +247,7 @@ if plotIt
     end
 end
 
-gridDataLRavgLog = log(abs(gridDataLRavg));
+gridDataLRavgLog = log(abs(1e3*gridDataLRavg));
 gridDataLRavgLog(gridDataLRavg>0) = 1*gridDataLRavgLog(gridDataLRavg>0);
 gridDataLRavgLog(gridDataLRavg<0) = -1*gridDataLRavgLog(gridDataLRavg<0);
 
@@ -249,7 +255,7 @@ if plotIt
     figure
     
     imagesc(gridDataLRavgLog,'AlphaData',imAlpha,[-max(abs(gridDataLRavg(:))), max(abs(gridDataLRavg(:)))])
-    set(gca,'color',1*[0.5 0.5 0.5]);
+    set(gca,'color',1*[0.7 0.7 0.7]);
     
     textStrings = {'+','-'};  %# Create strings from the matrix values
     textStrings = strtrim(cellstr(textStrings));  %# Remove any space padding
@@ -260,10 +266,12 @@ if plotIt
     set(gca,'xticklabel',[])
     set(gca,'ytick',[])
     set(gca,'yticklabel',[])
+    set(gca,'fontsize',18)
+    
     title('averaged - LR symmetry')
     colormap(cmap)
     cbar = colorbar();
-    cbar.Label.String = 'log(abs(Recorded Voltage/Stimulation Current)';
+    cbar.Label.String = '+/- log(abs(1e3 * V/I)';
     caxis([-max(abs(gridDataLRavgLog(:))), max(abs(gridDataLRavgLog(:)))])
     
     if saveIt
@@ -282,7 +290,7 @@ if plotIt
     
     figure
     imagesc(gridDataUDavg,'AlphaData',imAlpha,[-max(abs(gridDataUDavg(:))), max(abs(gridDataUDavg(:)))])
-    set(gca,'color',1*[0.5 0.5 0.5]);
+    set(gca,'color',1*[0.7 0.7 0.7]);
     
     textStrings = {'+','-'};  %# Create strings from the matrix values
     textStrings = strtrim(cellstr(textStrings));  %# Remove any space padding
@@ -293,10 +301,12 @@ if plotIt
     set(gca,'xticklabel',[])
     set(gca,'ytick',[])
     set(gca,'yticklabel',[])
+    set(gca,'fontsize',18)
+    
     title('averaged - UD symmetry ')
     colormap(cmap)
     cbar = colorbar();
-    cbar.Label.String = 'Recorded Voltage/Stimulation Current';
+    cbar.Label.String = 'V/I';
     caxis([-max(abs(gridDataUDavg(:))), max(abs(gridDataUDavg(:)))])
     
     
@@ -305,14 +315,14 @@ if plotIt
     end
 end
 
-gridDataUDavgLog = log(abs(gridDataUDavg));
+gridDataUDavgLog = log(abs(1e3*gridDataUDavg));
 gridDataUDavgLog(gridDataUDavg>0) = 1*gridDataUDavgLog(gridDataUDavg>0);
 gridDataUDavgLog(gridDataUDavg<0) = -1*gridDataUDavgLog(gridDataUDavg<0);
 
 if plotIt
     figure
     imagesc(gridDataUDavgLog,'AlphaData',imAlpha,[-max(abs(gridDataUDavg(:))), max(abs(gridDataUDavg(:)))])
-    set(gca,'color',1*[0.5 0.5 0.5]);
+    set(gca,'color',1*[0.7 0.7 0.7]);
     
     textStrings = {'+','-'};  %# Create strings from the matrix values
     textStrings = strtrim(cellstr(textStrings));  %# Remove any space padding
@@ -323,10 +333,12 @@ if plotIt
     set(gca,'xticklabel',[])
     set(gca,'ytick',[])
     set(gca,'yticklabel',[])
+    set(gca,'fontsize',18)
+    
     title('averaged - UD symmetry ')
     colormap(cmap)
     cbar = colorbar();
-    cbar.Label.String = 'log(abs(Recorded Voltage/Stimulation Current)';
+    cbar.Label.String = '+/- log(abs(1e3 * V/I)';
     caxis([-max(abs(gridDataUDavgLog(:))), max(abs(gridDataUDavgLog(:)))])
     
     if saveIt
@@ -342,7 +354,7 @@ gridDataLRUD = cat(3,gridDataExpandLR,-fliplr(gridDataExpandLR),gridDataExpandUD
 %average
 gridDataLRUDavg = nanmean(gridDataLRUD,3);
 % now shrink
-gridDataLRUDavg = gridDataLRUDavg(1:end-1,1:end-1,:);
+gridDataLRUDavg = gridDataLRUDavg(:,1:end-1,:);
 
 if plotIt
     imAlpha=ones(size(gridDataLRUDavg));
@@ -350,11 +362,11 @@ if plotIt
     
     figure
     imagesc(gridDataLRUDavg,'AlphaData',imAlpha,[-max(abs(gridDataLRUDavg(:))), max(abs(gridDataLRUDavg(:)))])
-    set(gca,'color',1*[0.5 0.5 0.5]);
+    set(gca,'color',1*[0.7 0.7 0.7]);
     
     colormap(cmap)
     cbar = colorbar();
-    cbar.Label.String = 'Recorded Voltage/Stimulation Current';
+    cbar.Label.String = 'V/I';
     caxis([-max(abs(gridDataLRUDavg(:))), max(abs(gridDataLRUDavg(:)))])
     
     textStrings = {'+','-'};  %# Create strings from the matrix values
@@ -367,6 +379,7 @@ if plotIt
     set(gca,'xticklabel',[])
     set(gca,'ytick',[])
     set(gca,'yticklabel',[])
+    set(gca,'fontsize',18)
     
     title('averaged - LRUD symmetry')
     if saveIt
@@ -374,7 +387,7 @@ if plotIt
     end
 end
 
-gridDataLRUDavgLog = log(abs(gridDataLRUDavg));
+gridDataLRUDavgLog = log(abs(1e3*gridDataLRUDavg));
 gridDataLRUDavgLog(gridDataLRUDavg>0) = 1*gridDataLRUDavgLog(gridDataLRUDavg>0);
 gridDataLRUDavgLog(gridDataLRUDavg<0) = -1*gridDataLRUDavgLog(gridDataLRUDavg<0);
 
@@ -382,12 +395,12 @@ if plotIt
     
     figure
     imagesc(gridDataLRUDavgLog,'AlphaData',imAlpha,[-max(abs(gridDataLRUDavgLog(:))), max(abs(gridDataLRUDavgLog(:)))])
-    set(gca,'color',1*[0.5 0.5 0.5]);
+    set(gca,'color',1*[0.7 0.7 0.7]);
     
     
     colormap(cmap)
     cbar = colorbar();
-    cbar.Label.String = 'log(abs(Recorded Voltage/Stimulation Current)';
+    cbar.Label.String = '+/- log(abs(1e3 * V/I)';
     caxis([-max(abs(gridDataLRUDavgLog(:))), max(abs(gridDataLRUDavgLog(:)))])
     
     textStrings = {'+','-'};  %# Create strings from the matrix values
@@ -400,7 +413,7 @@ if plotIt
     set(gca,'xticklabel',[])
     set(gca,'ytick',[])
     set(gca,'yticklabel',[])
-    
+    set(gca,'fontsize',18)
     title('averaged - LRUD symmetry')
     if saveIt
         SaveFig(workingDirec,'averageLRUDsym','png','-r600');
