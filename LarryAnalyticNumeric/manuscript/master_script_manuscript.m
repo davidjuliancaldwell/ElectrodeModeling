@@ -20,10 +20,13 @@ four_point_histograms_individual
 four_point_histograms_symmetrized 
 
 %% fit the individual data
+fit_individual_global
+
+%% 
 fit_individual
 
 %% fit the combined data
-fit_symmetrized
+fit_symmetrized_global 
 
 
 

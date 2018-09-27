@@ -1,7 +1,3 @@
-%% script to fit individual data
-%
-% David.J.Caldwell
-
 %% fitlm by bins
 % David.J.Caldwell 9.5.2018
 

@@ -2,6 +2,8 @@ function [l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChans,offset
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 
+tp = nan(jLength,kLength);
+
 for j=1:jLength
     for k=1:kLength
         dxp=j-jp;
@@ -12,12 +14,14 @@ for j=1:jLength
         dm=sqrt(dxm^2+dym^2);
         
         % Calculate voltages for 1-layer point-electrodes
-        %rhoA=0.7;
         scaleA=(i0*rhoA)/(2*pi);
         tp(j,k)=scaleA*((100/dp)-(100/dm));
     end
 end
-% 
+
+tp = tp';
+l1 = tp(:);
+
 % l1(1:8)=tp(1,1:8);
 % l1(1+8:8+8)=tp(2,1:8);
 % l1(1+16:8+16)=tp(3,1:8);

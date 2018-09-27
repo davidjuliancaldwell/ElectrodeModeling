@@ -1,6 +1,9 @@
 jLength = 8;
 kLength = 8;
 numChans = jLength*kLength;
+rho1_mean = [];
+rho1_std = [];
+rho1_median = [];
 
 for index = 1:numSubjs
     channelSelect = logical(zeros(numChans,1));
@@ -10,9 +13,12 @@ for index = 1:numSubjs
     
     rho1 = four_point_histogram_calculation(stimChansIndices(1,index),stimChansIndices(2,index),...
         stimChansIndices(3,index),stimChansIndices(4,index),currentMat(index),jLength,kLength,dataScreened);
-    
+    rho1 = rho1(~isnan(rho1) & ~isinf(rho1));
     rho1_hist_vec{index} = rho1;
-end
+    rho1_mean(index) = mean(rho1(:));
+    rho1_std(index) = std(rho1(:));
+    rho1_median(index) = median(rho1(:));
+end;
 %%
 bins = [0:0.1:10];
 figure;
@@ -24,7 +30,7 @@ for index = 1:numSubjs
 
 end
 xlabel(['\rho_{apparent}'])
-ylabel('count')
+ylabel('probability')
 %%
 figure
 for index = 1:numSubjs
@@ -45,7 +51,7 @@ for index = 1:numSubjs
 
 end
 xlabel(['\rho_{apparent}'])
-ylabel('count')
+ylabel('probability')
 
 
 
