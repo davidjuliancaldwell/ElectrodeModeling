@@ -54,7 +54,7 @@ for chan = 1:size(waveformMatrix,2)
     if beginInd+10 >= length(signalInt)
         signBegin = signalInt(beginInd);
     else
-    signBegin = signalInt(beginInd+10);
+        signBegin = signalInt(beginInd+10);
     end
     
     zDiff = zscore(diffSig); % zscore the diff of the sig

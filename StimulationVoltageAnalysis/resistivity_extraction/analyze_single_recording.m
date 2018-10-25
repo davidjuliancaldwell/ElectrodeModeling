@@ -19,7 +19,7 @@ saveIt = 1;
 
 structureData = uiimport('-file');
 %%
-data = 4.*[structureData.ECO1.data structureData.ECO2.data structureData.ECO3.data]; % add in factor of 4 10.10.2018
+data = [structureData.ECO1.data structureData.ECO2.data structureData.ECO3.data]; 
 fsData = structureData.ECO1.info.SamplingRateHz;
 Sing = structureData.Sing;
 Stim = structureData.Stim;
