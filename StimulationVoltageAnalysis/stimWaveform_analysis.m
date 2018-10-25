@@ -2,7 +2,7 @@
 close all;clear all;clc
 Z_Constants_Resistivity
 plotIt = 0;
-
+addpath(SUBJECT_DIR)
 %% go through first seven subjects first
 fs = 12207;
 preSamps = 3;
@@ -16,9 +16,18 @@ stdMatAll_1st8 = zeros(64,2,8);
 numberStimsAll_1st8 = zeros(8,1);
 stdEveryPoint_1st8 = {};
 
+% stimulation currents in A
+
+
+%% factor of 4 is included in here NOW within voltage_extract_avg
+stimChans_first7 = [22 30;13 14;11 12;59 60;56 55;54 62;56 64; 28 27];
+currentMat_first7 = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175 0.002...
 for i = 1:length(SIDS)
     sid = SIDS{i};
-    stimChans_subj = stimChans(i,:);
+    fprintf(['running for subject ' sid '\n']);
+    
+    
+    stimChans_subj = stimChans_first7(i,:);
     load(fullfile([sid '_StimulationAndCCEPs.mat']))
     ECoGData = permute(ECoGData,[1 3 2]);
     [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
@@ -115,7 +124,8 @@ dataStruct = struct('pair_21_20',struct('stim_current',[],'time_vec',[],'stim_da
     ,'pair_28_4',struct('stim_current',[],'time_vec',[],'stim_data',[]));
 
 % vector to loop through
-stimChans = [ 20 12;21 20; 22 19; 23 18; 28 4];
+stimChans_20f8a3 = [ 20 12;21 20; 22 19; 23 18; 28 4];
+currentMat_20f8a3 = [0.0005 0.0005 0.0005 0.0005 0.0005] ;
 pair_vec = {'pair_20_12','pair_21_20','pair_22_19','pair_23_18','pair_28_4'};
 fs = 12207;
 preSamps = 3;
@@ -130,6 +140,7 @@ numberStimsAll_2nd5 = zeros(5,1);
 stdEveryPoint_2nd5 = {};
 chansVec = [1:110];
 sid = '20f8a3';
+
 for pair = pair_vec
     
     switch(char(pair))
@@ -144,7 +155,9 @@ for pair = pair_vec
         case 'pair_28_4'
             load('G:\My Drive\GRIDLabDavidShared\20f8a3\StimulationSpacingChunked\stim_widePulse_28_4.mat')
     end
-    stimChans_subj = stimChans(i,:);
+    fprintf(['running for pair ' char(pair) '\n']);
+    
+    stimChans_subj = stimChans_20f8a3(i,:);
     ECoGData = dataEpoched;
     ECoGData = ECoGData(:,chansVec,:);
     
@@ -241,7 +254,7 @@ end
 preSamps = 3;
 postSamps = 3;
 %fs = 48828;
-stimChansVec = [2 3; 3 2; 3 4; 4 3; 4 5; 5 4; 5 6; 6 5; 6 7; 7 6; 4 6; 6 4]';
+stimChansVec_5e0cf = [2 3; 3 2; 3 4; 4 3; 4 5; 5 4; 5 6; 6 5; 6 7; 7 6; 4 6; 6 4]';
 numTrials = size(stimChansVec,2);
 
 meanMatAll_DBS_5e0cf = zeros(12,2,numTrials);
@@ -251,8 +264,9 @@ stdEveryPoint_DBS_5e0cf = {};
 i = 1;
 DBS_SID = DBS_SIDS{1};
 
-for stimChans = stimChansVec
+for stimChans = stimChansVec_5e0cf
     
+    fprintf(['running for 5e0cf stim chans ' num2str(stimChans) '\n']);
     
     %stimChans = [2 3];
     load(fullfile(DBS_DIR,DBS_SID, ['stimSpacingDBS-5e0cf-stim_' num2str(stimChans(1)) '-' num2str(stimChans(2))]));
@@ -368,8 +382,8 @@ end
 preSamps = 3;
 postSamps = 3;
 %fs = 48828;
-stimChansVec = [7 6; 6 7; 7 8; 8 7; 8 6; 6 8; 3 5; 5 3; 7 10; 10 7]';
-numTrials = size(stimChansVec,2);
+stimChansVec_b26b7 = [7 6; 6 7; 7 8; 8 7; 8 6; 6 8; 3 5; 5 3; 7 10; 10 7]';
+numTrials = size(stimChansVec_b26b7,2);
 
 meanMatAll_DBS_b26b7 = zeros(16,2,numTrials);
 stdMatAll_DBS_b26b7 = zeros(16,2,numTrials);
@@ -378,7 +392,8 @@ stdEveryPoint_DBS_b26b7 = {};
 
 i = 1;
 DBS_SID = DBS_SIDS{2};
-for stimChans = stimChansVec
+for stimChans = stimChansVec_b26b7
+    fprintf(['running for b26b7 stim chans ' num2str(stimChans) '\n']);
     
     load(fullfile(DBS_DIR,DBS_SID, ['stimSpacingDBS-b26b7-stim_' num2str(stimChans(1)) '-' num2str(stimChans(2))]));
     
@@ -493,9 +508,10 @@ end
 
 saveIt = 1;
 if saveIt
-    save('meansStds_8_25_2018.mat','meanMatAll_DBS_5e0cf','stdMatAll_DBS_5e0cf','numberStimsAll_DBS_5e0cf',...
+    save('meansStds_10_12_2018.mat','meanMatAll_DBS_5e0cf','stdMatAll_DBS_5e0cf','numberStimsAll_DBS_5e0cf',...
         'meanMatAll_DBS_b26b7','stdMatAll_DBS_b26b7','numberStimsAll_DBS_b26b7',...
         'meanMatAll_2nd5','stdMatAll_2nd5','numberStimsAll_2nd5',...
         'meanMatAll_1st8','stdMatAll_1st8','numberStimsAll_1st8',...
-        'stdEveryPoint_DBS_b26b7','stdEveryPoint_1st8','stdEveryPoint_2nd5','stdEveryPoint_DBS_b26b7');
+        'stdEveryPoint_DBS_b26b7','stdEveryPoint_1st8','stdEveryPoint_2nd5','stdEveryPoint_DBS_b26b7',...
+        'stimChansVec_20f8a3','stimChansVec_first7','stimChansVec_b26b7','stimChansVec_5e0cf','stdEveryPoint_DBS');
 end

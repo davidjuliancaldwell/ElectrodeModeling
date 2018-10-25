@@ -4,8 +4,8 @@ sid = '20f8a3';
 SUB_DIR = fullfile(myGetenv('subject_dir'));
 montageFilepath = strcat(SUB_DIR,'\',sid,'\',sid,'_Montage.mat');
 load(montageFilepath);
-load('20f8a3_mappedElectrodes.mat')
-filePath = 'C:\Users\djcald.CSENETID\GoogleDrive\GRIDLabDavidShared\20f8a3\StimulationSpacingChunked\stim_widePulse_20_12';
+load('20f8a3_mappedElectrodes_NEW.mat')
+filePath = 'G:\My Drive\GRIDLabDavidShared\20f8a3\StimulationSpacingChunked\stim_widePulse_20_12';
 load(filePath)
 
 %% plot individual trials for each condition on a different graph

@@ -30,6 +30,9 @@ tSamps = [1:size(waveformMatrix,1)];
 numTrials = size(waveformMatrix,3);
 stdCellEveryPoint = {};
 
+% scale by 4 for TDT!!!!!!!!!!!!!!!!!!!!!!!!!
+waveformMatrix = 4.*waveformMatrix;
+
 for chan = 1:size(waveformMatrix,2)
     % get average signal of interest to make it easier to detect onset and
     % offset

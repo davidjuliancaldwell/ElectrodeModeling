@@ -4,14 +4,14 @@
 % generates plots and extracts the peak voltages in the waveforms
 %
 %
-% David.J.Caldwell - 6-14-2018
+% David.J.Caldwell - 6.14.2018
 % requires getEpochSignal.m , subtitle.m , numSubplots.m , vline.m
 % GRAPHICS SHOULD WORK FOR BEFORE MATLAB 2014b
 
 %% initialize output and meta dir
 % clear workspace, get rid of extraneous information
 close all; clear all; clc
-saveIt = 0;
+saveIt = 1;
 
 % load in the datafile of interest!
 % have to have a value assigned to the file to have it wait to finish
@@ -19,7 +19,7 @@ saveIt = 0;
 
 structureData = uiimport('-file');
 %%
-data = [structureData.ECO1.data structureData.ECO2.data structureData.ECO3.data];
+data = 4.*[structureData.ECO1.data structureData.ECO2.data structureData.ECO3.data]; % add in factor of 4 10.10.2018
 fsData = structureData.ECO1.info.SamplingRateHz;
 Sing = structureData.Sing;
 Stim = structureData.Stim;
@@ -81,7 +81,7 @@ for reref = 0:0
     
     %% plot epoched signals
     scaling = 'n';
-    plot_unique_epochs(dataEpoched(:,1:64,:),t,uniqueLabels,labels,stimChans,scaling)
+    plot_unique_epochs(dataEpoched(:,1:64,:),t,uniqueLabels,labels,stimChans(stimChans<=64),scaling)
     
     
     %% extract averages, means, and standard deviations
@@ -119,9 +119,9 @@ for reref = 0:0
     %%
     if saveIt
         if reref
-            save([sid '_' regexprep(num2str(stimChans),'  ','_','emptymatch'),'_reref'],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t','uniqueLabels')
+            save([sid '_' regexprep(num2str(stimChans),'  ','_','emptymatch'),'_reref'],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t','uniqueLabels','labels')
         else
-            save([sid '_' regexprep(num2str(stimChans),'  ','_','emptymatch')],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t','uniqueLabels')
+            save([sid '_' regexprep(num2str(stimChans),'  ','_','emptymatch')],'meanMatAll','stdMatAll','stim1Epoched','dataEpoched','t','uniqueLabels','labels')
         end
     end
 end
