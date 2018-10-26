@@ -3,30 +3,29 @@ close all;clear all;clc
 Z_Constants_Resistivity
 addpath(SUBJECT_DIR)
 %% go through first seven subjects first
-fs = 12207;
 preSamps = 3;
 postSamps = 3;
 figTotal = figure;
 plotIt = 1;
 
+%% factor of 4 is included in here NOW within voltage_extract_avg
+
 % data for further analysis
-meanMatAll_1st8 = zeros(64,2,8);
-stdMatAll_1st8 = zeros(64,2,8);
-numberStimsAll_1st8 = zeros(8,1);
-stdEveryPoint_1st8 = {};
+meanMatAll_1st7 = zeros(64,2,7);
+stdMatAll_1st7 = zeros(64,2,7);
+numberStimsAll_1st7 = zeros(7,1);
+stdEveryPoint_1st7 = {};
 
 % stimulation currents in A
-
-
-%% factor of 4 is included in here NOW within voltage_extract_avg
 stimChans_first7 = [22 30;13 14;11 12;59 60;56 55;54 62;56 64; 28 27];
 currentMat_first7 = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175 0.002];
-for i = 1:length(SIDS)
-    sid = SIDS{i};
+for ii = 1:7
+    sid = SIDS{ii};
     fprintf(['running for subject ' sid '\n']);
     
+    fs = 12207;
     
-    stimChans_subj = stimChans_first7(i,:);
+    stimChans_subj = stimChans_first7(ii,:);
     load(fullfile([sid '_StimulationAndCCEPs.mat']))
     ECoGData = permute(ECoGData,[1 3 2]);
     [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
@@ -39,10 +38,10 @@ for i = 1:length(SIDS)
     stdCellEveryPoint{stimChans_subj(1)} = {nan,nan};
     stdCellEveryPoint{stimChans_subj(2)} =  {nan,nan};
     
-    meanMatAll_1st8(:,:,i) = meanMat;
-    stdMatAll_1st8(:,:,i) = stdMat;
-    numberStimsAll_1st8(i) = numberStims;
-    stdEveryPoint_1st8{i} = stdCellEveryPoint;
+    meanMatAll_1st7(:,:,ii) = meanMat;
+    stdMatAll_1st7(:,:,ii) = stdMat;
+    numberStimsAll_1st7(ii) = numberStims;
+    stdEveryPoint_1st7{ii} = stdCellEveryPoint;
     
     if plotIt
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,18 +54,18 @@ for i = 1:length(SIDS)
         legend('first phase','second phase')
         xlabel('electrode')
         ylabel('Voltage (V)')
-        % title(['Subject ' num2str(i)])
+        % title(['Subject ' num2str(ii)])
         title(['Mean and Standard Deviation for Recorded Biphasic Pulse'])
         set(gca,'fontsize',16)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         figure(figTotal)
-        subplot(4,2,i)
+        subplot(4,2,ii)
         errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)
         hold on
         errorbar(chanVec,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
         
-        title(['Subject ' num2str(i)])
+        title(['Subject ' num2str(ii)])
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         figure('units','normalized','outerposition',[0 0 1 1])
@@ -85,8 +84,8 @@ for i = 1:length(SIDS)
         
         xlabel('electrode')
         ylabel('Voltage (V)')
-        % title(['Subject ' num2str(i)])
-        title({['Subject ' num2str(i)],'Mean and Average Standard Deviation across windows for Recorded Biphasic Pulse'})
+        % title(['Subject ' num2str(ii)])
+        title({['Subject ' num2str(ii)],'Mean and Average Standard Deviation across windows for Recorded Biphasic Pulse'})
         set(gca,'fontsize',16)
         
         subplot(2,1,2)
@@ -115,6 +114,92 @@ if plotIt
     xlabel('electrode')
     ylabel('Voltage (V)')
 end
+
+%% go through 48 for 0a80cf
+
+stimChans_0a80cf = [ 28 27];
+currentMat_0a80cf = [ 0.002];
+sid = '0a80cf';
+for ii = 1:1
+    fprintf(['running for subject ' sid '\n']);
+    
+    fs = 12207;
+    
+    stimChans_subj = stimChans_0a80cf(ii,:);
+    load(fullfile([sid '_StimulationAndCCEPs.mat']))
+    ECoGData = permute(ECoGData,[1 3 2]);
+   ECoGData = ECoGData(:,[1:48],:);
+    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
+    meanMat(stimChans_subj,:) = nan;
+    stdMat(stimChans_subj,:) = nan;
+    extractCell{stimChans_subj(1)}{1} = nan;
+    extractCell{stimChans_subj(1)}{2}= nan;
+    extractCell{stimChans_subj(2)}{1}= nan;
+    extractCell{stimChans_subj(2)}{2}= nan;
+    stdCellEveryPoint{stimChans_subj(1)} = {nan,nan};
+    stdCellEveryPoint{stimChans_subj(2)} =  {nan,nan};
+    
+    meanMatAll_0a80cf(:,:,ii) = meanMat;
+    stdMatAll_0a80cf(:,:,ii) = stdMat;
+    numberStimsAll_0a80cf(ii) = numberStims;
+    stdEveryPoint_0a80cf{ii} = stdCellEveryPoint;
+    
+    if plotIt
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+        chanVec = [1:size(ECoGData,2)];
+        figure
+        errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)
+        hold on
+        errorbar(chanVec+0.3,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
+        legend('first phase','second phase')
+        xlabel('electrode')
+        ylabel('Voltage (V)')
+        % title(['Subject ' num2str(ii)])
+        title(['Mean and Standard Deviation for Recorded Biphasic Pulse'])
+        set(gca,'fontsize',16)
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+              
+        figure('units','normalized','outerposition',[0 0 1 1])
+        subplot(2,1,1)
+        hold on
+        plot(chanVec,abs(meanMat(:,1)),'linewidth',2)
+        plot(chanVec+0.3,abs(meanMat(:,2)),'linewidth',2)
+        
+        for chan = chanVec
+            dataInt = stdCellEveryPoint{chan};
+            dataInt1st = dataInt{1};
+            dataInt2nd = dataInt{2};
+            scatter(jitter(repmat(chan,size(dataInt1st)),0.01),abs(meanMat(chan,1))+dataInt1st,'markeredgecolor',[0,0.4470,0.7410])
+            scatter(jitter(repmat(chan+0.3,size(dataInt2nd)),0.01),abs(meanMat(chan,2))+dataInt2nd,'markeredgecolor',[0.8500,0.3250,0.0980])
+        end
+        
+        xlabel('electrode')
+        ylabel('Voltage (V)')
+        % title(['Subject ' num2str(ii)])
+        title({['Subject ' num2str(ii)],'Mean and Average Standard Deviation across windows for Recorded Biphasic Pulse'})
+        set(gca,'fontsize',16)
+        
+        subplot(2,1,2)
+        hold on
+        for chan = chanVec
+            dataInt = stdCellEveryPoint{chan};
+            dataInt1st = dataInt{1};
+            dataInt2nd = dataInt{2};
+            h1{chan} =scatter(jitter(repmat(chan,size(dataInt1st)),0.01),dataInt1st,'markeredgecolor',[0,0.4470,0.7410]);
+            h2{chan} =scatter(jitter(repmat(chan+0.3,size(dataInt2nd)),0.01),dataInt2nd,'markeredgecolor',[0.8500,0.3250,0.0980]);
+        end
+        set(gca,'YScale','log')
+        xlabel('electrode')
+        ylabel('standard deviation (V)')
+        title({'Standard Deviation for each sample in the stable part','of the artifact for Recorded Biphasic Pulse'})
+        legend([h1{1} h2{1}],{'first phase','second phase'})
+        set(gca,'fontsize',16)
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+        
+    end
+end
 %% now go through the next 5 spacing
 dataStruct = struct('pair_21_20',struct('stim_current',[],'time_vec',[],'stim_data',[])...
     ,'pair_20_12',struct('stim_current',[],'time_vec',[],'stim_data',[])...
@@ -130,7 +215,7 @@ preSamps = 3;
 postSamps = 3;
 figTotal = figure;
 
-i = 1;
+ii = 1;
 meanMatAll_2nd5 = zeros(110,2,5);
 stdMatAll_2nd5 = zeros(110,2,5);
 numberStimsAll_2nd5 = zeros(5,1);
@@ -154,7 +239,7 @@ for pair = pair_vec
     end
     fprintf(['running for pair ' char(pair) '\n']);
     fs = fs_data;
-    stimChans_subj = stimChans_20f8a3(i,:);
+    stimChans_subj = stimChans_20f8a3(ii,:);
     ECoGData = dataEpoched;
     ECoGData = ECoGData(:,chansVec,:);
     
@@ -168,12 +253,11 @@ for pair = pair_vec
     stdCellEveryPoint{stimChans_subj(1)} = {nan,nan};
     stdCellEveryPoint{stimChans_subj(2)} =  {nan,nan};
     
-    meanMatAll_2nd5(:,:,i) = meanMat;
-    stdMatAll_2nd5(:,:,i) = stdMat;
-    numberStimsAll_2nd5(i) = numberStims;
-    stdEveryPoint_2nd5{i} = stdCellEveryPoint;
+    meanMatAll_2nd5(:,:,ii) = meanMat;
+    stdMatAll_2nd5(:,:,ii) = stdMat;
+    numberStimsAll_2nd5(ii) = numberStims;
+    stdEveryPoint_2nd5{ii} = stdCellEveryPoint;
     
-    i = i + 1;
     pair_inds = strsplit(char(pair),'_');
     
     %pair_title = strrep(pair,'_','\_');
@@ -191,7 +275,7 @@ for pair = pair_vec
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         figure(figTotal)
-        subplot(2,3,i)
+        subplot(2,3,ii)
         errorbar(chanVec,abs(meanMat(chanVec,1)),stdMat(chanVec,1),'linewidth',2)
         hold on
         errorbar(chanVec,abs(meanMat(chanVec,2)),stdMat(chanVec,2),'linewidth',2)
@@ -215,7 +299,7 @@ for pair = pair_vec
         
         xlabel('electrode')
         ylabel('Voltage (V)')
-        % title(['Subject ' num2str(i)])
+        % title(['Subject ' num2str(ii)])
         title({['Electrode Pair ' pair_inds{2} ' ' pair_inds{3}],'Mean and Average Standard Deviation across windows for Recorded Biphasic Pulse'})
         set(gca,'fontsize',16)
         
@@ -237,6 +321,9 @@ for pair = pair_vec
         SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid '_electrodePair_'  pair_inds{2} '_' pair_inds{3} ]),'png');
         
     end
+    
+        ii = ii + 1;
+
 end
 if plotIt
     figure(figTotal)
@@ -272,7 +359,7 @@ preSamps = 3;
 postSamps = 3;
 figTotal = figure;
 
-i = 1;
+ii = 1;
 meanMatAll_3ada8b = zeros(92,2,length(currentMat_3ada8b));
 stdMatAll_3ada8b = zeros(92,2,length(currentMat_3ada8b));
 numberStimsAll_3ada8b = zeros(length(currentMat_3ada8b),1);
@@ -283,10 +370,10 @@ sid = '3ada8b';
 for stimChans = stimChans_3ada8b'
     
     fprintf(['running for 3ada8b stim chans ' num2str(stimChans(1)) '\n']);
-
+    
     load(fullfile('G:\My Drive\CDrive-Output-Pistachio\stimSpacing\outputData', ['3ada8b_' num2str(stimChans(1)) '_' num2str(stimChans(2))]));
-        
-    stimChans_subj = stimChans_3ada8b(i,:);
+    
+    stimChans_subj = stimChans_3ada8b(ii,:);
     ECoGData = dataEpoched;
     ECoGData = ECoGData(:,chansVec,:);
     fs = fsData;
@@ -300,13 +387,11 @@ for stimChans = stimChans_3ada8b'
     stdCellEveryPoint{stimChans_subj(1)} = {nan,nan};
     stdCellEveryPoint{stimChans_subj(2)} =  {nan,nan};
     
-    meanMatAll_3ada8b(:,:,i) = meanMat;
-    stdMatAll_3ada8b(:,:,i) = stdMat;
-    numberStimsAll_3ada8b(i) = numberStims;
-    stdEveryPoint_3ada8b{i} = stdCellEveryPoint;
-    
-    i = i + 1;
-    
+    meanMatAll_3ada8b(:,:,ii) = meanMat;
+    stdMatAll_3ada8b(:,:,ii) = stdMat;
+    numberStimsAll_3ada8b(ii) = numberStims;
+    stdEveryPoint_3ada8b{ii} = stdCellEveryPoint;
+        
     pair_inds = string(stimChans);
     
     %pair_title = strrep(pair,'_','\_');
@@ -324,7 +409,7 @@ for stimChans = stimChans_3ada8b'
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         figure(figTotal)
-        subplot(4,4,i)
+        subplot(4,4,ii)
         errorbar(chanVec,abs(meanMat(chanVec,1)),stdMat(chanVec,1),'linewidth',2)
         hold on
         errorbar(chanVec,abs(meanMat(chanVec,2)),stdMat(chanVec,2),'linewidth',2)
@@ -348,7 +433,7 @@ for stimChans = stimChans_3ada8b'
         
         xlabel('electrode')
         ylabel('Voltage (V)')
-        % title(['Subject ' num2str(i)])
+        % title(['Subject ' num2str(ii)])
         title({['Electrode Pair ' pair_inds{1} ' ' pair_inds{2}],'Mean and Average Standard Deviation across windows for Recorded Biphasic Pulse'})
         set(gca,'fontsize',16)
         
@@ -370,6 +455,9 @@ for stimChans = stimChans_3ada8b'
         SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid '_electrodePair_'  pair_inds{1} '_' pair_inds{2} ]),'png');
         
     end
+    
+        ii = ii + 1;
+
 end
 if plotIt
     figure(figTotal)
@@ -379,6 +467,114 @@ if plotIt
     ylabel('Voltage (V)')
 end
 
+%% now go through a7a181 - DIVIDE THIS BY 4 SINCE IT WAS ALREADY ACCOUNTED FOR
+
+% vector to loop through
+stimChans_a7a181 = [
+    23 24
+    ];
+currentMat_a7a181  = repmat([0.0015 0.003 0.0075]) ;
+preSamps = 3;
+postSamps = 3;
+figTotal = figure;
+
+ii = 1;
+meanMatAll_a7a181 = zeros(112,2,length(currentMat_a7a181 ));
+stdMatAll_a7a181 = zeros(112,2,length(currentMat_a7a181 ));
+numberStimsAll_a7a181  = zeros(length(currentMat_a7a181 ),1);
+stdEveryPoint_a7a181  = {};
+chansVec = [1:112];
+sid = 'a7a181';
+
+for current = currentMat_a7a181'
+    
+    fprintf(['running for a7a181 stim chans ' num2str(stimChans(1)) '\n']);
+
+    load(fullfile(['a7a181_' num2str(stimChans(1)) '_' num2str(stimChans(2))]));
+    fs = 12207;
+    stimChans_subj = stimChans_a7a181(ii,:);
+    ECoGData = dataEpoched./4; % FACTOR OF 4 !!!!
+    ECoGData = ECoGData(:,chansVec,:);
+    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
+    meanMat(stimChans_subj,:) = nan;
+    stdMat(stimChans_subj,:) = nan;
+    extractCell{stimChans_subj(1)}{1} = nan;
+    extractCell{stimChans_subj(1)}{2}= nan;
+    extractCell{stimChans_subj(2)}{1}= nan;
+    extractCell{stimChans_subj(2)}{2}= nan;
+    stdCellEveryPoint{stimChans_subj(1)} = {nan,nan};
+    stdCellEveryPoint{stimChans_subj(2)} =  {nan,nan};
+    
+    meanMatAll_a7a181(:,:,ii) = meanMat;
+    stdMatAll_a7a181(:,:,ii) = stdMat;
+    numberStimsAll_a7a181(ii) = numberStims;
+    stdEveryPoint_a7a181{ii} = stdCellEveryPoint;
+    
+    
+    pair_inds = string(stimChans);
+    
+    %pair_title = strrep(pair,'_','\_');
+    
+    if plotIt
+        chanVec = [1:112];
+        figure
+        errorbar(chanVec,abs(meanMat(chanVec,1)),stdMat(chanVec,1),'linewidth',2)
+        hold on
+        errorbar(chanVec,abs(meanMat(chanVec,2)),stdMat(chanVec,2),'linewidth',2)
+        legend('first phase','second phase')
+        xlabel('electrode')
+        ylabel('Voltage (V)')
+        title(['Electrode Pair ' pair_inds{1} ' ' pair_inds{2}])
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+               
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        figure('units','normalized','outerposition',[0 0 1 1])
+        subplot(2,1,1)
+        hold on
+        plot(chanVec,abs(meanMat(:,1)),'linewidth',2)
+        plot(chanVec+0.3,abs(meanMat(:,2)),'linewidth',2)
+        
+        for chan = chanVec
+            dataInt = stdCellEveryPoint{chan};
+            dataInt1st = dataInt{1};
+            dataInt2nd = dataInt{2};
+            scatter(jitter(repmat(chan,size(dataInt1st)),0.01),abs(meanMat(chan,1))+dataInt1st,'markeredgecolor',[0,0.4470,0.7410])
+            scatter(jitter(repmat(chan+0.3,size(dataInt2nd)),0.01),abs(meanMat(chan,2))+dataInt2nd,'markeredgecolor',[0.8500,0.3250,0.0980])
+        end
+        
+        xlabel('electrode')
+        ylabel('Voltage (V)')
+        % title(['Subject ' num2str(ii)])
+        title({['Electrode Pair ' pair_inds{1} ' ' pair_inds{2}],'Mean and Average Standard Deviation across windows for Recorded Biphasic Pulse'})
+        set(gca,'fontsize',16)
+        
+        subplot(2,1,2)
+        hold on
+        for chan = chanVec
+            dataInt = stdCellEveryPoint{chan};
+            dataInt1st = dataInt{1};
+            dataInt2nd = dataInt{2};
+            h1{chan} =scatter(jitter(repmat(chan,size(dataInt1st)),0.01),dataInt1st,'markeredgecolor',[0,0.4470,0.7410]);
+            h2{chan} =scatter(jitter(repmat(chan+0.3,size(dataInt2nd)),0.01),dataInt2nd,'markeredgecolor',[0.8500,0.3250,0.0980]);
+        end
+        set(gca,'YScale','log')
+        xlabel('electrode')
+        ylabel('standard deviation (V)')
+        title({'Standard Deviation for each sample in the stable part','of the artifact for Recorded Biphasic Pulse'})
+        legend([h1{1} h2{1}],{'first phase','second phase'})
+        set(gca,'fontsize',16)
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid '_electrodePair_'  pair_inds{1} '_' pair_inds{2} ]),'png');
+        
+    end
+    
+end
+if plotIt
+    figure(figTotal)
+    legend('first phase','second phase')
+    xlabel('electrode')
+    ylabel('Voltage (V)')
+end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DBS BELOW HERE
@@ -394,7 +590,7 @@ meanMatAll_DBS_5e0cf = zeros(12,2,numTrials);
 stdMatAll_DBS_5e0cf = zeros(12,2,numTrials);
 numberStimsAll_DBS_5e0cf = zeros(numTrials,1);
 stdEveryPoint_DBS_5e0cf = {};
-i = 1;
+ii = 1;
 DBS_SID = DBS_SIDS{1};
 
 for stimChans = stimChansVec_5e0cf
@@ -403,7 +599,7 @@ for stimChans = stimChansVec_5e0cf
     
     %stimChans = [2 3];
     load(fullfile(DBS_DIR,DBS_SID, ['stimSpacingDBS-5e0cf-stim_' num2str(stimChans(1)) '-' num2str(stimChans(2))]));
-fs = 48828;
+    fs = 48828;
     % take off mean for DBS channels
     tSamps = 1:size(dataEpoched,1);
     stimChans_subj = stimChans;
@@ -428,11 +624,11 @@ fs = 48828;
     stdCellEveryPoint{stimChans_subj(1)} = {nan,nan};
     stdCellEveryPoint{stimChans_subj(2)} =  {nan,nan};
     
-    meanMatAll_DBS_5e0cf(:,:,i) = meanMat;
-    stdMatAll_DBS_5e0cf(:,:,i) = stdMat;
-    numberStimsAll_DBS_5e0cf(i) = numberStims;
-    stdEveryPoint_DBS_5e0cf{i} = stdCellEveryPoint;
-    i = i + 1;
+    meanMatAll_DBS_5e0cf(:,:,ii) = meanMat;
+    stdMatAll_DBS_5e0cf(:,:,ii) = stdMat;
+    numberStimsAll_DBS_5e0cf(ii) = numberStims;
+    stdEveryPoint_DBS_5e0cf{ii} = stdCellEveryPoint;
+    ii = ii + 1;
     
     
     if plotIt
@@ -482,7 +678,7 @@ fs = 48828;
         v3 = vline(stimChans(2),'b');
         xlabel('electrode')
         ylabel('Voltage (V)')
-        % title(['Subject ' num2str(i)])
+        % title(['Subject ' num2str(ii)])
         title({DBS_SID,['Electrode Pair ' num2str(stimChans(1)) ' ' num2str(stimChans(2))],'Mean and Average Standard Deviation across windows for Recorded Biphasic Pulse'})
         set(gca,'fontsize',16)
         
@@ -524,7 +720,7 @@ stdMatAll_DBS_b26b7 = zeros(16,2,numTrials);
 numberStimsAll_DBS_b26b7 = zeros(numTrials,1);
 stdEveryPoint_DBS_b26b7 = {};
 
-i = 1;
+ii = 1;
 DBS_SID = DBS_SIDS{2};
 for stimChans = stimChans_b26b7
     fprintf(['running for b26b7 stim chans ' num2str(stimChans(1)) '\n']);
@@ -534,7 +730,7 @@ for stimChans = stimChans_b26b7
     % take off mean for DBS channels
     tSamps = 1:size(dataEpoched,1);
     stimChans_subj = stimChans;
-    % fs is in these data files 
+    % fs is in these data files
     for chan = 1:16
         %dataEpoched(:,chan,:) = squeeze(dataEpoched(:,chan,:))-repmat(squeeze(mean(dataEpoched(t_samps<55,chan,:))), [1,size(dataEpoched, 1)])';
         dataEpoched(:,chan,:) = squeeze(dataEpoched(:,chan,:))-repmat(mean(squeeze(mean(dataEpoched(tSamps<55,chan,:)))), [size(dataEpoched,3),size(dataEpoched, 1)])';
@@ -554,12 +750,12 @@ for stimChans = stimChans_b26b7
     stdCellEveryPoint{stimChans_subj(1)} = {nan,nan};
     stdCellEveryPoint{stimChans_subj(2)} =  {nan,nan};
     
-    meanMatAll_DBS_b26b7(:,:,i) = meanMat;
-    stdMatAll_DBS_b26b7(:,:,i) = stdMat;
-    numberStimsAll_DBS_b26b7(i) = numberStims;
-    stdEveryPoint_DBS_b26b7{i} = stdCellEveryPoint;
+    meanMatAll_DBS_b26b7(:,:,ii) = meanMat;
+    stdMatAll_DBS_b26b7(:,:,ii) = stdMat;
+    numberStimsAll_DBS_b26b7(ii) = numberStims;
+    stdEveryPoint_DBS_b26b7{ii} = stdCellEveryPoint;
     
-    i = i + 1;
+    ii = ii + 1;
     
     if plotIt
         figure
@@ -610,7 +806,7 @@ for stimChans = stimChans_b26b7
         
         xlabel('electrode')
         ylabel('Voltage (V)')
-        % title(['Subject ' num2str(i)])
+        % title(['Subject ' num2str(ii)])
         title({DBS_SID,['Electrode Pair ' num2str(stimChans(1)) ' ' num2str(stimChans(2))],'Mean and Average Standard Deviation across windows for Recorded Biphasic Pulse'})
         set(gca,'fontsize',16)
         
@@ -645,8 +841,9 @@ if saveIt
     save('meansStds_10_25_2018.mat','meanMatAll_DBS_5e0cf','stdMatAll_DBS_5e0cf','numberStimsAll_DBS_5e0cf',...
         'meanMatAll_DBS_b26b7','stdMatAll_DBS_b26b7','numberStimsAll_DBS_b26b7',...
         'meanMatAll_2nd5','stdMatAll_2nd5','numberStimsAll_2nd5',...
-        'meanMatAll_1st8','stdMatAll_1st8','numberStimsAll_1st8',...
-        'stdEveryPoint_DBS_b26b7','stdEveryPoint_1st8','stdEveryPoint_2nd5','stdEveryPoint_DBS_b26b7',...
+        'meanMatAll_1st7','stdMatAll_1st7','numberStimsAll_1st7',...
+        'meanMatAll_0a80cf','stdMatAll_0a80cf','numberStimsAll_0a80cf','stdEveryPoint_0a80cf',...
+        'stdEveryPoint_DBS_b26b7','stdEveryPoint_1st7','stdEveryPoint_2nd5','stdEveryPoint_DBS_b26b7',...
         'stimChansVec_20f8a3','stimChansVec_first7','stimChansVec_b26b7','stimChansVec_5e0cf',...
         'currentMat_first7','currentMat_20f8a3','currentMat_b26b7','currentMat_5e0cf');
 end
