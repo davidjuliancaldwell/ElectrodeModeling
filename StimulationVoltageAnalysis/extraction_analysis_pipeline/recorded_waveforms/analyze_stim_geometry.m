@@ -14,8 +14,8 @@ for sid = SIDS
     
     switch sid
         case '71c6c'
-            blocks = [1 2 3 4 5 6 7 8 9 10];
-            stimChansVec = [4 3; 5 3; 6 3; 7 3; 7 2; 8 1; 7 4; 7 4; 6 5; 8 4; 8 7];
+            blocks = [1 2 3 4 5 6 7 8 9];
+            stimChansVec = [4 3; 5 3; 6 3; 7 3; 7 2; 8 1; 6 4; 7 4; 6 5; 8 4];
             numChansVec = repmat(8,length(blocks),1);
             badChansVec = repmat({[]},length(blocks),1);
             badTrialsVec = repmat({[]},length(blocks),1);
@@ -51,8 +51,8 @@ for sid = SIDS
         badChansTotal = [stimChans badChans];
         
         %%
-        plotIt = 1;
-        savePlot = 1;
+        plotIt = 0;
+        savePlot = 0;
         saveName = [sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_' 'stimMonitor'];
         
         [stim1Epoched,t,fsStim,stimLevelLabels,pulseWidthLabels,uniqueLabels,uniquePulseWidths,uniquePulseWidthLabels,singEpoched] = voltage_monitor_different_width(Stim,Sing,...
@@ -85,7 +85,7 @@ for sid = SIDS
         % get rid of bad channels
         chansVec_goods = ones(numChans,1);
         chansVec_goods(badChansTotal) = 0;
-        dataEpoched(:,~chansVec_goods,:) = nan;
+       % dataEpoched(:,~chansVec_goods,:) = nan;
         
         % intialize counter for plotting
         k = 1;
@@ -204,8 +204,8 @@ for sid = SIDS
         
         counterIndex = counterIndex + 1;
         
-        %% save it - djc 2/8/2018
-        saveData = 1;
+        %% save the data 
+        saveData = 0;
         if saveData
             OUTPUT_DIR = pwd;
             fs = fsData;

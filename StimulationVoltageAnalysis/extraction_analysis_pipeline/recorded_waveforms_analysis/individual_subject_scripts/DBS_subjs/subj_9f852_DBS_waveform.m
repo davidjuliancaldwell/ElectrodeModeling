@@ -20,13 +20,12 @@ numChansInt = 8;
 
 sid = DBS_SIDS{5};
 figTotal =  figure('units','normalized','outerposition',[0 0 1 1]);
-labels = [repmat(50,20,1); repmat(100,20,1)];
 
 for stimChans = stimChansVec'
     jj = 1;
     for current = currentMatVec(1,:)
         stimChans = stimChansVec(ii,:);
-        fprintf(['running for 46c2a stim chans ' num2str(stimChans(1)) '\n']);
+        fprintf(['running for 9f852 stim chans ' num2str(stimChans(1)) '\n']);
         load(fullfile('G:\My Drive\GRIDLabDavidShared\resistivityDataSets\DBS_Subjects\Voltage_Monitor\9f852', ['EPScreen-DBS-9f852-stim_' num2str(stimChans(1)) '-' num2str(stimChans(2))]));
                 fs = fsData;
 
@@ -62,6 +61,6 @@ if plotIt
     ylabel('Voltage (V)')
 end
 
-[subj_3972f_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);
+[subj_9f852_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);
 clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat extractCellAll
 
