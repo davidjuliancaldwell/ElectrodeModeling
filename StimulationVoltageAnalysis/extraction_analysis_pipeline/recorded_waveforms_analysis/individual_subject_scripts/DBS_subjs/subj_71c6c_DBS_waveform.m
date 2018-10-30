@@ -13,7 +13,7 @@ meanMatAll = zeros(8,2,numStimChans,numCurrents);
 stdMatAll =  zeros(8,2,numStimChans,numCurrents);
 numberStimsAll =  zeros(numStimChans,numCurrents,1);
 numRows = 9;
-numColumns = 3;
+numColumns = 5;
 stdEveryPoint = {};
 extractCellAll = {};
 numChansInt = 8;
@@ -59,6 +59,8 @@ if plotIt
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+
 end
 
 [subj_71c6c_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);

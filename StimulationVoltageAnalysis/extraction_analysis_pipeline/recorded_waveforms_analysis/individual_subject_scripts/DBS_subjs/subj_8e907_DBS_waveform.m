@@ -1,6 +1,8 @@
 %% DBS subject 8e907
 
-stimChansVec = [7 8 ; 6 7; 5 4];
+%stimChansVec = [7 8 ; 6 7; 5 4]; % 5 4 has no long pulses
+stimChansVec = [7 8 ; 6 7]; % 5 4 has no long pulses
+
 currentMatVec = repmat([0.00001,0.0001,0.0005],length(stimChansVec),1);
 
 numStimChans = size(stimChansVec,2);
@@ -12,7 +14,7 @@ counterIndex = 1;
 meanMatAll = zeros(8,2,numStimChans,numCurrents);
 stdMatAll =  zeros(8,2,numStimChans,numCurrents);
 numberStimsAll =  zeros(numStimChans,numCurrents,1);
-numRows = 3;
+numRows = 2;
 numColumns = 3;
 stdEveryPoint = {};
 extractCellAll = {};
@@ -29,7 +31,7 @@ for stimChans = stimChansVec'
         load(fullfile('G:\My Drive\GRIDLabDavidShared\resistivityDataSets\DBS_Subjects\Voltage_Monitor\8e907', ['EPScreen-DBS-8e907-stim_' num2str(stimChans(1)) '-' num2str(stimChans(2))]));
                 fs = fsData;
 
-        dataEpoched = dataEpoched(:,1:8,(round(3*stimLevelLabels)==1e6*(current) & pulseWidthLabels >1.05e3));
+        dataEpoched = dataEpoched(:,1:8,(round(stimLevelLabels)==1e6*(current) & pulseWidthLabels >1.05e3));
         
         % ALREADY MEAN SUBTRACTED
         % fs is in these data files
@@ -59,6 +61,8 @@ if plotIt
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+
 end
 
 [subj_8e907_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);

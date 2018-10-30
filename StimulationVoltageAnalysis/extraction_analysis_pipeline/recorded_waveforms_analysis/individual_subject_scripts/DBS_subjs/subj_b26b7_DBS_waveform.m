@@ -40,7 +40,7 @@ for stimChans = stimChansVec
     [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,figTotal] =  DBS_subject_processing(ii,jj,...
         meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
         meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
-        stimChans,currentMatVec,numChansInt,sid,0,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
+        stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
     
     ii = ii + 1;
     %  jj = ii + 1;
@@ -52,6 +52,8 @@ if plotIt
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+
 end
 
 [subj_b26b7_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);

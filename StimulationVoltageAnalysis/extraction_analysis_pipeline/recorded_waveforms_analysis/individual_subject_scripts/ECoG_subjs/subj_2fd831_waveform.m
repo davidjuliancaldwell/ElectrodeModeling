@@ -33,7 +33,7 @@ dataDir_2fd831 = 'G:\My Drive\GRIDLabDavidShared\resistivityDataSets\ECoG_Subjec
 filesChoice = [2 3 5 6 8 9];
 
 for stimChans = stimChansVec'
-    fprintf(['running for a7a181 stim chans ' num2str(stimChans(1)) '\n']);
+    fprintf(['running for 2fd831 stim chans ' num2str(stimChans(1)) '\n']);
     
     load(fullfile(dataDir_2fd831,['stim_widePulse_' num2str(stimChans(1)) '_' num2str(stimChans(2))]));
     fs = 12207;

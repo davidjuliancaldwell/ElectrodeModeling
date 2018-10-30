@@ -260,7 +260,7 @@ for sid = SIDS
         end
         
         %% save it - djc 2/8/2018
-        saveData = 1;
+        saveData = 0;
         if saveData
             OUTPUT_DIR = pwd;
             fs = fsData;

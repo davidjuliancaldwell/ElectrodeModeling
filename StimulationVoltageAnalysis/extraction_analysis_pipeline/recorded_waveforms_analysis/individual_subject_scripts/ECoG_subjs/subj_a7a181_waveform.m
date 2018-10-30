@@ -52,6 +52,8 @@ if plotIt
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+
 end
 
 [subj_a7a181_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);

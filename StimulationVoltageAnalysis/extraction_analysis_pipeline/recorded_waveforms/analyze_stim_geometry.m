@@ -51,8 +51,8 @@ for sid = SIDS
         badChansTotal = [stimChans badChans];
         
         %%
-        plotIt = 0;
-        savePlot = 0;
+        plotIt = 1;
+        savePlot = 1;
         EPscreen = 0; % account for parallel stim channels
         saveName = [sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_' 'stimMonitor'];
         
@@ -206,7 +206,7 @@ for sid = SIDS
         counterIndex = counterIndex + 1;
         
         %% save the data 
-        saveData = 1;
+        saveData = 0;
         if saveData
             OUTPUT_DIR = pwd;
             fs = fsData;

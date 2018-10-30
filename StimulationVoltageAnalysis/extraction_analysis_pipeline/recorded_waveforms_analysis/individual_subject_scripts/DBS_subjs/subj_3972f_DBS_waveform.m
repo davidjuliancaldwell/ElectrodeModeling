@@ -14,8 +14,8 @@ counterIndex = 1;
 meanMatAll = zeros(8,2,numStimChans,numCurrents);
 stdMatAll =  zeros(8,2,numStimChans,numCurrents);
 numberStimsAll =  zeros(numStimChans,numCurrents,1);
-numRows = 5;
-numColumns = 2;
+numRows = 4;
+numColumns = 3;
 stdEveryPoint = {};
 extractCellAll = {};
 numChansInt = 8;
@@ -31,7 +31,7 @@ for stimChans = stimChansVec
     % take off mean for DBS channels
     tSamps = 1:size(dataEpoched,1);
     
-    dataEpoched = dataEpoched(:,1:numChansInt,(labels==1e6*(current)));
+    dataEpoched = dataEpoched(:,1:numChansInt,:);
 
     % fs is in these data files
     for chan = 1:8
@@ -57,6 +57,8 @@ if plotIt
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+
 end
 
 [subj_3972f_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);

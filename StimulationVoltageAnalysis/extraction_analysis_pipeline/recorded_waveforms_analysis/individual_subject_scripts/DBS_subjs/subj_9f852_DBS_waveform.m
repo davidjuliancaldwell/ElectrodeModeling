@@ -29,7 +29,7 @@ for stimChans = stimChansVec'
         load(fullfile('G:\My Drive\GRIDLabDavidShared\resistivityDataSets\DBS_Subjects\Voltage_Monitor\9f852', ['EPScreen-DBS-9f852-stim_' num2str(stimChans(1)) '-' num2str(stimChans(2))]));
                 fs = fsData;
 
-        dataEpoched = dataEpoched(:,1:8,(round(3*stimLevelLabels)==1e6*(current) & pulseWidthLabels >1.05e3));
+        dataEpoched = dataEpoched(:,1:8,(round(stimLevelLabels)==1e6*(current) & pulseWidthLabels >1.05e3));
         
         % ALREADY MEAN SUBTRACTED
         % fs is in these data files
@@ -59,6 +59,8 @@ if plotIt
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+
 end
 
 [subj_9f852_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);
