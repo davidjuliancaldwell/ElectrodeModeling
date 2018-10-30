@@ -1,37 +1,63 @@
-%% 7-14-2016 - David Caldwell - script to look at stim spacing
+%% 10-24-2016 - Quick DBS stim extraction - David Caldwell - script to look at stim spacing
 % requires getEpochSignal.m , subtitle.m , numSubplots.m , vline.m
 
 %% initialize output and meta dir
 % clear workspace
 close all; clear all; clc
+SIDS = {'bb908','80301','63ce7','05210','be99a','d417e','d4867','180a6','1dd75','c3bd9','c0329'};
+
+%%
 
 % load in the datafile of interest!
 % have to have a value assigned to the file to have it wait to finish
 % loading...mathworks bug
 
-structureData = uiimport('-file');
+[structureData,filepath] = promptForTDTrecording;
 Sing = structureData.Sing;
 Stim = structureData.Stim;
-%Stm0 = structureData.Stm0;
-Eco1 = structureData.ECO1;
-Eco2 = structureData.ECO2;
-Eco3 = structureData.ECO3;
-Eco4 = structureData.ECO4;
-Info = structureData.Info;
+Valu = structureData.Valu;
+Cond = structureData.Cond;
+DBSs = structureData.DBSs;
+ECOG = structureData.ECOG;
 
-Wave.info = structureData.ECO1.info; 
+
+dbsElectrodes = DBSs.data;
+dbs_fs = DBSs.info.SamplingRateHz;
+
+ECOGelectrodes = ECOG.data;
+ECOG_fs = ECOG.info.SamplingRateHz;
+
+stimBox = Stim.data;
+stim_fs = Stim.info.SamplingRateHz;
+
+stimProgrammed = Sing.data;
+
+stimSampDeliver = Cond.data(:,1);
+condition = Cond.data(:,2);
+
+% account for 1dd75 no condition file
+
+is_subj_1dd75 = strfind(filepath,'1dd75');
+if ~isempty(is_subj_1dd75)
+        % samp deliver
+        condition_file = [2,3,4,1,4,3,1,2,1,4,2,3,2,4,1,3,1,2,4,3,1,4,3,2,2,4,3,1,4,3,1,2,4,1,2,3,3,4,2,1,1,3,4,2,1,3,2,4,4,3,1,2,3,1,4,2,3,4,1,2];
+end
+ttlPulse = Cond.data(:,3);
+cond_fs = Cond.info.SamplingRateHz;
 
 %%
 % ui box for input for stimulation channels
-prompt = {'how many channels did we record from? e.g 48 ', 'what were the stimulation channels? e.g 28 29 ', 'how long before each stimulation do you want to look? in ms e.g. 1', 'how long after each stimulation do you want to look? in ms e.g 5'};
+prompt = {'how many channels did we record from? e.g 8 ', 'what were the stimulation channels? e.g 7 8 ', 'how long before each stimulation do you want to look? in ms e.g. 1', 'how long after each stimulation do you want to look? in ms e.g 5','process data to remove z>3 outliers?','subtract mean if DC coupled?'};
 dlg_title = 'StimChans';
 num_lines = 1;
-defaultans = {'48','28 29','1','5'};
+defaultans = {'8','7 8','1','5','n','n'};
 answer = inputdlg(prompt,dlg_title,num_lines,defaultans);
 numChans = str2num(answer{1});
 chans = str2num(answer{2});
 preTime = str2num(answer{3});
 postTime = str2num(answer{4});
+zScoreThresh = answer{5};
+meanSubtract = answer{6};
 
 %%
 % first and second stimulation channel
@@ -40,7 +66,7 @@ stim_2 = chans(2);
 
 
 % get sampling rates
-fs_data = Wave.info.SamplingRateHz;
+fs_data = DBSs.info.SamplingRateHz;
 fs_stim = Stim.info.SamplingRateHz;
 
 % stim data
@@ -49,11 +75,33 @@ stim = Stim.data;
 % current data
 sing = Sing.data;
 
-% recording data
-data = [Eco1.data Eco2.data Eco3.data Eco4.data];
+% recording data - 5-23-2017, DJC, add in ECoG
+%data = DBSs.data;
 
-% 
-dataNew = data(:,[1:8 33:36]);
+data = [dbsElectrodes, ECOGelectrodes];
+
+
+% DJC - 8-24-2016 - if it's DC coupled, below
+
+% zscore threshold to clear it
+
+if strcmp(zScoreThresh,'y')
+    
+    zScoredSig = zscore(data(:,1));
+    dataTemp = data(abs(zScoredSig)<3,:);
+    clear data;
+    data = dataTemp;
+    clear dataTemp;
+    
+end
+
+if strcmp(meanSubtract,'y')
+    
+    data = data-repmat(mean(data,1), [size(data, 1), 1]);
+    
+    
+end
+
 
 %% plot stim channels if interested
 
@@ -94,7 +142,7 @@ bursts = [];
 Sing1 = sing(:,1);
 fs_sing = Sing.info.SamplingRateHz;
 
-samplesOfPulse = round(2*fs_stim/1e3); % DOES NOT GET USED 
+samplesOfPulse = round(2*fs_stim/1e3);
 
 Sing1Mask = Sing1~=0;
 dmode = diff([0 Sing1Mask' 0 ]);
@@ -125,6 +173,65 @@ stim1Epoched = squeeze(getEpochSignal(stim1stChan,(bursts(2,:)-1),(bursts(3,:))+
 t = (0:size(stim1Epoched,1)-1)/fs_stim;
 t = t*1e3;
 
+%% DJC - 10-28-2016 - normalize to baseline
+
+labels = max(singEpoched);
+
+uniqueLabels = unique(labels);
+
+figure
+
+if strcmp(plotIt,'y')
+    for i = uniqueLabels
+        stimInterest = stim1Epoched(:,labels==i);
+        baseline = mean(stim1Epoched(1:5,:));
+        baselineRepped = repmat(baseline,[size(stim1Epoched,1), 1]);
+        stimNorm = stimInterest-baselineRepped(:,labels==i);
+        plot(t,stimNorm);
+        hold on
+    end
+    xlabel('Time (ms)');
+    ylabel('Voltage (V)');
+    title('Individual Stim Currents overlaid')
+    
+end
+%%
+% legLabels = {[num2str(uniqueLabels(1))]};
+%
+% k = 2;
+% if length(uniqueLabels>1)
+%     for i = uniqueLabels(2:end)
+%         legLabels{end+1} = [num2str(uniqueLabels(k))];
+%         k = k+1;
+%     end
+% end
+%
+% legend(legLabels);
+
+% plot divide by current 
+
+figure
+stimDivideTotal = [];
+if strcmp(plotIt,'y')
+    for i = uniqueLabels(uniqueLabels~=1)
+        stimInterest = stim1Epoched(:,labels==i);
+        baseline = mean(stim1Epoched(1:5,:));
+        baselineRepped = repmat(baseline,[size(stim1Epoched,1), 1]);
+        stimNorm = stimInterest-baselineRepped(:,labels==i);
+        stimDivide = stimNorm./(i*1e-6);
+        plot(t,stimDivide);
+        stimDivideTotal = [stimDivideTotal stimDivide];
+        hold on
+    end
+    xlabel('Time (ms)');
+    ylabel('V/I');
+    title('Voltage divided by current')
+    
+end
+
+%%
+
+
 if strcmp(plotIt,'y')
     
     figure
@@ -136,8 +243,9 @@ if strcmp(plotIt,'y')
 end
 
 % get the delay in stim times - looks to be 7 samples or so
-delay = round(0.2867*fs_stim/1e3);
+delay = round(0.1434*fs_stim/1e3);
 
+%delay = 0; %%%% setting delay = 0 to show better plots
 
 % plot the appropriately delayed signal
 if strcmp(plotIt,'y')
@@ -147,12 +255,16 @@ if strcmp(plotIt,'y')
     t = (0:size(stim1Epoched,1)-1)/fs_stim;
     t = t*1e3;
     figure
-    plot(t,stim1Epoched)
+    plot(t,stim1Epoched(:,:))
     xlabel('Time (ms)');
     ylabel('Voltage (V)');
     title('Stim voltage monitoring with delay added in')
 end
 
+
+% % redefine delay for other work - 10-28-2016
+% 
+% delay = round(0.1434*fs_stim/1e3);
 
 
 %% extract data
@@ -180,6 +292,14 @@ sts = round(stimTimes / fac) + delay2;
 %sts = round(stimTimes / fac);
 
 %% get the data epochs
+
+%%%%%%%%%%%%%%%%%%%%%% for stim param 12 at first pass
+
+%data = data(1:6e6,:);
+%sts = sts(sts<6e6);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 dataEpoched = squeeze(getEpochSignal(data,sts-presamps,sts+postsamps+1));
 
 % set the time vector to be set by the pre and post samps
@@ -189,7 +309,7 @@ t = (-presamps:postsamps)*1e3/fs_data;
 %% make the decision to scale it
 
 % ui box for input
-prompt = {'sscale the y axis to the maximum stim pulse value? "y" or "n" '};
+prompt = {'scale the y axis to the maximum stim pulse value? "y" or "n" '};
 dlg_title = 'Scale';
 num_lines = 1;
 defaultans = {'n'};
@@ -205,12 +325,18 @@ end
 %% plot individual trials for each condition on a different graph
 
 labels = max(singEpoched);
+
+%%%%%%%%%%%%%%%%%%%% for stim param 12 at first pass
+%labels = labels(sts<6e6);
+%%%%%%%%%%%%%%%%%%%%
+
 uniqueLabels = unique(labels);
 
 % intialize counter for plotting
 k = 1;
 
 % make vector of stim channels
+
 stimChans = [stim_1 stim_2];
 
 % determine number of subplot
@@ -253,8 +379,8 @@ for i=uniqueLabels
     % label axis
     xlabel('time in ms');
     ylabel('voltage in V');
-    subtitle(['Individual traces - Current set to ',num2str(uniqueLabels(k)),' \muA']);
-    
+    %subtitle(['Individual traces - Current set to ',num2str(uniqueLabels(k)),' \muA']);
+    subtitle(['Individual traces - Voltage set to ',num2str(uniqueLabels(k)),' V']);
     
     % get cell of raw values, can use this to analyze later
     dataRaw{k} = dataInterest;
@@ -325,11 +451,3 @@ if length(uniqueLabels>1)
 end
 
 legend(s,legLabels);
-
-%% save it - djc 2/8/2018
-saveData = 1;
-if saveData
-    OUTPUT_DIR = pwd;
-    fs = fsData;
-    save(sprintf(['stimSpacingDBS-%s-stim_%d-%d'], sid, stimChans(1),stimChans(2)),'dataEpoched','dataEpochedCell','stimChans','t','singEpoched','stim1Epoched','middlePts1st','middlePts2nd','fsData','fsStim','uniqueLabelsPulseWidths');
-end

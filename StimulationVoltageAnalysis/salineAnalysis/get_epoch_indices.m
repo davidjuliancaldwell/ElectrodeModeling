@@ -28,8 +28,11 @@ sts = round(stimTimes / fac);
 
 % looks like there's an additional 14 sample delay between the stimulation being set to
 % be delivered....and the ECoG recording. which would be 2.3 ms?
-
-delay2 = 14;
+if fsSing > 14000
+    delay2 = 14;
+else
+    delay2 = 7;
+end
 sts = round(stimTimes / fac) + delay2;
 %sts = round(stimTimes / fac);
 

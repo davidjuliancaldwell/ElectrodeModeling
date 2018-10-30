@@ -1,4 +1,4 @@
-function [stim1Epoched,t,fsStim,labels,pulseWidths,uniqueLabels,uniquePulseWidths,uniquePulseWidthLabels] = voltage_monitor_different_width(Stim,Sing,plotIt,savePlot,titleToUse,OUTPUT_DIR,saveName)
+function [stim1Epoched,t,fsStim,labels,pulseWidths,uniqueLabels,uniquePulseWidths,uniquePulseWidthLabels,singEpoched] = voltage_monitor_different_width(Stim,Sing,plotIt,savePlot,titleToUse,OUTPUT_DIR,saveName)
 
 %VOLTAGE_MONITOR Summary of this function goes here
 %   Detailed explanation goes here
@@ -37,8 +37,6 @@ t = t*1e3;
 
 % delay looks to be 7 samples
 
-%% DJC - 10-28-2016 - normalize to baseline
-
 if iscell(singEpoched)
     labels = cellfun(@max,singEpoched);
 elseif isnumeric(singEpoched)
@@ -47,11 +45,15 @@ end
 
 uniqueLabels = unique(labels);
 
-pulseWidths = 1e6*(bursts(3,:)-bursts(2,:))/fsStim;
-uniquePulseWidths = unique(pulseWidths);
+pulseWidths = 1e6*(bursts(3,:)-bursts(2,:))/(2*fsStim);
+uniquePulseWidths = unique(pulseWidths); % DIVIDE BY TWO SINCE IT'S BIPHASIC
 %
 % get the delay in stim times - looks to be 7 samples or so
+% if fsStim > 14000
 delay = round(0.2867*fsStim/1e3);
+% else
+%delay = round(0.2867*fsStim/(2*1e3));
+% end
 
 %delay = 0; %%%% setting delay = 0 to show better plots
 
@@ -64,12 +66,12 @@ if plotIt
     stimTimesEnd = bursts(3,:)-1+delay+120;
     stim1Epoched = squeeze(getEpochSignal(stim1stChan,stimTimesBegin,stimTimesEnd));
     
-    for i = uniquePulseWidthLabels
+    for ii = uniquePulseWidthLabels
         
         if iscell(stim1Epoched)
-            stim1EpochedInt = stim1Epoched{:,labels==i(1) & pulseWidths == i(2)};
+            stim1EpochedInt = stim1Epoched{:,labels==ii(1) & pulseWidths == ii(2)};
         elseif isnumeric(stim1Epoched)
-            stim1EpochedInt = stim1Epoched(:,labels==i(1) & pulseWidths == i(2));       
+            stim1EpochedInt = stim1Epoched(:,labels==ii(1) & pulseWidths == ii(2));
         end
         t = (0:size(stim1EpochedInt,1)-1)/fsStim;
         t = t*1e3;
@@ -77,7 +79,12 @@ if plotIt
         plot(t,mean(stim1EpochedInt,2),'linewidth',2)
         xlabel('Time (ms)');
         ylabel('Voltage (V)');
-        title(titleToUse)
+        if ~isempty(titleToUse)
+            title(titleToUse)
+        else
+            title(['Current = ' num2str(round(ii(1))) '\muA, pulse width = ' num2str(ii(2)) '\mus'])
+        end
+        
         set(gca,'fontsize',14)
         xlim([0 4])
         if savePlot
