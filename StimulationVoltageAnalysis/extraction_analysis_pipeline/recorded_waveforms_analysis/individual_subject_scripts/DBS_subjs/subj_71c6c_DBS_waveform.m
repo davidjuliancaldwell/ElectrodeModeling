@@ -1,6 +1,6 @@
 %% DBS subject 71c6c
 
-stimChansVec = [4 3; 5 3; 6 3; 7 3; 7 2; 8 1; 6 4; 7 4; 6 5];
+stimChansVec = [4 3; 5 3; 6 3; 7 3; 7 2; 8 1; 6 4; 7 4; 8 4];
 currentMatVec = repmat([0.00001,0.00005,0.0001,0.0005,0.001],length(stimChansVec),1);
 
 numStimChans = size(stimChansVec,2);

@@ -19,7 +19,6 @@ numberStimsAll(ii,jj) = numberStims;
 stdEveryPoint{ii,jj} = stdCellEveryPoint;
 
 if plotIt
-    chanVec = [1:numChansInt];
 %     
 %     figure
 %     hold on
@@ -49,7 +48,8 @@ if plotIt
 %     legend('1st phase','2nd phase','DBS/ECoG','- chan','+ chan')
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+        chanVec = [1:numChansInt];
+
     figure(figTotal)
     subplot(numRows,numColumns,counterIndex)
     errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)

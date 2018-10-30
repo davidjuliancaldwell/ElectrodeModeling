@@ -1,4 +1,4 @@
-function [stim1Epoched,t,fsStim,labels,pulseWidths,uniqueLabels,uniquePulseWidths,uniquePulseWidthLabels,singEpoched] = voltage_monitor_different_width(Stim,Sing,plotIt,savePlot,titleToUse,OUTPUT_DIR,saveName)
+function [stim1Epoched,t,fsStim,labels,pulseWidths,uniqueLabels,uniquePulseWidths,uniquePulseWidthLabels,singEpoched] = voltage_monitor_different_width(Stim,Sing,plotIt,savePlot,titleToUse,OUTPUT_DIR,saveName,EPscreen)
 
 %VOLTAGE_MONITOR Summary of this function goes here
 %   Detailed explanation goes here
@@ -41,6 +41,10 @@ if iscell(singEpoched)
     labels = cellfun(@max,singEpoched);
 elseif isnumeric(singEpoched)
     labels = max(singEpoched);
+end
+
+if EPscreen
+    labels = 3.*labels;
 end
 
 uniqueLabels = unique(labels);

@@ -36,8 +36,9 @@ if plotIt
 %     legend('- chan','+ chan')
 %     
 %     set(gca,'fontsize',16)
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+    %%%%%%%%%%%%%%%%%%%%%%%%%     
+    chanVec = [1:numChansInt];
+
     figure(figTotal)
     subplot(numRows,numColumns,counterIndex)
     errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)

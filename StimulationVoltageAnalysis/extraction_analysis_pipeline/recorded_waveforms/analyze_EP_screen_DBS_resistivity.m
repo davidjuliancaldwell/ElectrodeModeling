@@ -107,10 +107,12 @@ for sid = SIDS
         %%
         plotIt = 1;
         savePlot = 1;
+                EPscreen = 1; % account for parallel stim channels
+
         saveName = [sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_' 'stimMonitor'];
         
         [stim1Epoched,t,fsStim,stimLevelLabels,pulseWidthLabels,uniqueLabels,uniquePulseWidths,uniquePulseWidthLabels,singEpoched] = voltage_monitor_different_width(Stim,Sing,...
-            plotIt,savePlot,'',OUTPUT_DIR,saveName);
+            plotIt,savePlot,'',OUTPUT_DIR,saveName,EPscreen);
         
         goodTrialsVec = logical(ones(size(stim1Epoched,2),1));
         goodTrialsVec(badTrials) = 0;
@@ -157,7 +159,7 @@ for sid = SIDS
             dataInterest = dataEpoched(:,:,stimLevelLabels==ii(1) & pulseWidthLabels ==ii(2));
             for j = 1:numChans
                 subplot(p,q,j);
-                plot(t,squeeze(dataInterest(:,j,:)));
+                plot(t,4.*squeeze(dataInterest(:,j,:)));
                 xlim([min(t) max(t)]);
                 
                 % change y axis scaling if necessary
@@ -195,10 +197,10 @@ for sid = SIDS
             %increment counter
             k = k + 1;
             
-            subtitle(['Current = ' num2str(round(3*ii(1))) '\muA, pulse width = ' num2str(ii(2)) '\mus'])
+            subtitle(['Current = ' num2str(round(ii(1))) '\muA, pulse width = ' num2str(ii(2)) '\mus'])
             
             if savePlot
-                SaveFig(OUTPUT_DIR,[sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_stimCurr_' num2str(round(3*ii(1))) '_PW_' num2str(ii(2)) '_individualRecordings']);
+                SaveFig(OUTPUT_DIR,[sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_stimCurr_' num2str(round(ii(1))) '_PW_' num2str(ii(2)) '_individualRecordings']);
             end
             
         end
@@ -209,7 +211,7 @@ for sid = SIDS
         figure('units','normalized','outerposition',[0 0 1 1]);
         for k = 1:length(dataAvgs)
             
-            tempData = dataAvgs{k};
+            tempData = 4.*dataAvgs{k};
             
             for j = 1:numChans
                 s = subplot(p,q,j);
@@ -242,12 +244,12 @@ for sid = SIDS
         xlabel('time in ms');
         ylabel('voltage in \muV');
         %subtitle(['Averages for all conditions']);
-        legLabels = {[num2str(round(3*uniqueLabels(1)))]};
+        legLabels = {[num2str(round(uniqueLabels(1)))]};
         
         k = 2;
         if length(uniqueLabels>1)
             for ii = uniqueLabels(2:end)
-                legLabels{end+1} = [num2str(uniqueLabels(k))];
+                legLabels{end+1} = [num2str(round(uniqueLabels(k)))];
                 k = k+1;
             end
         end

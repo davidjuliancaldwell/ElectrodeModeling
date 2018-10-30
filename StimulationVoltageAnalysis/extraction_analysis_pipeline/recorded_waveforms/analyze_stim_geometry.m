@@ -15,7 +15,7 @@ for sid = SIDS
     switch sid
         case '71c6c'
             blocks = [1 2 3 4 5 6 7 8 9];
-            stimChansVec = [4 3; 5 3; 6 3; 7 3; 7 2; 8 1; 6 4; 7 4; 6 5; 8 4];
+            stimChansVec = [4 3; 5 3; 6 3; 7 3; 7 2; 8 1; 6 4; 7 4; 8 4];
             numChansVec = repmat(8,length(blocks),1);
             badChansVec = repmat({[]},length(blocks),1);
             badTrialsVec = repmat({[]},length(blocks),1);
@@ -53,10 +53,11 @@ for sid = SIDS
         %%
         plotIt = 0;
         savePlot = 0;
+        EPscreen = 0; % account for parallel stim channels
         saveName = [sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_' 'stimMonitor'];
         
         [stim1Epoched,t,fsStim,stimLevelLabels,pulseWidthLabels,uniqueLabels,uniquePulseWidths,uniquePulseWidthLabels,singEpoched] = voltage_monitor_different_width(Stim,Sing,...
-            plotIt,savePlot,'',OUTPUT_DIR,saveName);
+            plotIt,savePlot,'',OUTPUT_DIR,saveName,EPscreen);
         
         goodTrialsVec = logical(ones(size(stim1Epoched,2),1));
         goodTrialsVec(badTrials) = 0;
@@ -103,7 +104,7 @@ for sid = SIDS
             dataInterest = dataEpoched(:,:,stimLevelLabels==ii(1) & pulseWidthLabels ==ii(2));
             for j = 1:numChans
                 subplot(p,q,j);
-                plot(t,squeeze(dataInterest(:,j,:)));
+                plot(t,4.*squeeze(dataInterest(:,j,:)));
                 xlim([min(t) max(t)]);
                 
                 % change y axis scaling if necessary
@@ -155,7 +156,7 @@ for sid = SIDS
         figure('units','normalized','outerposition',[0 0 1 1]);
         for k = 1:length(dataAvgs)
             
-            tempData = dataAvgs{k};
+            tempData = 4.*dataAvgs{k};
             
             for j = 1:numChans
                 s = subplot(p,q,j);
@@ -192,7 +193,7 @@ for sid = SIDS
         k = 2;
         if length(uniqueLabels>1)
             for ii = uniqueLabels(2:end)
-                legLabels{end+1} = [num2str(uniqueLabels(k))];
+                legLabels{end+1} = [num2str(round(uniqueLabels(k)))];
                 k = k+1;
             end
         end
@@ -205,7 +206,7 @@ for sid = SIDS
         counterIndex = counterIndex + 1;
         
         %% save the data 
-        saveData = 0;
+        saveData = 1;
         if saveData
             OUTPUT_DIR = pwd;
             fs = fsData;

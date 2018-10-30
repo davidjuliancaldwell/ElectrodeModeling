@@ -10,7 +10,7 @@ figTotal =  figure('units','normalized','outerposition',[0 0 1 1]);
 
 % stimulation currents in A
 stimChansVec = [22 30;13 14;11 12;59 60;56 55;54 62;56 64];
-currentMatVec = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175];
+currentMatVec = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175]';
 numChansInt = 64;
 counterIndex = 1;
 numRows = 4;
