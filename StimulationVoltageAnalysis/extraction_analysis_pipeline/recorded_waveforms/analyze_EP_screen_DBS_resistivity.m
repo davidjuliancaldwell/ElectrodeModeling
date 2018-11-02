@@ -11,7 +11,7 @@ experiment = 'EP_Screen';
 
 for sid = SIDS
     OUTPUT_DIR = 'G:\My Drive\GRIDLabDavidShared\resistivityDataSets\Plots\dataPlots';
-
+    
     sid = sid{:};
     
     switch sid
@@ -19,6 +19,7 @@ for sid = SIDS
             blocks = [11 12 13 14];
         case '8e907'
             blocks = [1 2 4];
+         %   blocks = [4];
     end
     
     for block = blocks
@@ -105,10 +106,10 @@ for sid = SIDS
         badChansTotal = [stimChans badChans];
         
         %%
-        plotIt = 1;
-        savePlot = 1;
-                EPscreen = 1; % account for parallel stim channels
-
+        plotIt = 0;
+        savePlot = 0;
+        EPscreen = 1; % account for parallel stim channels
+        
         saveName = [sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_' 'stimMonitor'];
         
         [stim1Epoched,t,fsStim,stimLevelLabels,pulseWidthLabels,uniqueLabels,uniquePulseWidths,uniquePulseWidthLabels,singEpoched] = voltage_monitor_different_width(Stim,Sing,...
@@ -118,8 +119,8 @@ for sid = SIDS
         goodTrialsVec(badTrials) = 0;
         stimLevelLabels = stimLevelLabels(goodTrialsVec);
         pulseWidthLabels = pulseWidthLabels(goodTrialsVec);
-        singEpoched = singEpoched(goodTrialsVec);
-        stim1Epoched = stim1Epoched(goodTrialsVec);
+        singEpoched = singEpoched(:,goodTrialsVec);
+        stim1Epoched = stim1Epoched(:,goodTrialsVec);
         %% find out which each of the programmed stimuli actually were set to be delivered
         [sts,bursts] = get_epoch_indices(Sing.data,fsData,fsStim);
         
@@ -260,7 +261,7 @@ for sid = SIDS
         end
         
         %% save it - djc 2/8/2018
-        saveData = 0;
+        saveData = 1;
         if saveData
             OUTPUT_DIR = pwd;
             fs = fsData;

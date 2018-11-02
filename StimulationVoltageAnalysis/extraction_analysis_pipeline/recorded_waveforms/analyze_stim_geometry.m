@@ -51,8 +51,8 @@ for sid = SIDS
         badChansTotal = [stimChans badChans];
         
         %%
-        plotIt = 1;
-        savePlot = 1;
+        plotIt = 0;
+        savePlot = 0;
         EPscreen = 0; % account for parallel stim channels
         saveName = [sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_' 'stimMonitor'];
         
@@ -63,8 +63,8 @@ for sid = SIDS
         goodTrialsVec(badTrials) = 0;
         stimLevelLabels = stimLevelLabels(goodTrialsVec);
         pulseWidthLabels = pulseWidthLabels(goodTrialsVec);
-        singEpoched = singEpoched(goodTrialsVec);
-        stim1Epoched = stim1Epoched(goodTrialsVec);
+        singEpoched = singEpoched(:,goodTrialsVec);
+        stim1Epoched = stim1Epoched(:,goodTrialsVec);
         %% find out which each of the programmed stimuli actually were set to be delivered
         [sts,bursts] = get_epoch_indices(Sing.data,fsData,fsStim);
         
@@ -206,7 +206,7 @@ for sid = SIDS
         counterIndex = counterIndex + 1;
         
         %% save the data 
-        saveData = 0;
+        saveData = 1;
         if saveData
             OUTPUT_DIR = pwd;
             fs = fsData;

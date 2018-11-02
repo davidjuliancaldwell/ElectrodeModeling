@@ -2,6 +2,7 @@ function [stim1Epoched,t,fsStim,labels,pulseWidths,uniqueLabels,uniquePulseWidth
 
 %VOLTAGE_MONITOR Summary of this function goes here
 %   Detailed explanation goes here
+% David.J.Caldwell 10.2018 djcald@uw.edu
 
 % build a burst table with the timing of stimuli
 bursts = [];
@@ -29,6 +30,7 @@ t = t*1e3;
 %% Plot stims with info from above, and find the delay!
 
 stim1stChan = Stim.data(:,1);
+
 stim1Epoched = squeeze(getEpochSignal(stim1stChan,(bursts(2,:)-1),(bursts(3,:))+120));
 
 % put around 0
@@ -61,14 +63,15 @@ delay = round(0.2867*fsStim/1e3);
 
 %delay = 0; %%%% setting delay = 0 to show better plots
 
+stimTimesBegin = bursts(2,:)-1+delay;
+stimTimesEnd = bursts(3,:)-1+delay+120;
+stim1Epoched = squeeze(getEpochSignal(stim1stChan,stimTimesBegin,stimTimesEnd));
+
 pulseWidthLabels = [labels;pulseWidths];
 uniquePulseWidthLabels = unique(pulseWidthLabels','rows')';
 
 % plot the appropriately delayed signal
 if plotIt
-    stimTimesBegin = bursts(2,:)-1+delay;
-    stimTimesEnd = bursts(3,:)-1+delay+120;
-    stim1Epoched = squeeze(getEpochSignal(stim1stChan,stimTimesBegin,stimTimesEnd));
     
     for ii = uniquePulseWidthLabels
         
@@ -98,6 +101,5 @@ if plotIt
 end
 
 
-% % redefine delay for
 end
 
