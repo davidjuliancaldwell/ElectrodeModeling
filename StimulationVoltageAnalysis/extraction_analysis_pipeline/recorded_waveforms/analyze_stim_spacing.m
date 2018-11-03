@@ -3,11 +3,9 @@ close all;clear all;clc
 Z_Constants_Resistivity;
 %% load in subject
 
-%sid = '3809e';
-SIDS = {'9f852','8e907'};
-%SIDS = {'8e907'};
+SIDS = {'2fd831'};
 matlab_dir = 'MATLAB_Converted';
-experiment = 'EP_Screen';
+experiment = 'stimSpacing';
 
 for sid = SIDS
     OUTPUT_DIR = 'G:\My Drive\GRIDLabDavidShared\resistivityDataSets\Plots\dataPlots';
@@ -15,90 +13,38 @@ for sid = SIDS
     sid = sid{:};
     
     switch sid
-        case '9f852'
-            blocks = [11 12 13 14];
-        case '8e907'
-            blocks = [1 2 4];
-         %   blocks = [4];
+        case '2fd831'
+            blocks = [2 3 5 6 8 9];
+            stimChansVec = [121 122; 122 121; 63 121; 121 63; 55 121; 121 55];
+            numChansVec = repmat(128,length(blocks),1);
+            badChansVec = repmat({[]},length(blocks),1);
+            badTrialsVec = repmat({[]},length(blocks),1);
+            counterIndex = 1;
     end
     
     for block = blocks
+        load(fullfile('C:\Users\djcald.CSENETID\Data\Subjects\2fd831\data\d7',matlab_dir,experiment,['stimSpacing-' num2str(block) '.mat'])); 
         
-        % load in tank
-        switch sid
-            case '9f852'
-                switch block
-                    case 11
-                        load(fullfile(SUB_DIR,sid,matlab_dir,experiment,'EP_Screen-11.mat')); % most promising one
-                        chansSelect = [1:8];
-                        numChans = 8;
-                        stimChans = [6 7];
-                        badChans = [];
-                        badTrials = [];
-                    case 12
-                        load(fullfile(SUB_DIR,sid,matlab_dir,experiment,'EP_Screen-12.mat')); % most promising one
-                        chansSelect = [1:8];
-                        numChans = 8;
-                        stimChans = [5 6];
-                        badChans = [];
-                        badTrials = [];
-                        
-                    case 13
-                        load(fullfile(SUB_DIR,sid,matlab_dir,experiment,'EP_Screen-13.mat')); % most promising one
-                        chansSelect = [1:8];
-                        numChans = 8;
-                        stimChans = [6 5];
-                        badChans = [];
-                        badTrials = [];
-                        
-                    case 14
-                        load(fullfile(SUB_DIR,sid,matlab_dir,experiment,'EP_Screen-14.mat')); % most promising one
-                        chansSelect = [1:8];
-                        numChans = 8;
-                        stimChans = [ 4 3];
-                        badChans = [];
-                        badTrials = [];
-                        
-                end
-            case '8e907'
-                switch block
-                    case 1
-                        load(fullfile(SUB_DIR,sid,matlab_dir,experiment,'EP_Screen-1.mat')); % most promising one
-                        chansSelect = [1:8];
-                        numChans = 8;
-                        stimChans = [ 7 8];
-                        badChans = [2];
-                        badTrials = [];
-                        
-                    case 2
-                        load(fullfile(SUB_DIR,sid,matlab_dir,experiment,'EP_Screen-2.mat')); % most promising one
-                        chansSelect = [1:8];
-                        numChans = 8;
-                        stimChans = [ 6 7];
-                        badChans = [];
-                        badTrials = [23];
-                    case 4
-                        load(fullfile(SUB_DIR,sid,matlab_dir,experiment,'EP_Screen-4.mat')); % most promising one
-                        chansSelect = [1:8];
-                        numChans = 8;
-                        stimChans = [ 5 4];
-                        badChans = [];
-                        badTrials = [];
-                        
-                        
-                end
-        end
-        
+        stimChans = stimChansVec(counterIndex,:);
         fprintf(['running for subject ' sid ' stim chans ' num2str(stimChans(1)) ' ' num2str(stimChans(2)) '\n']);
-        
+        badChans = badChansVec{counterIndex};
+        badTrials = badTrialsVec{counterIndex};
+        numChans = numChansVec(counterIndex);
         %%
         meanSubtract = 1;
         preTime = 1 ;
         postTime = 5;
-        data = Wav1.data;
-        fsData = Wav1.info.SamplingRateHz;
-        data = data(:,chansSelect);
-        stimBox = Stim.data;
+        fsData = ECO1.info.SamplingRateHz;
+        data1= ECO1.data;
+        data2= ECO2.data;
+        data3= ECO3.data;
+        data4 = ECO4.data;
+        
+        fsSing = Sing.info.SamplingRateHz;
+        
+        sing = Sing.data;
+        data = [data1 data2 data3 data4];
+        data = data(:,1:numChans,:);        stimBox = Stim.data;
         fsStim = Stim.info.SamplingRateHz;
         stimProgrammed = Sing.data;
         presamps = round(preTime/1000 * fsData); % pre time in sec
@@ -106,10 +52,9 @@ for sid = SIDS
         badChansTotal = [stimChans badChans];
         
         %%
-        plotIt = 1;
+        plotIt = 0;
         savePlot = 0;
-        EPscreen = 1; % account for parallel stim channels
-        
+        EPscreen = 0; % account for parallel stim channels
         saveName = [sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_' 'stimMonitor'];
         
         [stim1Epoched,t,fsStim,stimLevelLabels,pulseWidthLabels,uniqueLabels,uniquePulseWidths,uniquePulseWidthLabels,singEpoched] = voltage_monitor_different_width(Stim,Sing,...
@@ -142,7 +87,7 @@ for sid = SIDS
         % get rid of bad channels
         chansVec_goods = ones(numChans,1);
         chansVec_goods(badChansTotal) = 0;
-        dataEpoched(:,~chansVec_goods,:) = nan;
+       % dataEpoched(:,~chansVec_goods,:) = nan;
         
         % intialize counter for plotting
         k = 1;
@@ -235,7 +180,6 @@ for sid = SIDS
                     
                 else
                     title(num2str(j));
-                    
                 end
                 vline(0);
                 
@@ -260,17 +204,19 @@ for sid = SIDS
             SaveFig(OUTPUT_DIR,[sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_' 'averageRecordings']);
         end
         
-        %% save it - djc 2/8/2018
+        counterIndex = counterIndex + 1;
+        
+        %% save the data 
         saveData = 1;
         if saveData
             OUTPUT_DIR = pwd;
             fs = fsData;
-            save(sprintf(['EPScreen-DBS-%s-stim_%d-%d'], sid, stimChans(1),stimChans(2)),...
+            save(sprintf(['stimSpacing-%s-stim_%d-%d'], sid, stimChans(1),stimChans(2)),...
                 'dataEpoched','dataEpochedCell','stimChans','t','fsStim','fsData','singEpoched',...
                 'stim1Epoched','fsData','fsStim','uniquePulseWidthLabels','stimLevelLabels','pulseWidthLabels');
         end
         
-        clearvars -except sid block blocks matlab_dir DBS_DIR DBS_SID META_DIR plotIt savePlot SUB_DIR experiment SIDS OUTPUT_DIR
+        clearvars -except sid block blocks matlab_dir DBS_DIR DBS_SID META_DIR plotIt savePlot SUB_DIR experiment SIDS OUTPUT_DIR counterIndex stimChansVec numChansVec badChansVec badTrialsVec
         
     end
 end

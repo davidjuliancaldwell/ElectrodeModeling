@@ -41,7 +41,7 @@ stim1stChan = Stim.data(:,1);
 stim1Epoched = squeeze(getEpochSignal(stim1stChan,(bursts(2,:)-1),(bursts(3,:))+60));
 
 % put around 0 
-stim1Epoched = stim1Epoched - repmat(stim1Epoched(1,:),size(stim1Epoched,1),1);
+stim1Epoched = stim1Epoched - repmat(mean(stim1Epoched(1:8,:),1),size(stim1Epoched,1),1);
 t = (0:size(stim1Epoched,1)-1)/fs_stim;
 t = t*1e3;
 

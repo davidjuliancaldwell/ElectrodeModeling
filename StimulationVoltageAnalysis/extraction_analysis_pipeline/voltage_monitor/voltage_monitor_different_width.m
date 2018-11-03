@@ -4,6 +4,7 @@ function [stim1Epoched,t,fsStim,labels,pulseWidths,uniqueLabels,uniquePulseWidth
 %   Detailed explanation goes here
 % David.J.Caldwell 10.2018 djcald@uw.edu
 
+meanSub = 1;
 % build a burst table with the timing of stimuli
 bursts = [];
 
@@ -63,10 +64,20 @@ delay = round(0.2867*fsStim/1e3);
 
 %delay = 0; %%%% setting delay = 0 to show better plots
 
-stimTimesBegin = bursts(2,:)-1+delay;
+stimTimesBegin = bursts(2,:)-15+delay;
 stimTimesEnd = bursts(3,:)-1+delay+120;
 stim1Epoched = squeeze(getEpochSignal(stim1stChan,stimTimesBegin,stimTimesEnd));
 
+% subtract pre period
+if meanSub
+    if iscell(stim1Epoched)
+        for ii = 1:length(stim1Epoched)
+            stim1Epoched{ii} = stim1Epoched{ii}-repmat(mean(stim1Epoched{ii}(1:8,:),1),size(stim1Epoched{ii},1),1);
+        end
+    else
+        stim1Epoched = stim1Epoched-repmat(mean(stim1Epoched(1:8,:),1),size(stim1Epoched,1),1);
+    end
+end
 pulseWidthLabels = [labels;pulseWidths];
 uniquePulseWidthLabels = unique(pulseWidthLabels','rows')';
 

@@ -1,5 +1,6 @@
 % script to analyze EP screen from paired pulse DBS experiments
-close all;clear all;clc
+%close all;clear all;clc
+clear all
 Z_Constants_Resistivity;
 %% load in subject
 
@@ -51,7 +52,7 @@ for sid = SIDS
         badChansTotal = [stimChans badChans];
         
         %%
-        plotIt = 0;
+        plotIt = 1;
         savePlot = 0;
         EPscreen = 0; % account for parallel stim channels
         saveName = [sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_' 'stimMonitor'];

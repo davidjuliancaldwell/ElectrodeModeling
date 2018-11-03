@@ -3,7 +3,7 @@ close all;clear all;clc
 Z_Constants_VoltageMonitoring
 SUB_DIR = fullfile(myGetenv('subject_dir'));
 %%
-for i = 1:2
+for i = 1:length(SIDS)
     sid = SIDS{i};
     switch sid
         case '8adc5c'
