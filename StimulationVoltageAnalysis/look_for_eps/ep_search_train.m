@@ -95,8 +95,8 @@ for subjNum = subjsNumericVec
         diffSts = diff(sts);
         [~,I] = find(diffSts>timeThresh*fsData/1e3);
         
-        sts = sts([1,I]);
-        labels = labels([1,I]);
+        sts = sts([1,I+1]);
+        labels = labels([1,I+1]);
         %%
         dataEpoched = squeeze(getEpochSignal(data,sts-preSamps,sts+postSamps+1));
         % set the time vector to be set by the pre and post samps
@@ -138,7 +138,7 @@ for subjNum = subjsNumericVec
             trainDuration = [];
             modePlot = 'avg';
             xlims = [-200 1000];
-            ylims = [-600 600];
+            ylims = [-800 800];
             vizFunc.small_multiples_time_series(processedSig(:,:,boolLabels),tEpoch,'type1',stimChans,'type2',0,'xlims',xlims,'ylims',ylims,'modePlot',modePlot,'highlightRange',trainDuration)
         end
         
