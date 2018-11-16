@@ -23,6 +23,9 @@ dmode(end-1) = dmode(end);
 bursts(2,:) = find(dmode==1);
 bursts(3,:) = find(dmode==-1);
 
+% get all to be the same length, so no cell required. 
+bursts(3,:) =  bursts(2,:) + max(bursts(3,:) - bursts(2,:));
+
 singEpoched = squeeze(getEpochSignal(Sing1,(bursts(2,:)-1),(bursts(3,:))+1));
 t = (0:size(singEpoched,1)-1)/fsSing;
 t = t*1e3;

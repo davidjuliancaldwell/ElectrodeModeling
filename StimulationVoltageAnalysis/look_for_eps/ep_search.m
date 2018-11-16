@@ -12,7 +12,13 @@ saveIt = 1;
 
 structureData = uiimport('-file');
 %%
+
+if size(structureData.ECO1.data,1) == size(structureData.ECO3.data,1)
 data = 4.*[structureData.ECO1.data structureData.ECO2.data structureData.ECO3.data]; % add in factor of 4 10.10.2018
+else
+    data = 4.*[structureData.ECO1.data(1:end-1,:) structureData.ECO2.data(1:end-1,:) structureData.ECO3.data]; % add in factor of 4 10.10.2018
+
+end
 fsData = structureData.ECO1.info.SamplingRateHz;
 Sing = structureData.Sing;
 Stim = structureData.Stim;
