@@ -9,7 +9,7 @@ subj_info % get information for all of the subjects
 
 SUBJECT_DIR = getenv('SUBJECT_DIR');
 
-blocksInt = [2];
+blocksInt = [8];
 subjsNumericVec = [1];
 
 reref = 0;
@@ -126,13 +126,11 @@ for subjNum = subjsNumericVec
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%
         for uniq = uniqueLabels
-            
-            % fix below 
-            boolLabels = labels==uniq;
-            vizFunc.multiple_visualizations(processedSig(:,:,boolLabels),dataEpoched(:,:,boolLabels),'fs',fsData,'type',type,'tEpoch',...
-                tEpoch,'xlims',xlims,'trainDuration',trainDuration,'stimChans',stimChans,...,
-                'chanIntList',chanIntList,'templateTrial',templateTrial,'templateDictCell',templateDictCell,'modePlot','confInt')
-            %
+                     boolLabels = labels==uniq;
+%             vizFunc.multiple_visualizations(processedSig(:,:,boolLabels),dataEpoched(:,:,boolLabels),'fs',fsData,'type',type,'tEpoch',...
+%                 tEpoch,'xlims',xlims,'trainDuration',trainDuration,'stimChans',stimChans,...,
+%                 'chanIntList',chanIntList,'templateTrial',templateTrial,'templateDictCell',templateDictCell,'modePlot','confInt')
+%             %
             average = 1;
             %chanIntList = 3;
             trainDuration = [];
