@@ -80,10 +80,9 @@ for reref = 0:0
     t = (-preSamps:postSamps)*1e3/fsData;
     
     %% plot epoched signals
-    scaling = 'n';
+    scaling = 'y';
     plot_unique_epochs(dataEpoched(:,1:64,:),t,uniqueLabels,labels,stimChans(stimChans<=64),scaling)
-    
-    
+
     %% extract averages, means, and standard deviations
     count = 1;
     

@@ -12,6 +12,7 @@ for sid = SIDS
     OUTPUT_DIR = 'G:\My Drive\GRIDLabDavidShared\resistivityDataSets\Plots\dataPlots';
     
     sid = sid{:};
+   
     
     switch sid
         case '71c6c'
