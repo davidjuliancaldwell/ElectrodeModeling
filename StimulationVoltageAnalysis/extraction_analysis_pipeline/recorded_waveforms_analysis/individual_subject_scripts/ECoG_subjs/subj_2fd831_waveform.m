@@ -49,6 +49,9 @@ for stimChans = stimChansVec'
         stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
     
     pair_inds = strsplit(char(pair),'_');
+    
+    subjectNum(counterIndex) = 11;
+    sidCell{counterIndex} = sid;
     ii = ii + 1;
     counterIndex = counterIndex + 1;
     
@@ -62,5 +65,5 @@ if plotIt
     SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
 end
 
-[subj_2fd831_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);
+[subj_2fd831_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum);
 clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat extractCellAll

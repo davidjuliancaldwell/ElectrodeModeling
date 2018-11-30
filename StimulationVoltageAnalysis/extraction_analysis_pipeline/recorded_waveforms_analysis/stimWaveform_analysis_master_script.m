@@ -6,7 +6,7 @@ addpath(SUBJECT_DIR)
 %% global parameters
 preSamps = 3; % for voltage extaction algorithm
 postSamps = 3; % for voltage extraction algorithm 
-plotIt = 1; % plot and save plots
+plotIt = 0; % plot and save plots
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,6 +16,9 @@ subj_first_7_waveform
 
 %%
 subj_0a80cf_waveform
+
+%% 
+subj_3f2113_waveform 
 
 %%
 subj_20f8a3_waveform
@@ -56,11 +59,12 @@ subj_8e907_DBS_waveform
 
 % save the data 
 %%
-saveIt = 0;
+saveIt = 1;
 if saveIt
     
-    save('recorded_waveform_data.mat',...
-        'first_7_struct','subj_20f8a3_struct','subj_3ada8b_struct',...
+    save('recorded_waveform_data_11_29_2018.mat',...
+        'first_7_struct','subj_0a80cf_struct','subj_3f2113_struct',...
+        'subj_20f8a3_struct','subj_3ada8b_struct',...
         'subj_2fd831_struct','subj_3ada8b_struct','subj_a7a181_struct','subj_5e0cf_DBS_struct',...
         'subj_b26b7_DBS_struct','subj_3972f_DBS_struct','subj_46c2a_DBS_struct',...
     'subj_9f852_DBS_struct','subj_71c6c_DBS_struct','subj_8e907_DBS_struct');

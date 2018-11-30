@@ -1,10 +1,10 @@
-%% resistivity analysis 
+%% resistivity analysis for all subjects 
 %
-% David.J.Caldwell 9.26.2018
+% David.J.Caldwell 11.23.2018
 close all;clear all;clc
 
 %% load in the data and define common constants 
-prepare_data
+prepare_data_allSubjs
 workingDirec = pwd;
 plotIt = 1;
 saveIt = 0;

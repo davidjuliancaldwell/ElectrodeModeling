@@ -6,6 +6,7 @@ stdMatAll = zeros(64,2,7,1);
 numberStimsAll = zeros(7,1,1);
 stdEveryPoint = {};
 extractCellAll = {};
+subjectNum = [];
 figTotal =  figure('units','normalized','outerposition',[0 0 1 1]);
 
 % stimulation currents in A
@@ -15,6 +16,7 @@ numChansInt = 64;
 counterIndex = 1;
 numRows = 4;
 numColumns = 2;
+
 for ii = 1:7
     sid = SIDS{ii};
     fprintf(['running for subject ' sid '\n']);
@@ -31,7 +33,9 @@ for ii = 1:7
         meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
         meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
-    
+   
+    sidCell{counterIndex} = sid; 
+    subjectNum(ii) = ii;
     counterIndex = counterIndex + 1;
 end
 
@@ -43,6 +47,6 @@ if plotIt
     SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7']),'png');
 end
 
-[first_7_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);
+[first_7_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum);
 
-clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat extractCellAll
+clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex

@@ -7,8 +7,7 @@ close all;clear all;clc
 prepare_data
 workingDirec = pwd;
 plotIt = 1;
-saveIt = 0;
-gaussianFits = 0; % do the gaussian kernel density estimation if need be 
+saveIt = 1;
 
 %% symmetrize the data
 symmetrize_data

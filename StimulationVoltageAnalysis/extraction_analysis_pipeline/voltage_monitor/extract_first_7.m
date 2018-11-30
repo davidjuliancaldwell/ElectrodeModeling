@@ -10,10 +10,6 @@ for i = 1:length(SIDS)
             tp = strcat(SUB_DIR,'\8adc5c\data\D6\8adc5c_BetaTriggeredStim');
             block = 'Block-67';
 
-        case '0a8cf'
-            tp = strcat(SUB_DIR,'\0a80cf\data\d10\0a80cf_BetaStim\0a80cf_BetaStim');
-            block = 'BetaPhase-4';
-
         case '9ab7ab'
             tp = strcat(SUB_DIR,'\9ab7ab\data\d7\9ab7ab_BetaTriggeredStim');
             block = 'BetaPhase-3';
@@ -43,7 +39,16 @@ for i = 1:length(SIDS)
             tp = strcat(SUB_DIR,'\0b5a2e\data\d8\0b5a2e_BetaStim\0b5a2e_BetaStim');
             block = 'BetaPhase-2';
             stims = [22 30];
-            
+     
+        case '0a8cf'
+            tp = strcat(SUB_DIR,'\0a80cf\data\d10\0a80cf_BetaStim\0a80cf_BetaStim');
+            block = 'BetaPhase-4';
+                        stims = [27 28];
+
+        case '3f2113'
+                       tp =  strcat(SUB_DIR,'\',sid,'\data\data\d6\BetaStim\BetaStim');
+            block = 'BetaPhase-5';
+            stims = [31 32];
     end
     
     tank = TTank;

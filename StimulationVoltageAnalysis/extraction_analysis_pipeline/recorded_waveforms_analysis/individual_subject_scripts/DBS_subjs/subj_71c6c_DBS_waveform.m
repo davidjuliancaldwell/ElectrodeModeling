@@ -46,6 +46,9 @@ for stimChans = stimChansVec'
             meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
             stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
         
+        subjectNum(counterIndex) = 18;
+        sidCell{counterIndex} = sid;
+        
         jj = jj + 1;
         counterIndex = counterIndex + 1;
         
@@ -59,10 +62,10 @@ if plotIt
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
-        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
-
+    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+    
 end
 
-[subj_71c6c_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);
-clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat extractCellAll
+[subj_71c6c_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum);
+clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex
 

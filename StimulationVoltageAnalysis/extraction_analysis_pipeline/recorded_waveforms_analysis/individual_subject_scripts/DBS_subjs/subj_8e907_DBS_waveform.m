@@ -29,18 +29,18 @@ for stimChans = stimChansVec'
         stimChans = stimChansVec(ii,:);
         fprintf(['running for 8e907 stim chans ' num2str(stimChans(1)) '\n']);
         load(fullfile('G:\My Drive\GRIDLabDavidShared\resistivityDataSets\DBS_Subjects\Voltage_Monitor\8e907', ['EPScreen-DBS-8e907-stim_' num2str(stimChans(1)) '-' num2str(stimChans(2))]));
-                fs = fsData;
-
+        fs = fsData;
+        
         dataEpoched = dataEpoched(:,1:8,(round(stimLevelLabels)==1e6*(current) & pulseWidthLabels >1.05e3));
         
         % ALREADY MEAN SUBTRACTED
         % fs is in these data files
-%         for chan = 1:8
-%             %dataEpoched(:,chan,:) = squeeze(dataEpoched(:,chan,:))-repmat(squeeze(mean(dataEpoched(t_samps<55,chan,:))), [1,size(dataEpoched, 1)])';
-%             dataEpoched(:,chan,:) = squeeze(dataEpoched(:,chan,:))-repmat(mean(squeeze(mean(dataEpoched(tSamps<55,chan,:)))), [size(dataEpoched,3),size(dataEpoched, 1)])';
-%             
-%         end
-%         
+        %         for chan = 1:8
+        %             %dataEpoched(:,chan,:) = squeeze(dataEpoched(:,chan,:))-repmat(squeeze(mean(dataEpoched(t_samps<55,chan,:))), [1,size(dataEpoched, 1)])';
+        %             dataEpoched(:,chan,:) = squeeze(dataEpoched(:,chan,:))-repmat(mean(squeeze(mean(dataEpoched(tSamps<55,chan,:)))), [size(dataEpoched,3),size(dataEpoched, 1)])';
+        %
+        %         end
+        %
         % calculate metrics of interest
         [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(dataEpoched,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
         [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,figTotal] =  DBS_subject_processing(ii,jj,...
@@ -48,6 +48,8 @@ for stimChans = stimChansVec'
             meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
             stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
         
+        sidCell{counterIndex} = sid;
+        subjectNum(counterIndex) = 15;
         jj = jj + 1;
         counterIndex = counterIndex + 1;
         
@@ -61,10 +63,10 @@ if plotIt
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
-        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
-
+    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+    
 end
 
-[subj_8e907_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll);
-clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat extractCellAll
+[subj_8e907_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum);
+clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex
 
