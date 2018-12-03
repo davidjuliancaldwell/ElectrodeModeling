@@ -17,6 +17,7 @@ counterIndex = 1;
 numRows = 4;
 numColumns = 2;
 
+
 for ii = 1:7
     sid = SIDS{ii};
     fprintf(['running for subject ' sid '\n']);
@@ -28,12 +29,15 @@ for ii = 1:7
     
     [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',...
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
-    
+        
     [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
         meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
         meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
-   
+      
+    [dataSubset,tSubset] = data_subset(ECoGData,1e3*t,preExtract,postExtract);
+    dataSubsetCell{counterIndex} = dataSubset;
+    
     sidCell{counterIndex} = sid; 
     subjectNum(ii) = ii;
     counterIndex = counterIndex + 1;
@@ -47,6 +51,7 @@ if plotIt
     SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7']),'png');
 end
 
-[first_7_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum);
+[first_7_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,...
+    currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset);
 
-clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex
+clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex tSubset dataSubset dataSubsetCell

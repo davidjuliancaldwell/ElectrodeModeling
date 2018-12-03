@@ -1,4 +1,4 @@
-%% go through 64 
+%% go through 64
 
 
 stimChansVec = [ 31 32];
@@ -24,7 +24,7 @@ for ii = 1:1
     stimChans = stimChansVec(ii,:);
     load(fullfile([sid '_StimulationAndCCEPs.mat']))
     ECoGData = permute(ECoGData,[1 3 2]);
-    ECoGData = ECoGData(:,[1:48],:);
+    ECoGData = ECoGData(:,[1:64],:);
     [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',...
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
     
@@ -32,8 +32,17 @@ for ii = 1:1
         meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
         meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
+    
+    [dataSubset,tSubset] = data_subset(ECoGData,1e3*t,preExtract,postExtract);
+    dataSubsetCell{counterIndex} = dataSubset;
+    
+    
+    
     subjectNum(ii) = 9;
+    sidCell{ii} = '3f2113';
 end
 
-[subj_3f2113_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum);
-clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat extractCellAll
+[subj_3f2113_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,...
+    currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset);
+
+clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex tSubset dataSubset dataSubsetCell

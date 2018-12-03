@@ -46,10 +46,14 @@ for current = currentMatVec
         meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
         meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
-        
+    
+    
+   [dataSubset,tSubset] = data_subset(dataEpoched,t,preExtract,postExtract);
+    dataSubsetCell{counterIndex} = dataSubset;
+    
     subjectNum(counterIndex) = 17;
-    sidCell{counterIndex} = sid; 
-
+    sidCell{counterIndex} = sid;
+    
     %ii = ii + 1;
     jj = ii + 1;
     counterIndex = counterIndex + 1;
@@ -60,10 +64,11 @@ if plotIt
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
-        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
-
+    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+    
 end
 
-[subj_46c2a_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum);
-clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex
+[subj_46c2a_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,...
+    currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset);
 
+clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex tSubset dataSubset dataSubsetCell

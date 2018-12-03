@@ -46,6 +46,9 @@ for stimChans = stimChansVec
         meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
         meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
+    
+   [dataSubset,tSubset] = data_subset(dataEpoched,t,preExtract,postExtract);
+    dataSubsetCell{counterIndex} = dataSubset;
        
     subjectNum(counterIndex) = 19;
     sidCell{counterIndex} = sid; 
@@ -64,5 +67,7 @@ if plotIt
 
 end
 
-[subj_3972f_DBS_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum);
-clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex
+[subj_3972f_DBS_struct] = convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,...
+    currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset);
+
+clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex tSubset dataSubset dataSubsetCell

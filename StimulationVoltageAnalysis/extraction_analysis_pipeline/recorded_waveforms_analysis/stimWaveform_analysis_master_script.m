@@ -7,6 +7,8 @@ addpath(SUBJECT_DIR)
 preSamps = 3; % for voltage extaction algorithm
 postSamps = 3; % for voltage extraction algorithm 
 plotIt = 0; % plot and save plots
+preExtract = 1; % how many ms before for extracting 
+postExtract = 10; % how many ms after stim to extract 
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -14,55 +16,55 @@ plotIt = 0; % plot and save plots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subj_first_7_waveform
 
-%%
+%
 subj_0a80cf_waveform
 
-%% 
+%
 subj_3f2113_waveform 
 
-%%
+%
 subj_20f8a3_waveform
 
-%%
+%
 subj_2fd831_waveform
 
-%%
+%
 subj_3ada8b_waveform
 
-%%
+%
 subj_a7a181_waveform
 
-%%
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DBS BELOW HERE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 subj_5e0cf_DBS_waveform
 
-%%
+%
 subj_b26b7_DBS_waveform
 
-%%
+%
 subj_3972f_DBS_waveform
 
-%%
+%
 subj_46c2a_DBS_waveform
 
-%%
+%
 subj_9f852_DBS_waveform
 
-%%
+%
 subj_71c6c_DBS_waveform
 
 %
 subj_8e907_DBS_waveform
 
 % save the data 
-%%
+%
 saveIt = 1;
 if saveIt
     
-    save('recorded_waveform_data_11_29_2018.mat',...
+    save('recorded_waveform_data_12_3_2018.mat',...
         'first_7_struct','subj_0a80cf_struct','subj_3f2113_struct',...
         'subj_20f8a3_struct','subj_3ada8b_struct',...
         'subj_2fd831_struct','subj_3ada8b_struct','subj_a7a181_struct','subj_5e0cf_DBS_struct',...

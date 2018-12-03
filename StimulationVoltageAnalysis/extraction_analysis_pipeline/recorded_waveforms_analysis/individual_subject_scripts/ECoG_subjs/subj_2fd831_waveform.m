@@ -29,7 +29,7 @@ stdEveryPoint = {};
 extractCellAll = {};
 numChansInt = 128;
 sid = '2fd831';
-dataDir_2fd831 = 'G:\My Drive\GRIDLabDavidShared\resistivityDataSets\ECoG_Subjects\2fd831\StimulationSpacingChunked';
+dataDir_2fd831 = 'G:\My Drive\GRIDLabDavidShared\resistivityDataSets\ECoG_Subjects\Voltage_Monitor\2fd831\StimulationSpacingChunked';
 filesChoice = [2 3 5 6 8 9];
 
 for stimChans = stimChansVec'
@@ -48,7 +48,12 @@ for stimChans = stimChansVec'
         meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
     
-    pair_inds = strsplit(char(pair),'_');
+    
+    [dataSubset,tSubset] = data_subset(ECoGData,t,preExtract,postExtract);
+    dataSubsetCell{counterIndex} = dataSubset;
+    
+    
+    %   pair_inds = strsplit(char(pair),'_');
     
     subjectNum(counterIndex) = 11;
     sidCell{counterIndex} = sid;
@@ -65,5 +70,7 @@ if plotIt
     SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
 end
 
-[subj_2fd831_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum);
-clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat extractCellAll
+[subj_2fd831_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,...
+    currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset);
+
+clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex tSubset dataSubset dataSubsetCell
