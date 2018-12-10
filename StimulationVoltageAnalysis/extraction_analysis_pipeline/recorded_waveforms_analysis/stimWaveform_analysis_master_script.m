@@ -16,7 +16,7 @@ postExtract = 10; % how many ms after stim to extract
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subj_first_7_waveform
 
-%
+%%
 subj_0a80cf_waveform
 
 %
@@ -50,10 +50,10 @@ subj_3972f_DBS_waveform
 %
 subj_46c2a_DBS_waveform
 
-%
+%%
 subj_9f852_DBS_waveform
 
-%
+%%
 subj_71c6c_DBS_waveform
 
 %
@@ -61,7 +61,7 @@ subj_8e907_DBS_waveform
 
 % save the data 
 %
-saveIt = 1;
+saveIt = 0;
 if saveIt
     
     save('recorded_waveform_data_12_3_2018.mat',...

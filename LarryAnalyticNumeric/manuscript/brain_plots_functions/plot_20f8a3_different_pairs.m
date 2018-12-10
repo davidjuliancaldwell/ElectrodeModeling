@@ -1,6 +1,7 @@
-%% script to plot cortices for resistivity modeling
-%
-% David.J.Caldwell 9.25.2017 
+%% script to plot all of the 20f8a3 pairs on one cortex 
+% need to finish this 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% David.J.Caldwell 12.9.2018 
 
 clear all;close all;clc
 Z_Constants_resistivity_brainPlots
@@ -12,46 +13,18 @@ figure
 PlotCortex('MNI')
 hold on
 
+stimChansVec = [ 20 12;21 20; 22 19; 23 18; 28 4];
+
 count = 1;
-leftSide = [1 2 4 6 7];
-rightSide = [3 5];
-for sid = SIDS
-    subjid = sid{:};
-    switch(subjid)
-        case '0b5a2e'
-            stims = [22 30];
-        case '702d24'
-            stims = [13 14];
-        case '7dbdec'
-            stims = [11 12];
-        case '9ab7ab'
-            stims = [59 60];
-        case 'c91479'
-            stims = [56 55];
-        case 'd5cd55'
-            stims = [54 62];
-        case 'ecb43e'
-            stims = [64 56];
-        otherwise
-            error('unknown SID entered');
-    end
-    
-    load(fullfile('C:\Users\djcald.CSENETID\Data\Subjects\coords',...
-        [subjid,'_trode_coords_MNIandTal.mat']))
+for stimChans = stimChansVec'
+ 
+load('C:\Users\david\Data\Subjects\20f8a3\bis_trodes.mat')
     % project all to same hemisphere
-    
-    
-    %locsStruct.(strcat('x',i{:})) = locs;
-    locs = MNIcoords(1:64,:);
-    
-    if strcmp(sid,'c91479')
-        locs = (c91479TrodesMNIcoords(1:64,:));
-    end
-    
+    stims = stimChans;
     weights = [1 -1];
     map = [.2 1 0; 1 1 1; 1 0 1];
     map = [0.5 0.5 1; 1 1 1; 1 0.5 0.5];
-    locs = locs(stims,:);
+    locs = AllTrodes(stims,:);
     clims = [-1 1]; % we want the color limits to be the same for all sets of dots
     
     % project all onto the same side
@@ -102,51 +75,27 @@ figure
 PlotCortex('MNI')
 hold on
 
+figure
+PlotCortex('MNI')
+hold on
+
+stimChansVec = [ 20 12;21 20; 22 19; 23 18; 28 4];
+
 count = 1;
-leftSide = [1 2 4 6 7];
-rightSide = [3 5];
-for sid = SIDS
-    subjid = sid{:};
-    switch(subjid)
-        case '0b5a2e'
-            stims = [22 30];
-        case '702d24'
-            stims = [13 14];
-        case '7dbdec'
-            stims = [11 12];
-        case '9ab7ab'
-            stims = [59 60];
-        case 'c91479'
-            stims = [56 55];
-        case 'd5cd55'
-            stims = [54 62];
-        case 'ecb43e'
-            stims = [64 56];
-        otherwise
-            error('unknown SID entered');
-    end
-    
-    load(fullfile('C:\Users\djcald.CSENETID\Data\Subjects\coords',...
-        [subjid,'_trode_coords_MNIandTal.mat']))
-    
-    %locsStruct.(strcat('x',i{:})) = locs;
-    locs = MNIcoords(1:64,:);
-    
-    if strcmp(sid,'c91479')
-        locs = (c91479TrodesMNIcoords(1:64,:));
-    end
-    
+for stimChans = stimChansVec'
+ 
+load('C:\Users\david\Data\Subjects\20f8a3\bis_trodes.mat')
+    % project all to same hemisphere
+    stims = stimChans;
+    weights = [1 1];
+    map = [.2 1 0; 1 1 1; 1 0 1];
+    map = [0.5 0.5 1; 1 1 1; 1 0.5 0.5];
+    locs = AllTrodes(stims,:);
+    clims = [-1 1]; % we want the color limits to be the same for all sets of dots
+   
     weights = [1 1];
     map = colors(count,:);
-    
-    locs = locs(stims,:);
-    clims = [-1 1]; % we want the color limits to be the same for all sets of dots
-    
-    % project all onto the same side
-    if project
-        locs = projectToHemisphere(locs, 'l');
-    end
-    
+        clims = [-1 1]; % we want the color limits to be the same for all sets of dots
     
     markerSize = 15;
     logicIndex = [1 2];
