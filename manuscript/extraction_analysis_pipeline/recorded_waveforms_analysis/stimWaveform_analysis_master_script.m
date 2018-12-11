@@ -17,6 +17,7 @@ postExtract = 10; % how many ms after stim to extract
 % ECoG BELOW HERE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subj_first_7_waveform
+
 %%
 saveIt = 1;
 if saveIt

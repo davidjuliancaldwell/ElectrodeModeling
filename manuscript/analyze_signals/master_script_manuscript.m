@@ -1,63 +1,60 @@
-%% resistivity analysis for all subjects 
+%% resistivity analysis for all subjects
 %
 % David.J.Caldwell 11.23.2018
 close all;clear all;clc
 
-cd(fileparts(which('prepare_data_single_subj')));
-locationsDir = pwd;
-folderData = fullfile(locationsDir, '..','data');
-folderCoords = fullfile(locationsDir,'..','coordinates');
-
-totalData = load(fullfile(folderData,'recorded_voltages.mat'));
-
 plotIt = 1;
 saveIt = 0;
 
-%% define data structures to be filled later
-
-histStruct = struct;
-dataInteresStruct = struct;
-symmetryStruct = struct; 
-
-%% define additional grid electrode locations just for first 7
-prepare_electrode_mapping
-
 %% load in the data and define common constants, run single subject fits
-prepare_data_single_subj
+[subStruct] = prepare_data_single_subj();
 
-%% prepare data for symmetry
-prepare_data_symmetry
-
-%% symmetrize the data
-symmetrize_data
+%% symmetry
+symmetryStruct = symmetrize_data(subStruct,plotIt,saveIt);
 
 
 %% 4 point histograms for the individual
+histStruct = four_point_histograms_individual(subStruct,plotIt,saveIt);
 
-four_point_histograms_individual
+%% 4 point histograms using the CT coordinates
+histStructCoords = four_point_histograms_individual_coords(subStruct,plotIt,saveIt);
 
-%% 4 point histograms using the CT coordinates 
-
-four_point_histograms_individual_coords
-
-%% fit the individual subject data with one rhoA 
-
-fit_individual_global
+%% fit the individual subject data with one rhoA
+fitIndGlobal = fit_individual_global(subStruct);
 
 %% fit the individual subject data with rhoA for different bins
-fit_individual
+fitIndBins = fit_individual(subStruct,plotIt,saveIt);
+
+%% if plotit
+if plotIt
+    
+    figure
+    
+    for index = 1:numIndices
+        
+        subplot(2,4,index)
+        plot(dataSelect(:,index),'linewidth',2)
+        hold on
+        plot(fitValsVec(:,index),'linewidth',2)
+        plot(bestVals(:,index),'linewidth',2)
+        title(['subject ' num2str(index)])
+        set(gca,'fontsize',18)
+    end
+    ylabel('voltage (V)')
+    legend({'data','binned best fits','global best fits'})
+    
+end
 
 %% 4 point histograms for the symmetrized data
 
-%%%%%%%%%%%%%%%%%% which symmetrized data to use? %%%%%%%%%%%%%%%%%%%%%%%%%
-dataInt = gridDataAvg; % this just selects the averaged data
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-four_point_histograms_symmetrized 
+histStructSym = four_point_histograms_symmetrized(symmetryStruct,plotIt,saveIt);
 %% fit the averaged data (defined as dataInt above) with one rhoA
-fit_symmetrized_global 
+fitSymGlobal = fit_symmetrized_global(symmetryStruct,plotIt,saveIt);
 
 %% fit the averaged data (defined as dataInt above) with rhoA by bins
-fit_symmetrized
+fitSymBins = fit_symmetrized(symmetryStruct,plotIt,saveIt);
 
- 
+%% fitlm on waveforms to get idea of slope/capacitance
+
+voltageSlopeStruct = fit_slope_recorded_voltage(subStruct,plotIt,saveIt);
+

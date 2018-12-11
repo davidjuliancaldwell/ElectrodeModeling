@@ -4,13 +4,22 @@
 %% run script to load data, declare stimulation channels, etc
 % starting with subject 1. move everything in a block
 
+function symmetryStruct = symmetrize_data(subStruct,plotIt,saveIt)
+
+mid = 8;
 figind = figure;
 figindLog = figure;
 cmap = flipud(cbrewer('div','RdBu',40));
 load('america')
 cmap = cm;
 
-symmetryStruct = struct; 
+symmetryStruct = struct;
+
+dataSelect = subStruct.dataSelect;
+stimChansIndices = subStruct.stimChansIndices;
+currentMat = subStruct.currentMat;
+numIndices = size(subStruct.meanMat,3);
+gridData = subStruct.gridData;
 
 for index = 1:numIndices
     
@@ -115,7 +124,7 @@ for index = 1:numIndices
 end
 
 symmetryStruct.gridData = gridData;
-symmetryStruct.gridDataLog = gridDataLog; 
+symmetryStruct.gridDataLog = gridDataLog;
 
 if plotIt
     figure(figind)
@@ -370,7 +379,7 @@ gridDataLRUDavg = nanmean(gridDataLRUD,3);
 % now shrink
 gridDataLRUDavg = gridDataLRUDavg(:,1:end-1,:);
 
-symmetryStruct.gridDataLRUDavg = gridDataLRUDavg; 
+symmetryStruct.gridDataLRUDavg = gridDataLRUDavg;
 
 if plotIt
     imAlpha=ones(size(gridDataLRUDavg));
@@ -438,5 +447,6 @@ end
 
 if saveIt
     save('symmetricDataDavid_12_2018.mat','symmetryStruct')
+end
 end
 

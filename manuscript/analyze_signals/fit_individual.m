@@ -1,8 +1,4 @@
-%% script to fit individual data
-%
-% David.J.Caldwell
-
-%% fitlm by bins
+function fitStruct = fit_individual(subStruct,plotIt,saveIt)
 % David.J.Caldwell 9.5.2018
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -10,27 +6,30 @@
 
 gridSize = [8,8];
 bins = (repmat([1:7],2,1)+[0;1])';
-rhoAcalc = 1;
-offset = 0;
-
-costVec1layer = [];
-subject_residuals = [];
-rhoAOutput = [];
+rhoA = 1;
+dataSelect = subStruct.dataSelect;
+numIndices = size(subStruct.meanMat,3);
 jLength = 8;
 kLength = 8;
 %%
 for index = 1:numIndices
     
-    % select particular values for constants
     dataInt = dataSelect(:,index);
-    i0 = currentMat(index);
-    sid = sidAll{:};
-    stimChans = [(stimChansVecTotal{index})];
-    stimChansDistance = stimChans(1:2);
-    jp = jp_vec(index);
-    kp = kp_vec(index);
-    jm = jm_vec(index);
-    km = km_vec(index);
+    % select particular values for constants
+    
+    stimChans = subStruct.stimChans(index,:);
+    i0 = subStruct.currentMat(index);
+    meanMat = subStruct.meanMat(:,:,index);
+    locs = subStruct.locs{index};
+    stimChansIndices = subStruct.stimChansIndices;
+    sid = subStruct.sid{index};
+    stimChansTotal = subStruct.stimChansVecTotal{index};
+    jp = stimChansIndices(1,index);
+    kp = stimChansIndices(2,index);
+    jm = stimChansIndices(3,index);
+    km = stimChansIndices(4,index);
+    
+    stimChansDistance = stimChans;
     
     % [distancesPosNeg] = distance_electrodes_pos_neg(stimChans,gridSize);
     [distances] = distance_electrodes_center(stimChansDistance,gridSize);
@@ -38,18 +37,19 @@ for index = 1:numIndices
     % perform 1d optimization
     % extract measured data and calculate theoretical ones
     
-    [l1] = computePotentials_1layer(jp,kp,jm,km,rhoAcalc,i0,stimChans,offset,jLength,kLength);
+    [l1] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChans,0,jLength,kLength);
     % c91479 was flipped l1 l3
     
-    [rhoAoutput,MSE,subjectResiduals,offsetOutput,fitVals] = distance_selection_MSE_bins_fitlm(dataInt,l1,bins,distances,stimChans);
+    [rhoAoutput,MSE,subjectResiduals,offset,bestVals] = distance_selection_MSE_bins_fitlm(dataInt,l1,bins,distances,stimChans);
     
-    fit.fitVals = fitVals;
-    fit.MSE = MSE;
-    fit.rhoAoutput = rhoAoutput;
-    fit.offsetVec = offsetVec;
+    tempStruct.bestVals = bestVals;
+    tempStruct.MSE = MSE;
+    tempStruct.rhoAcalc = rhoAoutput;
+    tempStruct.offset = offset;
     
-    fitStruct.fitIndGrid{index} = fit;
-    fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(rhoAoutput) ' offset = ' num2str(offsetOutput) ' \n ']);
+    fitStruct.calc{index} = tempStruct;
+    
+    fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(rhoAoutput) ' offset = ' num2str(offset) ' \n ']);
     
     
 end
@@ -59,12 +59,18 @@ end
 if plotIt
     
     figure
-    plot(rhoAVec','-o','linewidth',2)
-    legend({'1','2','3','4','5','6','7','8'})
+    hold on
+    for index = 1:numIndices
+        plot(fitStruct.calc{index}.rhoAcalc(1:5),'-o','linewidth',2)
+    end
+    legend({'1','2','3','4','5','6','7'})
     xlabel('bin')
     ylabel('rhoA (ohm-m)')
     title('one layer apparent resistivity by subject and bin')
     set(gca,'fontsize',18)
+    
+    if saveIt
+    end
     
 end
 
@@ -77,34 +83,24 @@ if plotIt
     for index = 1:numIndices
         
         subplot(2,4,index)
-        plot(rhoAVec(index,:),'-o','linewidth',2)
+        plot(fitStruct.calc{index}.rhoAcalc(1:5),'-o','linewidth',2)
         
         title(['subject ' num2str(index)])
         set(gca,'fontsize',18)
         ylim([0 5])
+        xlim([0 6])
+        yticks([0 1 2 3 4 5 6])
+        xticks([0 1 2 3 4 5 6])
+        
     end
     xlabel('bin')
     ylabel('rhoA (ohm-m)')
+    sgtitle('one layer apparent resistivity by subject and bin','fontsize',18)
     
-end
-
-%% if plotit
-if plotIt
-    
-    figure
-    
-    for index = 1:numIndices
+    if saveIt
         
-        subplot(2,4,index)
-        plot(dataSelect(:,index),'linewidth',2)
-        hold on
-        plot(fitValsVec(:,index),'linewidth',2)
-        plot(bestVals(:,index),'linewidth',2)
-        title(['subject ' num2str(index)])
-        set(gca,'fontsize',18)
     end
-    ylabel('voltage (V)')
-    legend({'data','binned best fits','global best fits'})
     
 end
 
+end

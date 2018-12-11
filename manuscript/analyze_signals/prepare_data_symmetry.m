@@ -11,8 +11,9 @@ stimChansVecTotal{5} = [[stimChansVecOnly{5,:}] 1 49 58 59];
 stimChansVecTotal{6} = [[stimChansVecOnly{6,:}] 57:64];
 stimChansVecTotal{7} = [[stimChansVecOnly{7,:}] 1 9 10 35 43];
 
-dataSelect = cell2mat(dataInterestStruct.meanData);
+subStruct.stimChansVecTotal = stimChansVecTotal;
 
+dataSelect = cell2mat(dataInterestStruct.meanData);
 gridData = nan(15,15,numIndices);
 mid = 8;
 

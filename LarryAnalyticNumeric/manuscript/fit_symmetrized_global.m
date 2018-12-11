@@ -1,8 +1,6 @@
 %% script to fit symmetric data
 %
-% David.J.Caldwell
-
-%% fitlm by bins
+% fitlm global
 % David.J.Caldwell 9.5.2018
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
