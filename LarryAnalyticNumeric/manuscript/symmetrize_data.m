@@ -1,5 +1,5 @@
 %% symmetrize data from recorded ECoG surface grids, assuming their stimulation locations are known
-% David.J.Caldwell 9/24/2018
+% David.J.Caldwell 9.24.2018
 
 %% run script to load data, declare stimulation channels, etc
 

@@ -1,58 +1,46 @@
-%% factor of 4 is included in here NOW within voltage_extract_avg
+%% go through 48 for 0a80cf
 
+
+stimChansVec = [ 28 27];
+currentMatVec = [ 0.002];
 % data for further analysis
-meanMatAll = zeros(64,2,7,1);
-stdMatAll = zeros(64,2,7,1);
-numberStimsAll = zeros(7,1,1);
+meanMatAll = zeros(48,2,1,1);
+stdMatAll = zeros(48,2,1,1);
+numberStimsAll = zeros(1,1,1);
 stdEveryPoint = {};
 extractCellAll = {};
+numChansInt = 48;
+counterIndex = 1;
+numRows = 1;
+numColumns = 1;
+sid = '0a80cf';
 subjectNum = [];
 figTotal =  figure('units','normalized','outerposition',[0 0 1 1]);
 
-% stimulation currents in A
-stimChansVec = [30 22;14 13;12 11;60 59;55 56;62 54;56 64];
-
-currentMatVec = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175]';
-numChansInt = 64;
-counterIndex = 1;
-numRows = 4;
-numColumns = 2;
-
-
-for ii = 1:7
-    sid = SIDS{ii};
+for ii = 1:1
     fprintf(['running for subject ' sid '\n']);
+    jj = 1;
     fs = 12207;
-    jj =1;
     stimChans = stimChansVec(ii,:);
     load(fullfile([sid '_StimulationAndCCEPs.mat']))
     ECoGData = permute(ECoGData,[1 3 2]);
-    
+    ECoGData = ECoGData(:,[1:48],:);
     [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',...
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
-        
+    
     [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
         meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
         meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
-      
+    
     [dataSubset,tSubset] = data_subset(ECoGData,1e3*t,preExtract,postExtract);
     dataSubsetCell{counterIndex} = dataSubset;
     
-    sidCell{counterIndex} = sid; 
-    subjectNum(ii) = ii;
-    counterIndex = counterIndex + 1;
+    sidCell{counterIndex} = sid;
+    subjectNum(ii) = 8;
 end
 
-if plotIt
-    figure(figTotal)
-    legend('first phase','second phase')
-    xlabel('electrode')
-    ylabel('Voltage (V)')
-    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7']),'png');
-end
-
-[first_7_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,...
+[subj_0a80cf_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,...
     currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset);
 
 clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex tSubset dataSubset dataSubsetCell

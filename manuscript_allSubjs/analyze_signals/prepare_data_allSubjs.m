@@ -1,10 +1,9 @@
 %% script to prepare the data for the one layer point theory
 %
 % David.J.Caldwell 11.23.2018
+cd(fileparts(which('prepare_data_allSubjs')));
 
 locationsDir = pwd;
-addpath(fullfile(locationsDir,'\coordinates'))
-addpath(fullfile(locationsDir,'\data'));
 
 totalData = load('recorded_waveform_data_12_3_2018.mat');
 plotIt = 1;
@@ -25,15 +24,16 @@ for totalDataInd = fieldnames(totalData)'
     numberStimsAll = subStruct.numberStims;
     stdEveryPointAll = subStruct.stdEveryPoint;
     extractCellAll = subStruct.extractCell;
-    numTrialsAll = size(meanMat,3);
+    numTrialsAll = size(subStruct.meanMat,3);
     sidAll = subStruct.sid;
     subjectNumAll = subStruct.subjectNum;
     t = subStruct.t;
     rawDataAll = subStruct.data;
     % badChansAll = subStruct.badChans % if bad chans exist
     
-    for trial = 1:numTrials
-        
+    % loop through trials within structure
+    for trial = 1:numTrialsAll
+        % setup temporary structure 
         indTrial.stimChans = stimChansVec(trial,:);
         indTrial.current = currentMat(trial);
         indTrial.meanMat = meanMatAll(:,:,trial);
@@ -43,21 +43,29 @@ for totalDataInd = fieldnames(totalData)'
         indTrial.sid = sidAll{trial};
         indTrial.subjectNum = subjectNumAll(trial);
         indTrial.rawData = rawDataAll{trial};
-      % indTrial.badChans = badChansAll{trial};
-     %   indTrial.badChans = [65:size(indTrial.meanMat,1)];
-       indTrial.badChans = [];
-       
+        % indTrial.badChans = badChansAll{trial};
+        %   indTrial.badChans = [65:size(indTrial.meanMat,1)];
+        indTrial.badChans = [];      
         indTrial.badTotal = [indTrial.stimChans indTrial.badChans];
         % load in electrode coords
-     %   load(fullfile(indTrial.sid,'bis_trodes.mat'));
+        %   load(fullfile(indTrial.sid,'bis_trodes.mat'));
         
-      %  basedir = getSubjDir(sid);
-      %  load(['bis_trodes.mat']);
-      load(['subj_' num2str(indTrial.subjectNum) '_bis_trodes.mat']);
+        %  basedir = getSubjDir(sid);
+        %  load(['bis_trodes.mat']);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % get electrode locations
         
+        load(['subj_' num2str(indTrial.subjectNum) '_bis_trodes.mat']);
         locs = AllTrodes;
         
-        vals = compute_1layer_theory_coords(locs,stimChans);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % one layer theory fitlm
+        
+        vals = compute_1layer_theory_coords(locs,indTrial.stimChans);
+        
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % 4 point histogram
         
         numChans = size(indTrial.meanMat,1);
         channelSelect = logical(zeros(numChans,1));
@@ -66,14 +74,15 @@ for totalDataInd = fieldnames(totalData)'
         dataScreened(channelSelect) = nan;
         
         [rho1] = four_point_histogram_calculation_coords(indTrial.current,locs,indTrial.badTotal,dataScreened);
-              rho1 = rho1(~isnan(rho1) & ~isinf(rho1));
-
+        rho1 = rho1(~isnan(rho1) & ~isinf(rho1));
+        
         rhoHist.vals = rho1;
         rhoHist.mean = mean(rho1(:));
         rhoHist.std = std(rho1(:));
         rhoHist.median = median(rho1(:));
         
         bins = [0:0.1:10];
+        % plot histogram 
         if plotIt
             figure;
             histogram(-rhoHist.vals,bins,'normalization','pdf');
@@ -83,8 +92,10 @@ for totalDataInd = fieldnames(totalData)'
             xlabel(['\rho_{apparent}'])
             ylabel('probability')
         end
-
-
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+        
         
     end
     
@@ -116,7 +127,7 @@ stimChansVec{3} = [[stimChansVecOnly{3,:}] 57];
 stimChansVec{4} = [[stimChansVecOnly{4,:}] 2 3 31 57];
 stimChansVec{5} = [[stimChansVecOnly{5,:}] 1 49 58 59];
 stimChansVec{6} = [[stimChansVecOnly{6,:}] 57:64];
-stimChansVec{7} = [[stimChansVecOnly{7,:}] 1 9 10 35 43];
+stimChansVec{9} = [[stimChansVecOnly{7,:}] 1 9 10 35 43];
 stimChansVec{8} = [[stimChansVecOnly{8,:}] 49:64];
 
 % LOCAL FIT
