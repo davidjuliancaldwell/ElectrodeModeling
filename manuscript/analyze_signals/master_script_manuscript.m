@@ -1,7 +1,7 @@
 %% resistivity analysis for all subjects 
 %
 % David.J.Caldwell 11.23.2018
-%close all;clear all;clc
+close all;clear all;clc
 
 cd(fileparts(which('prepare_data_single_subj')));
 locationsDir = pwd;
@@ -12,6 +12,13 @@ totalData = load(fullfile(folderData,'recorded_voltages.mat'));
 
 plotIt = 1;
 saveIt = 0;
+
+%% define data structures to be filled later
+
+histStruct = struct;
+dataInteresStruct = struct;
+symmetryStruct = struct; 
+
 %% define additional grid electrode locations just for first 7
 prepare_electrode_mapping
 
@@ -23,6 +30,15 @@ prepare_data_symmetry
 
 %% symmetrize the data
 symmetrize_data
+
+
+%% 4 point histograms for the individual
+
+four_point_histograms_individual
+
+%% 4 point histograms using the CT coordinates 
+
+four_point_histograms_individual_coords
 
 %% fit the individual subject data with one rhoA 
 

@@ -10,7 +10,9 @@ cmap = flipud(cbrewer('div','RdBu',40));
 load('america')
 cmap = cm;
 
-for index = 1:numTrialsAll
+symmetryStruct = struct; 
+
+for index = 1:numIndices
     
     % select subject data
     dataInt = reshape(dataSelect(:,index),8,8);
@@ -112,6 +114,9 @@ for index = 1:numTrialsAll
     end
 end
 
+symmetryStruct.gridData = gridData;
+symmetryStruct.gridDataLog = gridDataLog; 
+
 if plotIt
     figure(figind)
     cbar = colorbar();
@@ -179,6 +184,8 @@ gridDataAvgLog = log(abs(1e3*gridDataAvg));
 gridDataAvgLog(gridDataAvg>0) = 1*gridDataAvgLog(gridDataAvg>0);
 gridDataAvgLog(gridDataAvg<0) = -1*gridDataAvgLog(gridDataAvg<0);
 
+symmetryStruct.gridDataAvgLog = gridDataAvgLog;
+
 if plotIt
     imAlpha=ones(size(gridDataAvg));
     imAlpha(isnan(gridDataAvg))=0;
@@ -211,10 +218,12 @@ if plotIt
 end
 %%
 % pad to make left right flip easier
-gridDataExpandLR = cat(2,gridData,nan(15,1,numTrialsAll));
+gridDataExpandLR = cat(2,gridData,nan(15,1,numIndices));
 gridDataLRavg =  nanmean(cat(3,-fliplr(gridDataExpandLR),gridDataExpandLR),3);
 % now shrink
 gridDataLRavg = gridDataLRavg(:,1:end-1,:);
+
+symmetryStruct.gridDataLRavg = gridDataLRavg;
 
 if plotIt
     imAlpha=ones(size(gridDataLRavg));
@@ -250,6 +259,8 @@ gridDataLRavgLog = log(abs(1e3*gridDataLRavg));
 gridDataLRavgLog(gridDataLRavg>0) = 1*gridDataLRavgLog(gridDataLRavg>0);
 gridDataLRavgLog(gridDataLRavg<0) = -1*gridDataLRavgLog(gridDataLRavg<0);
 
+symmetryStruct.gridDataLRavgLog = gridDataLRavgLog;
+
 if plotIt
     figure
     
@@ -282,6 +293,8 @@ end
 % flip up down and average
 gridDataUD = cat(3,flipud(gridData),gridData);
 gridDataUDavg = nanmean(gridDataUD,3);
+
+symmetryStruct.gridDataUDavg = gridDataUDavg;
 
 if plotIt
     imAlpha=ones(size(gridDataUDavg));
@@ -318,6 +331,8 @@ gridDataUDavgLog = log(abs(1e3*gridDataUDavg));
 gridDataUDavgLog(gridDataUDavg>0) = 1*gridDataUDavgLog(gridDataUDavg>0);
 gridDataUDavgLog(gridDataUDavg<0) = -1*gridDataUDavgLog(gridDataUDavg<0);
 
+symmetryStruct.gridDataUDavgLog = gridDataUDavgLog;
+
 if plotIt
     figure
     imagesc(gridDataUDavgLog,'AlphaData',imAlpha,[-max(abs(gridDataUDavg(:))), max(abs(gridDataUDavg(:)))])
@@ -347,13 +362,15 @@ end
 %%
 % pad and expand UD
 gridDataExpandUD = cat(3,flipud(gridData),gridData);
-gridDataExpandUD = cat(2,gridDataExpandUD,nan(15,1,numTrialsAll*2));
+gridDataExpandUD = cat(2,gridDataExpandUD,nan(15,1,numIndices*2));
 % combine left right up down
-gridDataLRUD = cat(3,gridDataExpandLR,-fliplr(gridDataExpandLR),gridDataExpandUD,grid);
+gridDataLRUD = cat(3,gridDataExpandLR,gridDataExpandUD);
 %average
 gridDataLRUDavg = nanmean(gridDataLRUD,3);
 % now shrink
 gridDataLRUDavg = gridDataLRUDavg(:,1:end-1,:);
+
+symmetryStruct.gridDataLRUDavg = gridDataLRUDavg; 
 
 if plotIt
     imAlpha=ones(size(gridDataLRUDavg));
@@ -420,7 +437,6 @@ if plotIt
 end
 
 if saveIt
-    save('symmetricDataDavid_9_24_2018.mat','gridData','gridDataLRUDavg',...
-        'gridDataLRUD','gridDataLRavg','gridDataExpandLR','gridDataUD','gridDataUDavg')
+    save('symmetricDataDavid_12_2018.mat','symmetryStruct')
 end
 

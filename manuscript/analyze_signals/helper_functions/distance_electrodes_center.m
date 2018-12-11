@@ -1,4 +1,4 @@
-function [distances] = distance_electrodes_center_coords(electrodes,gridSize)
+function [distances] = distance_electrodes_center(electrodes,gridSize)
 % function to calculate the distances from the center of a positive
 % negative stimulation dipole
 % David.J.Caldwell 8.22.2018
