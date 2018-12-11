@@ -99,13 +99,13 @@ if plotIt
     % new version of scatter plot
     %%
     figure('units','normalized','outerposition',[0 0 1 1])
-    subplot(3,1,1)
+    subplot(2,1,1)
     hold on
     plot(chanVec,abs(meanMat(:,1)),'linewidth',2)
     plot(chanVec+0.3,abs(meanMat(:,2)),'linewidth',2)
     
-    h{1} = errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2,'color',[0,0.4470,0.7410]);
-    h{2} = errorbar(chanVec+0.3,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2,'color',[0.8500,0.3250,0.0980]);
+    h{1} = errorbar(chanVec,abs(meanMat(:,1)),3.*stdMat(:,1),'linewidth',2,'color',[0,0.4470,0.7410]);
+    h{2} = errorbar(chanVec+0.3,abs(meanMat(:,2)),3.*stdMat(:,2),'linewidth',2,'color',[0.8500,0.3250,0.0980]);
     v2 = vline(stimChans(1),'g');
     v3 = vline(stimChans(2),'b');
     xlabel('electrode')
@@ -113,26 +113,26 @@ if plotIt
     % title(['Subject ' num2str(ii)])
     title({['Subject ' num2str(ii) ' subject ID ' sid ' stim channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)) ],...
         [' current ' num2str(1e6*currentMat(ii,jj)) '\muA'],...
-        'Mean and Average Standard Deviation for mean waveform for Recorded Biphasic Pulse'})
-       legend([h{1} h{2} v2 v3],{'first phase','second phase','- chan','+ chan'})
-
+        'Mean and 3x average standard deviation for mean waveform for recorded biphasic pulse'})
+    legend([h{1} h{2} v2 v3],{'first phase','second phase','- chan','+ chan'})
+    
     set(gca,'fontsize',16)
     
-    subplot(3,1,2)
-    hold on
-    h{1} = scatter(chanVec,100*stdMat(:,1)./abs(meanMat(:,1)),'filled');
-    h{2} = scatter(chanVec,100*stdMat(:,2)./abs(meanMat(:,2)),'filled');
-    set(gca,'YScale','log')
-    v2 = vline(stimChans(1),'g');
-    v3 = vline(stimChans(2),'b');
+    %     subplot(3,1,2)
+    %     hold on
+    %     h{1} = scatter(chanVec,100*stdMat(:,1)./abs(meanMat(:,1)),'filled');
+    %     h{2} = scatter(chanVec,100*stdMat(:,2)./abs(meanMat(:,2)),'filled');
+    %     set(gca,'YScale','log')
+    %     v2 = vline(stimChans(1),'g');
+    %     v3 = vline(stimChans(2),'b');
+    %
+    %     xlabel('electrode')
+    %     ylabel('Percent percent of mean')
+    %     title({'Percent of mean, standard Deviation across mean waveform','of the artifact for Recorded Biphasic Pulse'})
+    %     legend([h1{1} h2{1} v2 v3],{'first phase','second phase','- chan','+ chan'})
+    %     set(gca,'fontsize',16)
     
-    xlabel('electrode')
-    ylabel('Percent percent of mean')
-    title({'Percent of mean, standard Deviation across mean waveform','of the artifact for Recorded Biphasic Pulse'})
-    legend([h1{1} h2{1} v2 v3],{'first phase','second phase','- chan','+ chan'})
-    set(gca,'fontsize',16)
-    
-    subplot(3,1,3)
+    subplot(2,1,2)
     hold on
     h{1} = scatter(chanVec,stdMat(:,1),'filled');
     h{2} = scatter(chanVec,stdMat(:,2),'filled');
@@ -144,8 +144,8 @@ if plotIt
     
     xlabel('electrode')
     ylabel('Voltage (V)')
-    title({'Standard Deviation across mean waveform','of the artifact for Recorded Biphasic Pulse'})
-   % legend([h1{1} h2{1} v2 v3],{'first phase','second phase','- chan','+ chan'})
+    title({'standard Deviation across mean waveform','of the artifact for recorded biphasic pulse'})
+    % legend([h1{1} h2{1} v2 v3],{'first phase','second phase','- chan','+ chan'})
     set(gca,'fontsize',16)
     if saveIt
         SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_v2_' sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_current_' num2str(1e6*currentMat(ii,jj))]),'png');
