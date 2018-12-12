@@ -6,6 +6,7 @@ stdMatAll = zeros(64,2,7,1);
 numberStimsAll = zeros(7,1,1);
 stdEveryPoint = {};
 extractCellAll = {};
+meanEveryTrial = {};
 subjectNum = [];
 figTotal =  figure('units','normalized','outerposition',[0 0 1 1]);
 
@@ -27,15 +28,15 @@ for ii = 1:7
     stimChans = stimChansVec(ii,:);
     load(fullfile([sid '_StimulationAndCCEPs.mat']))
     ECoGData = permute(ECoGData,[1 3 2]);
-    
-    [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',...
+    %%
+    [meanMat,stdMat,stdCellEveryPoint,meanCellEveryTrial,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',...
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
-        
-    [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
-        meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
-        meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
+        %%
+    [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrial,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
+        meanMat,stdMat,numberStims,stdCellEveryPoint,meanCellEveryTrial,extractCell,...
+        meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrial,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,1,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
-      
+      %%
     [dataSubset,tSubset] = data_subset(ECoGData,1e3*t,preExtract,postExtract);
     dataSubsetCell{counterIndex} = dataSubset;
     
@@ -52,7 +53,7 @@ if plotIt
     SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7']),'png');
 end
 
-[first_7_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,...
+[first_7_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,meanEveryTrial,stimChansVec,...
     currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset);
 
 clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex tSubset dataSubset dataSubsetCell

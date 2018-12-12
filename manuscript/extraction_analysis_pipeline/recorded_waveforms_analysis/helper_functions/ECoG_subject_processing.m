@@ -1,5 +1,5 @@
-function [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,figTotal] = ECoG_subject_processing(ii,jj,meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
-    meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,stimChans,...
+function [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrial,extractCellAll,figTotal] = ECoG_subject_processing(ii,jj,meanMat,stdMat,numberStims,stdCellEveryPoint,meanCellEveryTrial,extractCell,...
+    meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrial,extractCellAll,stimChans,...
     currentMat,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex)
 
 meanMat(stimChans,:) = nan;
@@ -10,6 +10,8 @@ extractCell{stimChans(2)}{1}= nan;
 extractCell{stimChans(2)}{2}= nan;
 stdCellEveryPoint{stimChans(1)} = {nan,nan};
 stdCellEveryPoint{stimChans(2)} =  {nan,nan};
+meanCellEveryTrial{stimChans(1)} = {nan,nan};
+meanCellEveryTrial{stimChans(2)} = {nan,nan};
 
 extractCellAll{ii,jj} = extractCell;
 
@@ -17,6 +19,7 @@ meanMatAll(:,:,ii,jj) = meanMat;
 stdMatAll(:,:,ii,jj) = stdMat;
 numberStimsAll(ii,jj) = numberStims;
 stdEveryPoint{ii,jj} = stdCellEveryPoint;
+meanEveryTrial{ii,jj} = meanCellEveryTrial;
 
 saveIt = 0;
 if plotIt
@@ -96,16 +99,17 @@ if plotIt
         SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_current_' num2str(1e6*currentMat(ii,jj))]),'png');
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % new version of scatter plot
-    %%
+    %% new version of scatter plot
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
     figure('units','normalized','outerposition',[0 0 1 1])
     subplot(2,1,1)
     hold on
     plot(chanVec,abs(meanMat(:,1)),'linewidth',2)
     plot(chanVec+0.3,abs(meanMat(:,2)),'linewidth',2)
     
-    h{1} = errorbar(chanVec,abs(meanMat(:,1)),3.*stdMat(:,1),'linewidth',2,'color',[0,0.4470,0.7410]);
-    h{2} = errorbar(chanVec+0.3,abs(meanMat(:,2)),3.*stdMat(:,2),'linewidth',2,'color',[0.8500,0.3250,0.0980]);
+    h{1} = errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2,'color',[0,0.4470,0.7410]);
+    h{2} = errorbar(chanVec+0.3,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2,'color',[0.8500,0.3250,0.0980]);
     v2 = vline(stimChans(1),'g');
     v3 = vline(stimChans(2),'b');
     xlabel('electrode')
@@ -113,7 +117,7 @@ if plotIt
     % title(['Subject ' num2str(ii)])
     title({['Subject ' num2str(ii) ' subject ID ' sid ' stim channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)) ],...
         [' current ' num2str(1e6*currentMat(ii,jj)) '\muA'],...
-        'Mean and 3x average standard deviation for mean waveform for recorded biphasic pulse'})
+        'Mean and standard deviation for mean waveform for recorded biphasic pulse'})
     legend([h{1} h{2} v2 v3],{'first phase','second phase','- chan','+ chan'})
     
     set(gca,'fontsize',16)
@@ -150,6 +154,82 @@ if plotIt
     if saveIt
         SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_v2_' sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_current_' num2str(1e6*currentMat(ii,jj))]),'png');
     end
+    
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% new version of scatter, mean across waveform 
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    figure('units','normalized','outerposition',[0 0 1 1])
+    
+    for chan = chanVec
+        for phase = 1:2
+    mWT(chan,phase) = mean(meanCellEveryTrial{chan}{phase});
+    stdWT(chan,phase) = std(meanCellEveryTrial{chan}{phase});
+        end
+    end
+
+    subplot(2,1,1)
+    hold on
+    plot(chanVec,abs(mWT(:,1)),'linewidth',2)
+    plot(chanVec+0.3,abs(mWT(:,2)),'linewidth',2)
+    
+    h{1} = errorbar(chanVec,abs(mWT(:,1)),stdWT(:,1),'linewidth',2,'color',[0,0.4470,0.7410]);
+    h{2} = errorbar(chanVec+0.3,abs(mWT(:,2)),stdWT(:,2),'linewidth',2,'color',[0.8500,0.3250,0.0980]);
+    v2 = vline(stimChans(1),'g');
+    v3 = vline(stimChans(2),'b');
+    xlabel('electrode')
+    ylabel('Voltage (V)')
+    % title(['Subject ' num2str(ii)])
+    title({['Subject ' num2str(ii) ' subject ID ' sid ' stim channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)) ],...
+        [' current ' num2str(1e6*currentMat(ii,jj)) '\muA'],...
+        'Mean and standard deviation for individual trials voltage average for recorded biphasic pulse'})
+    legend([h{1} h{2} v2 v3],{'first phase','second phase','- chan','+ chan'})
+    
+    set(gca,'fontsize',16)
+    
+    %     subplot(3,1,2)
+    %     hold on
+    %     h{1} = scatter(chanVec,100*stdMat(:,1)./abs(meanMat(:,1)),'filled');
+    %     h{2} = scatter(chanVec,100*stdMat(:,2)./abs(meanMat(:,2)),'filled');
+    %     set(gca,'YScale','log')
+    %     v2 = vline(stimChans(1),'g');
+    %     v3 = vline(stimChans(2),'b');
+    %
+    %     xlabel('electrode')
+    %     ylabel('Percent percent of mean')
+    %     title({'Percent of mean, standard Deviation across mean waveform','of the artifact for Recorded Biphasic Pulse'})
+    %     legend([h1{1} h2{1} v2 v3],{'first phase','second phase','- chan','+ chan'})
+    %     set(gca,'fontsize',16)
+    
+    subplot(2,1,2)
+    hold on
+    h{1} = scatter(chanVec,stdWT(:,1),'filled');
+    h{2} = scatter(chanVec,stdWT(:,2),'filled');
+    
+    
+    set(gca,'YScale','log')
+    v2 = vline(stimChans(1),'g');
+    v3 = vline(stimChans(2),'b');
+    
+    xlabel('electrode')
+    ylabel('Voltage (V)')
+    title({'standard Deviation across trials','of the extracted average voltage for recorded biphasic pulse'})
+    % legend([h1{1} h2{1} v2 v3],{'first phase','second phase','- chan','+ chan'})
+    set(gca,'fontsize',16)
+    if saveIt
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_v2_' sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_current_' num2str(1e6*currentMat(ii,jj))]),'png');
+    end
+    
+    %%
+    figure
+    for chan = chanVec
+        subplot(8,8,chan)
+       plot(meanCellEveryTrial{chan}{1})
+       title([num2str(chan)])
+       set(gca,'fontsize',14)
+    end
+    sgtitle('Variation across stimulation pulses')
+    
 end
 
 end

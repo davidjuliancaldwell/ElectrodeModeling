@@ -1,4 +1,4 @@
-function [meanMatrix,stdMatrix,stdCellEveryPoint,extractCell,numTrials] = voltage_extract_avg(waveformMatrix,varargin)
+function [meanMatrix,stdMatrix,stdCellEveryPoint,meanCellEveryTrial,extractCell,numTrials] = voltage_extract_avg(waveformMatrix,varargin)
 % expects time x channels x trials
 % average across trials, and find the average stimulation waveform during
 % each phase of a stimulus
@@ -100,6 +100,13 @@ for chan = 1:size(waveformMatrix,2)
     stdMatrix(chan,1) = std(firstPhase);
     stdMatrix(chan,2) = std(secondPhase);
     
+    % get the means at every point 
+    firstPhaseSig = channelSig(beginInd+preSamps:transitionPt-postSamps,:);
+    secondPhaseSig = channelSig(transitionPt+preSamps:endInd-postSamps,:);
+    
+    meanCellEveryTrial{chan}{1} = mean(firstPhaseSig,1);
+    meanCellEveryTrial{chan}{2} = mean(secondPhaseSig,1);
+   
     % now get the standard deviation at every point in the recorded
     % waveform
     stdCellEveryPoint{chan}{1} = std(channelSig(beginInd+preSamps:transitionPt-postSamps,:),[],2);
