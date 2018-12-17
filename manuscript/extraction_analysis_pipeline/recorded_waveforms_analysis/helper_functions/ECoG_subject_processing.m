@@ -1,5 +1,5 @@
-function [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrial,extractCellAll,figTotal] = ECoG_subject_processing(ii,jj,meanMat,stdMat,numberStims,stdCellEveryPoint,meanCellEveryTrial,extractCell,...
-    meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrial,extractCellAll,stimChans,...
+function [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,figTotal] = ECoG_subject_processing(ii,jj,meanMat,stdMat,numberStims,stdCellEveryPoint,meanEveryTrial,extractCell,...
+    meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,stimChans,...
     currentMat,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex)
 
 meanMat(stimChans,:) = nan;
@@ -10,8 +10,8 @@ extractCell{stimChans(2)}{1}= nan;
 extractCell{stimChans(2)}{2}= nan;
 stdCellEveryPoint{stimChans(1)} = {nan,nan};
 stdCellEveryPoint{stimChans(2)} =  {nan,nan};
-meanCellEveryTrial{stimChans(1)} = {nan,nan};
-meanCellEveryTrial{stimChans(2)} = {nan,nan};
+meanEveryTrial(stimChans(1),:,:) = nan;
+meanEveryTrial(stimChans(2),:,:) = nan;
 
 extractCellAll{ii,jj} = extractCell;
 
@@ -19,7 +19,7 @@ meanMatAll(:,:,ii,jj) = meanMat;
 stdMatAll(:,:,ii,jj) = stdMat;
 numberStimsAll(ii,jj) = numberStims;
 stdEveryPoint{ii,jj} = stdCellEveryPoint;
-meanEveryTrial{ii,jj} = meanCellEveryTrial;
+meanEveryTrialAll{ii,jj} = meanEveryTrial;
 
 saveIt = 0;
 if plotIt
@@ -163,8 +163,8 @@ if plotIt
     
     for chan = chanVec
         for phase = 1:2
-    mWT(chan,phase) = mean(meanCellEveryTrial{chan}{phase});
-    stdWT(chan,phase) = std(meanCellEveryTrial{chan}{phase});
+    mWT(chan,phase) = mean(meanEveryTrial(chan,phase,:));
+    stdWT(chan,phase) = std(meanEveryTrial(chan,phase,:));
         end
     end
 
@@ -224,7 +224,7 @@ if plotIt
     figure
     for chan = chanVec
         subplot(8,8,chan)
-       plot(meanCellEveryTrial{chan}{1})
+       plot(squeeze(meanEveryTrial(chan,1,:)))
        title([num2str(chan)])
        set(gca,'fontsize',14)
     end
