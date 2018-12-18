@@ -8,11 +8,11 @@ outputStructure.meanMat = meanMat;
 outputStructure.stdMat = stdMat;
 outputStructure.numberStims = numberStims;
 outputStructure.stdEveryPoint = stdEveryPoint;
-outputStructure.extractCell = extractCell;
+%outputStructure.extractCell = extractCell;
 outputStructure.sid = sid;
 outputStructure.subjectNum = subjectNum; 
 outputStructure.t = t;
-outputStructure.data = data; 
+%outputStructure.data = data; 
 outputStructure.meanEveryTrial = meanEveryTrial;
 
 end

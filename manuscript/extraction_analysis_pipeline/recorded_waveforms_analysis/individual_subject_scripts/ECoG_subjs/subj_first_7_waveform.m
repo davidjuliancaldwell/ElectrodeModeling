@@ -20,7 +20,7 @@ numRows = 4;
 numColumns = 2;
 
 
-for ii = 1:7
+for ii = 2:2
     sid = SIDS{ii};
     fprintf(['running for subject ' sid '\n']);
     fs = 12207;
