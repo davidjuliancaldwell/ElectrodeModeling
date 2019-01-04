@@ -12,7 +12,6 @@ saveIt = 0;
 %% symmetry
 symmetryStruct = symmetrize_data(subStruct,plotIt,saveIt);
 
-
 %% 4 point histograms for the individual
 histStruct = four_point_histograms_individual(subStruct,plotIt,saveIt);
 
@@ -25,25 +24,9 @@ fitIndGlobal = fit_individual_global(subStruct);
 %% fit the individual subject data with rhoA for different bins
 fitIndBins = fit_individual(subStruct,plotIt,saveIt);
 
-%% if plotit
-if plotIt
-    
-    figure
-    
-    for index = 1:numIndices
-        
-        subplot(2,4,index)
-        plot(dataSelect(:,index),'linewidth',2)
-        hold on
-        plot(fitValsVec(:,index),'linewidth',2)
-        plot(bestVals(:,index),'linewidth',2)
-        title(['subject ' num2str(index)])
-        set(gca,'fontsize',18)
-    end
-    ylabel('voltage (V)')
-    legend({'data','binned best fits','global best fits'})
-    
-end
+%% plot the binned fits, original data, and global fit for each subject
+
+plot_ind_fits(subStruct,fitIndGlobal,fitIndBins,saveIt)
 
 %% 4 point histograms for the symmetrized data
 

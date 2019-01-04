@@ -37,10 +37,12 @@ for index = 1:numIndices
     % perform 1d optimization
     % extract measured data and calculate theoretical ones
     
-    [l1] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChans,0,jLength,kLength);
+    [l1] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChansTotal,0,jLength,kLength);
     % c91479 was flipped l1 l3
     
     [rhoAoutput,MSE,subjectResiduals,offset,bestVals] = distance_selection_MSE_bins_fitlm(dataInt,l1,bins,distances,stimChans);
+    
+    tempStruct = struct;
     
     tempStruct.bestVals = bestVals;
     tempStruct.MSE = MSE;
