@@ -1,36 +1,35 @@
-function fitStruct = fit_individual_global(subStruct)
+function fitStruct = fit_individual_global_coords(subStruct)
 
 % function to fit individual subject data with global rhoA
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
 
-
 rhoA = 1;
 dataSelect = subStruct.dataSelect;
 numIndices = size(subStruct.meanMat,3);
-jLength = 8;
-kLength = 8;
+
 %%
 for index = 1:numIndices
     
     dataInt = dataSelect(:,index);
+    badTotal = subStruct.badTotal{index};
+    dataInt(badTotal) = nan;
+
     % select particular values for constants
     
+    stimChans = subStruct.stimChans(index,:);
     i0 = subStruct.currentMat(index);
-    stimChansIndices = subStruct.stimChansIndices;
-    badTotal = subStruct.badTotal{index};
-    jp = stimChansIndices(1,index);
-    kp = stimChansIndices(2,index);
-    jm = stimChansIndices(3,index);
-    km = stimChansIndices(4,index);
-       
-    % perform 1d optimization
-    offset = 0;
+    locs = subStruct.locs{index};
+    % only use grid electrodes
+    locs = locs(1:64,:);
     % extract measured data and calculate theoretical ones
     
-    [l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,badTotal,offset,jLength,kLength);
-    
+    %[l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChansTotal,offset,jLength,kLength);
+    l1 = compute_1layer_theory_coords(locs,stimChans);
+    scaleA=(i0*rhoA)/(2*pi);
+    l1 = scaleA*l1;
+
     intercept = true;
     tempStruct = struct;
     
@@ -38,7 +37,7 @@ for index = 1:numIndices
     if ~isempty(dataInt)
         if ~intercept
             dlm=fitlm(l1,dataInt,'intercept',false);
-            tempStruct.rhoAcalc(index) =dlm.Coefficients{1,1};
+            tempStruct.rhoAcalc(index)=dlm.Coefficients{1,1};
             tempStruct.offset(index) = 0;
         else
             dlm=fitlm(l1,dataInt);

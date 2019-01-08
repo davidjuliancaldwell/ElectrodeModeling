@@ -1,4 +1,4 @@
-function [rhoA,MSE,subjectResiduals,offset,bestVals] = distance_selection_MSE_bins_fitlm(data,theory,bins,distances,stimChans)
+function [rhoA,MSE,subjectResiduals,offset,bestVals] = distance_selection_MSE_bins_fitlm(data,theory,bins,distances)
 
 MSE = zeros(size(bins,1),1);
 bestVals = nan(size(distances,1),1);

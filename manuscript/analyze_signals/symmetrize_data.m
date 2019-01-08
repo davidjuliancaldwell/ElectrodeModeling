@@ -26,6 +26,8 @@ for index = 1:numIndices
     % select subject data
     dataInt = reshape(dataSelect(:,index),8,8);
     
+    dataInt(subStruct.badTotal{index}) = nan;
+    
     % figure out shift needed to align
     
     xShift = mid - stimChansIndices(2,index) + 1;
@@ -370,14 +372,14 @@ if plotIt
 end
 %%
 % pad and expand UD
-gridDataExpandUD = cat(3,flipud(gridData),gridData);
-gridDataExpandUD = cat(2,gridDataExpandUD,nan(15,1,numIndices*2));
+%gridDataExpandUD = cat(3,flipud(gridData),gridData);
+%gridDataExpandUD = cat(2,gridDataExpandUD,nan(15,1,numIndices*2));
 % combine left right up down
-gridDataLRUD = cat(3,gridDataExpandLR,gridDataExpandUD);
+gridDataLRUD = cat(3,gridDataLRavg,flipud(gridDataLRavg));
 %average
 gridDataLRUDavg = nanmean(gridDataLRUD,3);
 % now shrink
-gridDataLRUDavg = gridDataLRUDavg(:,1:end-1,:);
+%gridDataLRUDavg = gridDataLRUDavg(:,1:end-1,:);
 
 symmetryStruct.gridDataLRUDavg = gridDataLRUDavg;
 
@@ -444,6 +446,10 @@ if plotIt
         SaveFig(workingDirec,'averageLRUDsym','png','-r600');
     end
 end
+
+% add in stim channels
+symmetryStruct.stimChansIndices = [8 8 9 8];
+symmetryStruct.stimChans = [113 128];
 
 if saveIt
     save('symmetricDataDavid_12_2018.mat','symmetryStruct')

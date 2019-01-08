@@ -1,6 +1,6 @@
 %% script to prepare the data for the one layer point theory
 
-function [subStruct] = prepare_data_single_subj()
+function [subStruct] = prepare_data_single_subj(eliminateBadChannels)
 
 cd(fileparts(which('prepare_data_single_subj')));
 locationsDir = pwd;
@@ -37,16 +37,26 @@ stimChansIndices = [jp_vec; kp_vec; jm_vec; km_vec];
 
 stimChansVecOnly = {22 30; 13 14; 11 12; 59 60; 56 55; 54 62; 64 56};
 
-stimChansVecTotal = {};
-stimChansVecTotal{1} = [[stimChansVecOnly{1,:}] 17 18 19];
-stimChansVecTotal{2} = [[stimChansVecOnly{2,:}] 23 27 28 29 30 32 44 52 60];
-stimChansVecTotal{3} = [[stimChansVecOnly{3,:}] 57];
-stimChansVecTotal{4} = [[stimChansVecOnly{4,:}] 2 3 31 57];
-stimChansVecTotal{5} = [[stimChansVecOnly{5,:}] 1 49 58 59];
-stimChansVecTotal{6} = [[stimChansVecOnly{6,:}] 57:64];
-stimChansVecTotal{7} = [[stimChansVecOnly{7,:}] 1 9 10 35 43];
+badTotal = {};
+if eliminateBadChannels
+    badTotal{1} = [[stimChansVecOnly{1,:}] 17 18 19];
+    badTotal{2} = [[stimChansVecOnly{2,:}] 23 27 28 29 30 32 44 52 60];
+    badTotal{3} = [[stimChansVecOnly{3,:}] 57];
+    badTotal{4} = [[stimChansVecOnly{4,:}] 2 3 31 57];
+    badTotal{5} = [[stimChansVecOnly{5,:}] 1 49 58 59];
+    badTotal{6} = [[stimChansVecOnly{6,:}] 57:64];
+    badTotal{7} = [[stimChansVecOnly{7,:}] 1 9 10 35 43];
+else
+    badTotal{1} = [[stimChansVecOnly{1,:}]];
+    badTotal{2} = [[stimChansVecOnly{2,:}]];
+    badTotal{3} = [[stimChansVecOnly{3,:}]];
+    badTotal{4} = [[stimChansVecOnly{4,:}]];
+    badTotal{5} = [[stimChansVecOnly{5,:}]];
+    badTotal{6} = [[stimChansVecOnly{6,:}]];
+    badTotal{7} = [[stimChansVecOnly{7,:}]];
+end
 
-subStruct.stimChansVecTotal = stimChansVecTotal;
+subStruct.badTotal = badTotal;
 
 
 subStruct.stimChansIndices = stimChansIndices;
@@ -54,8 +64,8 @@ subStruct.stimChansIndices = stimChansIndices;
 % loop through trials within structure
 for index = 1:numIndices
     
-    subStruct.badChans = [];
-    subStruct.badTotal{index} = [subStruct.stimChans(index,:) subStruct.badChans];
+    %subStruct.badChans = [];
+    %subStruct.badTotal{index} = [subStruct.stimChans(index,:) subStruct.badChans];
     
     subStruct.meanData{index} = subStruct.meanMat(:,1,index);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,7 +77,7 @@ for index = 1:numIndices
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % one layer theory fitlm
     
-    subStruct.oneLayerVals{index} = compute_1layer_theory_coords(subStruct.locs{index},subStruct.stimChans(index,:));
+    %  subStruct.oneLayerVals{index} = compute_1layer_theory_coords(subStruct.locs{index},subStruct.stimChans(index,:));
     
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

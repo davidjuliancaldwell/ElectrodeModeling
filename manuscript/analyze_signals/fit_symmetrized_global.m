@@ -1,12 +1,13 @@
-%% script to fit symmetric data
-%
-% David.J.Caldwell
-
-%% fitlm by bins
+function fitStruct = fit_symmetrized_global(subStruct)
+%% function to fit symmetric data
+%fitlm by bins
 % David.J.Caldwell 9.5.2018
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
+
+dataInt = subStruct.gridDataLRUDavg;
+stimChansSym = subStruct.stimChansIndices;
 dataInt = dataInt(:);
 
 cost_vec_1layer = [];
@@ -24,13 +25,11 @@ gridSize = [jLength,kLength];
 
 % select particular values for constants
 i0 = 1;
-stimChansSym(1) = sub2ind([jLength,kLength],8,8);
-stimChansSym(2) = sub2ind([jLength,kLength],8,9);
 
-jp = stimChansIndicesSym(1);
-kp = stimChansIndicesSym(2);
-jm = stimChansIndicesSym(3);
-km = stimChansIndicesSym(4);
+jp = stimChansSym(1);
+kp = stimChansSym(2);
+jm = stimChansSym(3);
+km = stimChansSym(4);
 
 % perform 1d optimization
 offsetSym = 0;
@@ -41,31 +40,29 @@ offsetSym = 0;
 intercept = true;
 
 % use MSE
+% use MSE
 if ~isempty(dataInt)
     if ~intercept
         dlm=fitlm(l1,dataInt,'intercept',false);
-        rhoACalcSym =dlm.Coefficients{1,1};
-        offsetSym = 0;
+        fitStruct.rhoAcalc=dlm.Coefficients{1,1};
+        fitStruct.offset = 0;
     else
         dlm=fitlm(l1,dataInt);
-        
-        rhoACalcSym=dlm.Coefficients{2,1};
-        offsetSym = dlm.Coefficients{1,1};
+        fitStruct.rhoAcalc=dlm.Coefficients{2,1};
+        fitStruct.offset = dlm.Coefficients{1,1};
     end
-    MSESym = dlm.RMSE;
-    fitValsSymVec = dlm.Fitted;
+    fitStruct.MSE = dlm.RMSE;
+    fitStruct.bestVals = dlm.Fitted;
     
 else
-    
-    rhoACalcSym = nan;
-    MSESym = nan;
-    offsetSym = nan;
+    fitStruct.rhoAcalc = nan;
+    fitStruct.MSE = nan;
+    fitStruct.offset = nan;
 end
 
-
-fprintf(['complete for symmetric  rhoA ='  num2str(rhoACalcSym) ' offsetSym = ' num2str(offsetSym) ' \n ']);
-%%
+fprintf(['complete for symmetric  rhoA ='  num2str(fitStruct.rhoAcalc) ' offsetSym = ' num2str(fitStruct.offset) ' \n ']);
 
 
+end
 
 

@@ -1,41 +1,36 @@
-function fitStruct = fit_individual(subStruct,plotIt,saveIt)
+function fitStruct = fit_individual_coords(subStruct,plotIt,saveIt)
 % David.J.Caldwell 9.5.2018
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
 
-gridSize = [8,8];
 bins = (repmat([1:7],2,1)+[0;1])';
 rhoA = 1;
 dataSelect = subStruct.dataSelect;
 numIndices = size(subStruct.meanMat,3);
-jLength = 8;
-kLength = 8;
+
 %%
 for index = 1:numIndices
+    
     dataInt = dataSelect(:,index);
     badTotal = subStruct.badTotal{index};
     dataInt(badTotal) = nan;
     
     % select particular values for constants
+    
     stimChans = subStruct.stimChans(index,:);
     i0 = subStruct.currentMat(index);
-    stimChansIndices = subStruct.stimChansIndices;
-    jp = stimChansIndices(1,index);
-    kp = stimChansIndices(2,index);
-    jm = stimChansIndices(3,index);
-    km = stimChansIndices(4,index);
-    
-    stimChansDistance = stimChans;
-    
-    % [distancesPosNeg] = distance_electrodes_pos_neg(stimChans,gridSize);
-    [distances] = distance_electrodes_center(stimChansDistance,gridSize);
-    
+    locs = subStruct.locs{index};
+    locs = locs(1:64,:);
+
+    centerSpace = mean([locs(stimChans(1),:);locs(stimChans(2),:)],1);
+    distances = vecnorm((locs-repmat(centerSpace,64,1)),2,2)./10;
     % perform 1d optimization
     % extract measured data and calculate theoretical ones
     
-    [l1] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,badTotal,0,jLength,kLength);
-    % c91479 was flipped l1 l3
+    l1 = compute_1layer_theory_coords(locs,stimChans);
+    scaleA=(i0*rhoA)/(2*pi);
+    l1 = scaleA*l1;
     
     [rhoAoutput,MSE,subjectResiduals,offset,bestVals] = distance_selection_MSE_bins_fitlm(dataInt,l1,bins,distances);
     
@@ -49,7 +44,6 @@ for index = 1:numIndices
     fitStruct.calc{index} = tempStruct;
     
     fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(rhoAoutput) ' offset = ' num2str(offset) ' \n ']);
-    
     
 end
 
