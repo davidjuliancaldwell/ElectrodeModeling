@@ -1,17 +1,47 @@
 %% resistivity analysis for all subjects
 %
 % David.J.Caldwell 11.23.2018
-close all;clear all;clc
+%close all;clear all;clc
 
 plotIt = 1;
 saveIt = 0;
+shrinkStruct = 1;
 eliminateBadChannels = 0;
+loadLarry = 1;
 
 %% load in the data and define common constants, run single subject fits
 [subStruct] = prepare_data_single_subj(eliminateBadChannels);
 
 %% symmetry
 symmetryStruct = symmetrize_data(subStruct,plotIt,saveIt);
+
+%% shrink symmetric structure
+
+if shrinkStruct
+    symmetryStruct = shrink_symmetry(symmetryStruct);
+end
+
+if loadLarry
+    load('G:\My Drive\FilesForAndFromLarry\1-9-2019-data\jan9\collapseDatasets.mat')
+    dUDLR = rot90(symmetryStruct.gridDataLRUDavgShrunk,-1);
+    dUD = rot90(symmetryStruct.gridDataLRavgShrunk,-1);
+    figure
+    plot(UDLR(:),'linewidth',2)
+    hold on
+    plot(dUDLR(:),'linewidth',2)
+    legend({'Larry','David'})
+    title('LRUD')
+    
+    figure
+        figure
+    plot(UD2(:),'linewidth',2)
+    hold on
+    plot(dUD(:),'linewidth',2)
+    legend({'Larry','David'})
+    title('UD')
+end
+
+
 
 %% 4 point histograms for the individual
 histStruct = four_point_histograms_individual(subStruct,plotIt,saveIt);
@@ -35,6 +65,8 @@ fitIndBinsCoords = fit_individual_coords(subStruct,plotIt,saveIt);
 plot_ind_fits(subStruct,fitIndGlobal,fitIndBins,saveIt)
 
 plot_ind_fits(subStruct,fitIndGlobalCoords,fitIndBinsCoords,saveIt)
+
+plot_ind_fits_subjects_grouped
 
 %% 4 point histograms for the symmetrized data
 histStructSym = four_point_histograms_symmetrized(symmetryStruct,plotIt,saveIt);

@@ -195,6 +195,7 @@ gridDataAvgLog = log(abs(1e3*gridDataAvg));
 gridDataAvgLog(gridDataAvg>0) = 1*gridDataAvgLog(gridDataAvg>0);
 gridDataAvgLog(gridDataAvg<0) = -1*gridDataAvgLog(gridDataAvg<0);
 
+symmetryStruct.gridDataAvg = gridDataAvg;
 symmetryStruct.gridDataAvgLog = gridDataAvgLog;
 
 if plotIt
