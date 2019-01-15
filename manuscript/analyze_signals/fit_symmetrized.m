@@ -4,22 +4,24 @@ function fitStruct = fit_symmetrized(subStruct,plotIt,saveIt);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
-dataInt = subStruct.gridDataLRUDavg;
-stimChansSym = subStruct.stimChansIndices;
+dataInt = subStruct.gridDataLRUDavgShrunk;
+jLength = size(dataInt,2);
+kLength = size(dataInt,1);
+
+stimChansSym = subStruct.stimChansIndicesShrunk;
+stimChansSymLinear = subStruct.stimChansShrunk;
 dataInt = dataInt(:);
 
 bins = (repmat([1:8],2,1)+[0;1])';
 rhoAcalc = 1;
 
-jLength = 15;
-kLength = 15;
-gridSize = [jLength,kLength];
+gridSize = [kLength,jLength];
 %%
 
 % select particular values for constants
 i0 = 1;
 
-stimChansDistance = subStruct.stimChans;
+stimChansDistance = subStruct.stimChansShrunk;
 
 jp = stimChansSym(1);
 kp = stimChansSym(2);
@@ -33,7 +35,7 @@ offsetSym = 0;
 % perform 1d optimization
 % extract measured data and calculate theoretical ones
 
-[l1] = computePotentials_1layer(jp,kp,jm,km,rhoAcalc,i0,stimChansSym,offsetSym,jLength,kLength);
+[l1] = computePotentials_1layer(jp,kp,jm,km,rhoAcalc,i0,stimChansSymLinear,offsetSym,jLength,kLength);
 
 [rhoAoutput,MSE,subjectResiduals,offset,bestVals] = distance_selection_MSE_bins_fitlm(dataInt,l1,bins,distances);
 

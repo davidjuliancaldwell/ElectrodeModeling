@@ -1,11 +1,11 @@
 function histStruct = four_point_histograms_symmetrized(subStruct,plotIt,saveIt)
 
-jLength = size(subStruct.gridDataLRUDavg,1);
-kLength = size(subStruct.gridDataLRUDavg,2);
+jLength = size(subStruct.gridDataLRUDavgShrunk,1);
+kLength = size(subStruct.gridDataLRUDavgShrunk,2);
 numChans = jLength*kLength;
 
-data = subStruct.gridDataLRUDavg;
-stimChansIndices = subStruct.stimChansIndices;
+data = subStruct.gridDataLRUDavgShrunk;
+stimChansIndices = subStruct.stimChansIndicesShrunk;
 
 rho1 = four_point_histogram_calculation(stimChansIndices(1),stimChansIndices(2),...
     stimChansIndices(3),stimChansIndices(4),1,jLength,kLength,data);

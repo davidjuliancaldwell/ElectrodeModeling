@@ -2,7 +2,7 @@ function [] = plot_symm_fits(dataStruct,fitGlobal,fitBins,saveIt)
 
 figure
 
-dataInt = dataStruct.gridDataLRUDavg;
+dataInt = dataStruct.gridDataLRUDavgShrunk;
 dataInt = dataInt(:);
 
 plot(dataInt,'linewidth',2)

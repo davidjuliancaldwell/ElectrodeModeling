@@ -19,4 +19,10 @@ symmetryStruct.gridDataLRavgShrunk = symmetryStruct.gridDataLRavg(newX,newY);
 symmetryStruct.gridDataUDavgShrunk = symmetryStruct.gridDataUDavg(newX,newY);
 symmetryStruct.gridDataLRUDavgShrunk = symmetryStruct.gridDataLRUDavg(newX,newY);
 
+
+% add in stim channels
+symmetryStruct.stimChansIndicesShrunk = [5 7 6 7];
+symmetryStruct.stimChansShrunk = [59 72];
+
+
 end

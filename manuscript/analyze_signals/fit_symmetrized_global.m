@@ -6,10 +6,13 @@ function fitStruct = fit_symmetrized_global(subStruct)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
 
-dataInt = subStruct.gridDataLRUDavg;
-stimChansSym = subStruct.stimChansIndices;
-dataInt = dataInt(:);
+dataInt = subStruct.gridDataLRUDavgShrunk;
+jLength = size(dataInt,2);
+kLength = size(dataInt,1);
 
+stimChansSym = subStruct.stimChansIndicesShrunk;
+stimChansSymLinear = subStruct.stimChansShrunk;
+dataInt = dataInt(:);
 cost_vec_1layer = [];
 rhoA = 1;
 cost_vec_1layer = [];
@@ -17,9 +20,7 @@ rhoAcalc = 1;
 subject_min_rhoA_vec = [];
 subject_residuals = [];
 
-jLength = 15;
-kLength = 15;
-gridSize = [jLength,kLength];
+
 
 %%
 
@@ -35,7 +36,7 @@ km = stimChansSym(4);
 offsetSym = 0;
 % extract measured data and calculate theoretical ones
 
-[l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChansSym,offsetSym,jLength,kLength);
+[l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChansSymLinear,offsetSym,jLength,kLength);
 
 intercept = true;
 
