@@ -6,14 +6,13 @@ thy1 = zeros(sizeData,1);
 % default scale to 1 because will fitlm later 
 scale = 1;
 %R = 7/100; % cm
-
+locs = locs/1000;
 [az,el,r]  = cart2sph(locs(:,1),locs(:,2),locs(:,3));
 R= median(r);
 % positive and negative stim channels
 jp = stimChans(2);
 jm = stimChans(1);
 
-locs = locs/1000;
 
 for j=1:sizeData
     dp=norm(locs(j,:)-locs(jp,:));

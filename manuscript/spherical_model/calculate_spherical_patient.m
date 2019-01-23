@@ -5,7 +5,7 @@
 %close all;clear all;clc
 
 plotIt = 1;
-saveIt = 0;
+saveIt = 1;
 shrinkStruct = 1;
 eliminateBadChannels = 0;
 loadLarry = 1;
@@ -34,3 +34,8 @@ fitIndBinsCoordsSphere = fit_individual_coords_spherical(subStruct,plotIt,saveIt
 plot_ind_fits(subStruct,fitIndGlobalCoords,fitIndBinsCoords,saveIt)
 %%
 plot_ind_fits(subStruct,fitIndGlobalCoordsSphereCart,fitIndBinsCoordsSphere,saveIt)
+
+%%
+plot_ind_fits_sphereCompare(subStruct,fitIndGlobalCoords,fitIndGlobalCoordsSphereCart,saveIt)
+%%
+plot_ind_fits_sphereCompare(subStruct,fitIndBinsCoords,fitIndBinsCoordsSphere,saveIt)

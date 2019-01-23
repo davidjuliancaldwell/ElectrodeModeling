@@ -1,6 +1,7 @@
 function [] = plot_ind_fits(dataStruct,fitGlobal,fitBins,saveIt)
 
-figure
+OUTPUT_DIR = getenv('output_dir');
+masterPlot = figure('units','normalized','outerposition',[0 0 1 1]);
 
 for index = 1:7
     
@@ -16,7 +17,7 @@ ylabel('voltage (V)')
 legend({'data','binned best fits','global best fits'})
 
 for index = 1:7
-    figure
+    figSub(index) = figure('units','normalized','outerposition',[0 0 1 1]);
     plot(dataStruct.meanData{index},'linewidth',2)
     hold on
     plot(fitBins.calc{index}.bestVals,'linewidth',2)
@@ -26,7 +27,17 @@ for index = 1:7
     ylabel('voltage (V)')
     legend({'data','binned best fits','global best fits'})
 end
+
 if saveIt
+    figure(masterPlot)
+    SaveFig(OUTPUT_DIR, sprintf('masterPlot_binned_compare'), 'png', '-r600');
+    
+    
+    for index = 1:7
+        figure(figSub(index))
+            SaveFig(OUTPUT_DIR, sprintf('binGlobal_compare_subject_%d',index), 'png', '-r600');
+
+    end
 end
 
 end

@@ -10,11 +10,11 @@ scale = 1;
 jp = stimChans(2);
 jm = stimChans(1);
 
-locs = locs/1000;
 % locs(:,1) = locs(:,1) + 0.5;
 % locs(:,2) = locs(:,2) + 4;
 % locs(:,3) = locs(:,3) + 6;
 
+locs = locs/1000;
 
 [az,el,r]  = cart2sph(locs(:,1),locs(:,2),locs(:,3));
 %R = 7/100; % cm

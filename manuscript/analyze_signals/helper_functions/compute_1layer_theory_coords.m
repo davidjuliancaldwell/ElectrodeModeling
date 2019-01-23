@@ -10,10 +10,12 @@ scale = 1;
 jp = stimChans(2);
 jm = stimChans(1);
 
+locs = locs/1000;
+
 for j=1:sizeData
     dp=norm(locs(j,:)-locs(jp,:));
     dm=norm(locs(j,:)-locs(jm,:));
-    thy1(j)=scale*((1000/dp)-(1000/dm));
+    thy1(j)=scale*((1/dp)-(1/dm));
 end
 
 end

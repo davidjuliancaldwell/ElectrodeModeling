@@ -4,7 +4,7 @@ function fitStruct = fit_individual_coords_spherical(subStruct,plotIt,saveIt)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
 
-bins = (repmat([1:7],2,1)+[0;1])';
+bins = (repmat([1:8],2,1)+[0;1])';
 rhoA = 1;
 dataSelect = subStruct.dataSelect;
 numIndices = size(subStruct.meanMat,3);
