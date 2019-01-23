@@ -15,6 +15,17 @@ end
 ylabel('voltage (V)')
 legend({'data','binned best fits','global best fits'})
 
+for index = 1:7
+    figure
+    plot(dataStruct.meanData{index},'linewidth',2)
+    hold on
+    plot(fitBins.calc{index}.bestVals,'linewidth',2)
+    plot(fitGlobal.calc{index}.bestVals,'linewidth',2)
+    title(['subject ' num2str(index)])
+    set(gca,'fontsize',18)
+    ylabel('voltage (V)')
+    legend({'data','binned best fits','global best fits'})
+end
 if saveIt
 end
 

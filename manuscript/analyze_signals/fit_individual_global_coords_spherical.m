@@ -1,4 +1,4 @@
-function fitStruct = fit_individual_global_coords(subStruct)
+function fitStruct = fit_individual_global_coords_spherical(subStruct)
 
 % function to fit individual subject data with global rhoA
 
@@ -26,8 +26,8 @@ for index = 1:numIndices
     % extract measured data and calculate theoretical ones
     
     %[l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChansTotal,offset,jLength,kLength);
-    l1 = compute_1layer_theory_coords(locs,stimChans);
-    scaleA=(i0*rhoA)/(2*pi);
+    l1 = compute_1layer_theory_coords_spherical(locs,stimChans);
+    scaleA=(i0*rhoA)/(4*pi);
     l1 = scaleA*l1;
 
     intercept = true;

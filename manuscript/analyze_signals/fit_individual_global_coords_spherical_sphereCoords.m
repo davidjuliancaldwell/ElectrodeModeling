@@ -1,4 +1,4 @@
-function fitStruct = fit_individual_global_coords(subStruct)
+function fitStruct = fit_individual_global_coords_spherical(subStruct)
 
 % function to fit individual subject data with global rhoA
 
@@ -26,8 +26,8 @@ for index = 1:numIndices
     % extract measured data and calculate theoretical ones
     
     %[l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChansTotal,offset,jLength,kLength);
-    l1 = compute_1layer_theory_coords(locs,stimChans);
-    scaleA=(i0*rhoA)/(2*pi);
+    l1 = compute_1layer_theory_coords_spherical_sphereCoords(locs,stimChans);
+    scaleA=(i0*rhoA)/(4*pi);
     l1 = scaleA*l1;
 
     intercept = true;
@@ -37,12 +37,12 @@ for index = 1:numIndices
     if ~isempty(dataInt)
         if ~intercept
             dlm=fitlm(l1,dataInt,'intercept',false);
-            tempStruct.rhoAcalc=dlm.Coefficients{1,1};
-            tempStruct.offset = 0;
+            tempStruct.rhoAcalc(index)=dlm.Coefficients{1,1};
+            tempStruct.offset(index) = 0;
         else
             dlm=fitlm(l1,dataInt);
-            tempStruct.rhoAcalc=dlm.Coefficients{2,1};
-            tempStruct.offset = dlm.Coefficients{1,1};
+            tempStruct.rhoAcalc(index)=dlm.Coefficients{2,1};
+            tempStruct.offset(index) = dlm.Coefficients{1,1};
         end
         tempStruct.MSE = dlm.RMSE;
         tempStruct.bestVals = dlm.Fitted;
@@ -54,7 +54,7 @@ for index = 1:numIndices
     end
     
     fitStruct.calc{index} = tempStruct;
-    fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
+    fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(tempStruct.rhoAcalc(index)) ' offset = ' num2str(tempStruct.offset(index)) ' \n ']);
     
 end
 

@@ -6,21 +6,15 @@ function fitStruct = fit_symmetrized_global(subStruct)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % optimization for 1 layer
 
-dataInt = subStruct.gridDataLRUDavgShrunk;
-jLength = size(dataInt,2);
-kLength = size(dataInt,1);
 
 stimChansSym = subStruct.stimChansIndicesShrunk;
 stimChansSymLinear = subStruct.stimChansShrunk;
-dataInt = dataInt(:);
-cost_vec_1layer = [];
 rhoA = 1;
-cost_vec_1layer = [];
-rhoAcalc = 1;
-subject_min_rhoA_vec = [];
-subject_residuals = [];
 
-
+dataInt = subStruct.gridDataLRUDavgShrunk;
+jLength = size(dataInt,2);
+kLength = size(dataInt,1);
+dataInt = dataInt(:);
 
 %%
 
@@ -42,6 +36,8 @@ intercept = true;
 
 % use MSE
 % use MSE
+
+for 
 if ~isempty(dataInt)
     if ~intercept
         dlm=fitlm(l1,dataInt,'intercept',false);

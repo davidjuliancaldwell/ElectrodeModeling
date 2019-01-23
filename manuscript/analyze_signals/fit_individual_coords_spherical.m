@@ -1,4 +1,4 @@
-function fitStruct = fit_individual_coords(subStruct,plotIt,saveIt)
+function fitStruct = fit_individual_coords_spherical(subStruct,plotIt,saveIt)
 % David.J.Caldwell 9.5.2018
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -28,8 +28,8 @@ for index = 1:numIndices
     % perform 1d optimization
     % extract measured data and calculate theoretical ones
     
-    l1 = compute_1layer_theory_coords(locs,stimChans);
-    scaleA=(i0*rhoA)/(2*pi);
+    l1 = compute_1layer_theory_coords_spherical(locs,stimChans);
+    scaleA=(i0*rhoA)/(4*pi);
     l1 = scaleA*l1;
     
     [rhoAoutput,MSE,subjectResiduals,offset,bestVals] = distance_selection_MSE_bins_fitlm(dataInt,l1,bins,distances);

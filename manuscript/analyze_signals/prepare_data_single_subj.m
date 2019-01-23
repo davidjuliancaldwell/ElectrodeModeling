@@ -2,6 +2,7 @@
 
 function [subStruct] = prepare_data_single_subj(eliminateBadChannels)
 
+useMNI = 1;
 cd(fileparts(which('prepare_data_single_subj')));
 locationsDir = pwd;
 folderData = fullfile(locationsDir, '..','data');
@@ -70,10 +71,13 @@ for index = 1:numIndices
     subStruct.meanData{index} = subStruct.meanMat(:,1,index);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % get electrode locations
-    
-    load(fullfile(folderCoords,['subj_' num2str(subStruct.subjectNum(index)) '_bis_trodes.mat']));
-    subStruct.locs{index} = AllTrodes;
-    
+    if ~useMNI
+        load(fullfile(folderCoords,['subj_' num2str(subStruct.subjectNum(index)) '_bis_trodes.mat']));
+        subStruct.locs{index} = AllTrodes;
+    else
+        load(fullfile(folderCoords,['subj' num2str(subStruct.subjectNum(index)) '_trode_coords_MNIandTal.mat']));
+        subStruct.locs{index} = MNIcoords;
+    end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % one layer theory fitlm
     

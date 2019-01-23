@@ -20,27 +20,27 @@ symmetryStruct = symmetrize_data(subStruct,plotIt,saveIt);
 if shrinkStruct
     symmetryStruct = shrink_symmetry(symmetryStruct);
 end
-
-if loadLarry
-    load('G:\My Drive\FilesForAndFromLarry\1-9-2019-data\jan9\collapseDatasets.mat')
-    dUDLR = rot90(symmetryStruct.gridDataLRUDavgShrunk,-1);
-    dUD = rot90(symmetryStruct.gridDataLRavgShrunk,-1);
-    figure
-    plot(UDLR(:),'linewidth',2)
-    hold on
-    plot(dUDLR(:),'linewidth',2)
-    legend({'Larry','David'})
-    title('LRUD')
-    
-    figure
-        figure
-    plot(UD2(:),'linewidth',2)
-    hold on
-    plot(dUD(:),'linewidth',2)
-    legend({'Larry','David'})
-    title('UD')
-end
-
+% 
+% if loadLarry
+%     load('G:\My Drive\FilesForAndFromLarry\1-9-2019-data\jan9\collapseDatasets.mat')
+%     dUDLR = rot90(symmetryStruct.gridDataLRUDavgShrunk,-1);
+%     dUD = rot90(symmetryStruct.gridDataLRavgShrunk,-1);
+%     figure
+%     plot(UDLR(:),'linewidth',2)
+%     hold on
+%     plot(dUDLR(:),'linewidth',2)
+%     legend({'Larry','David'})
+%     title('LRUD')
+%     
+%     figure
+%         figure
+%     plot(UD2(:),'linewidth',2)
+%     hold on
+%     plot(dUD(:),'linewidth',2)
+%     legend({'Larry','David'})
+%     title('UD')
+% end
+% 
 
 
 %% 4 point histograms for the individual
