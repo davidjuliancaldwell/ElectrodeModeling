@@ -5,7 +5,7 @@
 %close all;clear all;clc
 
 plotIt = 1;
-saveIt = 1;
+saveIt = 0;
 shrinkStruct = 1;
 eliminateBadChannels = 0;
 loadLarry = 1;
