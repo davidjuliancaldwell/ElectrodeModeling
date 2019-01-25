@@ -27,7 +27,7 @@ for j=1:sizeData
     series1 = 0;
     series2 = 0;
     series3 = 0;
-    for n = 1:100
+    for n = 1:200
         an = calculate_an(n,s1,s2,s3,a,b,c);
         sn = calculate_sn(n,s1,s2,s3,a,b,c);
         un = calculate_un(n,s1,s2,s3,a,b,c);
@@ -36,7 +36,7 @@ for j=1:sizeData
         
         legendreA = legendreP(n,cosA);
         legendreB = legendreP(n,cosB);
-        legAB = (legendreB-legendreA);
+        legAB = (legendreA -legendreB);
         series3 = series3 + ((an*((rInt/c).^n)*(legAB)));
         series2 = series2 + (((sn*(rInt.^n)) + (un*(rInt.^(-(n+1)))))*(legAB));
         series1 = series1 + (((tn*(rInt.^n)) + (wn*(rInt.^(-(n+1)))))*(legAB));

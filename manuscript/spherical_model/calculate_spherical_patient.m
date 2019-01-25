@@ -8,10 +8,16 @@ plotIt = 1;
 saveIt = 0;
 shrinkStruct = 1;
 eliminateBadChannels = 0;
-loadLarry = 1;
+getRidOfFullData = 1;
 
 %% load in the data and define common constants, run single subject fits
 [subStruct] = prepare_data_single_subj(eliminateBadChannels);
+
+if getRidOfFullData
+    % clean up sub struct for saving
+    field = {'data','extractCell','stdEveryPoint','meanEveryTrial'};
+    subStruct = rmfield(subStruct,field);
+end
 
 %% fit the individual subject data with one rhoA and coordinates
 fitIndGlobalCoords = fit_individual_global_coords(subStruct);
@@ -23,10 +29,10 @@ fitIndBinsCoords = fit_individual_coords(subStruct,plotIt,saveIt);
 %% fit the individual subject data with one rhoA and spherical
 
 fitIndGlobalCoordsSphereCart = fit_individual_global_coords_spherical(subStruct);
- %%
+%%
 fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(subStruct);
 
-%% 
+%%
 fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);
 
 

@@ -74,9 +74,16 @@ for index = 1:numIndices
     if ~useMNI
         load(fullfile(folderCoords,['subj_' num2str(subStruct.subjectNum(index)) '_bis_trodes.mat']));
         subStruct.locs{index} = AllTrodes;
+        locs = AllTrodes;
     else
         load(fullfile(folderCoords,['subj' num2str(subStruct.subjectNum(index)) '_trode_coords_MNIandTal.mat']));
         subStruct.locs{index} = MNIcoords;
+        locs = MNIcoords;
+        [az,el,r]  = cart2sph(locs(:,1),locs(:,2),locs(:,3));
+        subStruct.locsSpherical{index}(:,1) = az;
+        subStruct.locsSpherical{index}(:,2) = el;
+        subStruct.locsSpherical{index}(:,3) = r;
+
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % one layer theory fitlm

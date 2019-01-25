@@ -33,9 +33,9 @@ for index = 1:numIndices
     b = median(r);
     c = b + (1/1000);
     a = b - (3.5/1000);
-    s1 = 0.0275; % conductivity of top layer
-    s2 = 0.0275;
-    s3 = 0.0275;
+    s1 = 3; % conductivity of top layer
+    s2 = 2;
+    s3 = 1;
     
     %[l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChansTotal,offset,jLength,kLength);
     [thy1,thy2,thy3] = compute_1layer_theory_coords_RushDriscoll(locs,stimChans,s1,s2,s3,a,b,c);
