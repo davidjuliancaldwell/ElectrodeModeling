@@ -48,3 +48,12 @@ plot_ind_fits(subStruct,fitIndGlobalCoordsSphereCart,fitIndBinsCoordsSphere,save
 plot_ind_fits_sphereCompare(subStruct,fitIndGlobalCoords,fitIndGlobalCoordsSphereCart,saveIt)
 %%
 plot_ind_fits_sphereCompare(subStruct,fitIndBinsCoords,fitIndBinsCoordsSphere,saveIt)
+
+
+%% 4 point histograms using the CT coordinates
+histStructCoords = four_point_histograms_individual_coords(subStruct,plotIt,saveIt);
+
+%%
+histStructCoordsSpherical = four_point_histograms_individual_coords_spherical(subStruct,plotIt,saveIt);
+
+%% average E/T, then fit
