@@ -2,7 +2,7 @@
 %
 % David.J.Caldwell 9/25/2018
 
-clear all;close all;clc
+%clear all;close all;clc
 Z_Constants_resistivity_brainPlots
 
 %% parameters

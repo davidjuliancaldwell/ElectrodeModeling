@@ -8,6 +8,15 @@ scale = 1;
 %R = 7/100; % cm
 locs = locs/1000;
 [az,el,r]  = cart2sph(locs(:,1),locs(:,2),locs(:,3));
+
+r = r(1:64);
+figure
+histogram(r,10);
+ylabel('count');
+title('histogram of spherical r values');
+xlabel('r value');
+set(gca,'fontsize',14);
+
 R= median(r);
 % positive and negative stim channels
 jp = stimChans(2);

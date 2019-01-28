@@ -2,7 +2,7 @@
 %
 % David.J.Caldwell 9.25.2017 
 
-clear all;close all;clc
+%clear all;close all;clc
 Z_Constants_resistivity_brainPlots
 
 project = 1;
@@ -36,7 +36,7 @@ for sid = SIDS
             error('unknown SID entered');
     end
     
-    load(fullfile('C:\Users\djcald.CSENETID\Data\Subjects\coords',...
+    load(fullfile('C:\Users\david\Data\Subjects\coords',...
         [subjid,'_trode_coords_MNIandTal.mat']))
     % project all to same hemisphere
     
@@ -44,9 +44,6 @@ for sid = SIDS
     %locsStruct.(strcat('x',i{:})) = locs;
     locs = MNIcoords(1:64,:);
     
-    if strcmp(sid,'c91479')
-        locs = (c91479TrodesMNIcoords(1:64,:));
-    end
     
     weights = [1 -1];
     map = [.2 1 0; 1 1 1; 1 0 1];
@@ -54,7 +51,7 @@ for sid = SIDS
     locs = locs(stims,:);
     clims = [-1 1]; % we want the color limits to be the same for all sets of dots
     
-    % project all onto the same side
+    % project all onto the same sides
     if project
         locs = projectToHemisphere(locs, 'l');
     end
@@ -126,15 +123,12 @@ for sid = SIDS
             error('unknown SID entered');
     end
     
-    load(fullfile('C:\Users\djcald.CSENETID\Data\Subjects\coords',...
+    load(fullfile('C:\Users\david\Data\Subjects\coords',...
         [subjid,'_trode_coords_MNIandTal.mat']))
     
     %locsStruct.(strcat('x',i{:})) = locs;
     locs = MNIcoords(1:64,:);
     
-    if strcmp(sid,'c91479')
-        locs = (c91479TrodesMNIcoords(1:64,:));
-    end
     
     weights = [1 1];
     map = colors(count,:);

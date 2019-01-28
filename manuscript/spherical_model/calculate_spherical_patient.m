@@ -5,7 +5,7 @@
 %close all;clear all;clc
 
 plotIt = 1;
-saveIt = 0;
+saveIt = 1;
 shrinkStruct = 1;
 eliminateBadChannels = 0;
 getRidOfFullData = 1;
@@ -55,5 +55,6 @@ histStructCoords = four_point_histograms_individual_coords(subStruct,plotIt,save
 
 %%
 histStructCoordsSpherical = four_point_histograms_individual_coords_spherical(subStruct,plotIt,saveIt);
-
+%%
+compare_four_points(histStructCoords,histStructCoordsSpherical)
 %% average E/T, then fit

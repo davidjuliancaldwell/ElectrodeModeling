@@ -30,12 +30,12 @@ end
 
 if saveIt
     figure(masterPlot)
-    SaveFig(OUTPUT_DIR, sprintf('masterPlot_binned_compare'), 'png', '-r600');
+    SaveFig(OUTPUT_DIR, sprintf('masterPlot_binned_sphere'), 'png', '-r600');
     
     
     for index = 1:7
         figure(figSub(index))
-            SaveFig(OUTPUT_DIR, sprintf('binGlobal_compare_subject_%d',index), 'png', '-r600');
+            SaveFig(OUTPUT_DIR, sprintf('binGlobal_sphere_compare_subject_%d',index), 'png', '-r600');
 
     end
 end

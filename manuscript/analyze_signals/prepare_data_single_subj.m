@@ -89,7 +89,7 @@ for index = 1:numIndices
     % one layer theory fitlm
     
     %  subStruct.oneLayerVals{index} = compute_1layer_theory_coords(subStruct.locs{index},subStruct.stimChans(index,:));
-    
+    clearvars AllTrodes MNIcoords
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

@@ -17,6 +17,7 @@ jm = stimChans(1);
 locs = locs/1000;
 
 [az,el,r]  = cart2sph(locs(:,1),locs(:,2),locs(:,3));
+r = r(1:64);
 %R = 7/100; % cm
 R = median(r);
 

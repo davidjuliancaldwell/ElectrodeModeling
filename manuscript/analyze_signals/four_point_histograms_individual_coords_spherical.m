@@ -17,17 +17,20 @@ for index = 1:numIndices
     
     [rho1] = four_point_histogram_calculation_coords_spherical(current,locs,stimChans,dataScreened);
     rho1 = rho1(~isnan(rho1) & ~isinf(rho1));
+    rho1 = rho1(rho1<=10 & rho1>0);
     
     rhoHist.vals = rho1;
     rhoHist.mean = mean(rho1(:));
     rhoHist.std = std(rho1(:));
     rhoHist.median = median(rho1(:));
+    fprintf(['Subject ' num2str(index) ' spherical, mean = ' num2str(rhoHist.mean), ' std = ' num2str(rhoHist.std) ' median = ' num2str(rhoHist.median) '\n'])
     
     histStruct.hist{index} = rhoHist;
     
     bins = [0:0.1:10];
     % plot histogram
     if plotIt
+        figure
         histogram(rhoHist.vals,bins,'normalization','pdf');
         set(gca,'fontsize',14)
         title(['Subject ' num2str(subStruct.subjectNum(index))])
