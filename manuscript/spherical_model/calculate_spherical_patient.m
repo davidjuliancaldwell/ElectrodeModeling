@@ -58,3 +58,54 @@ histStructCoordsSpherical = four_point_histograms_individual_coords_spherical(su
 %%
 compare_four_points(histStructCoords,histStructCoordsSpherical)
 %% average E/T, then fit
+
+fitStruct = fit_all_at_once(subStruct);
+%%
+fitStructSpherical = fit_all_at_once_spherical(subStruct);
+
+%%
+figure
+hold on
+plot(fitStruct.calc.data,fitStruct.calc.bestVals,'o')
+x(1) = min(fitStruct.calc.data);
+x(2) = max(fitStruct.calc.data);
+%func1 = @(x)((x - fitStruct.calc.offset)/fitStruct.calc.rhoAcalc);
+%y = func1(x);
+y = x;
+plot(x,y);
+xlabel('theory')
+ylabel('experiment')
+set(gca,'fontsize',18)
+title('Flat')
+
+figure
+plot(fitStruct.calc.data)
+hold on
+plot(fitStruct.calc.bestVals)
+legend({'data','theory'})
+set(gca,'fontsize',18)
+title('Flat')
+
+figure
+hold on
+plot(fitStructSpherical.calc.data,fitStructSpherical.calc.bestVals,'o')
+x(1) = min(fitStructSpherical.calc.data);
+x(2) = max(fitStructSpherical.calc.data);
+%func1 = @(x)((x - fitStruct.calc.offset)/fitStruct.calc.rhoAcalc);
+%y = func1(x);
+y = x;
+plot(x,y);
+xlabel('theory')
+ylabel('experiment')
+set(gca,'fontsize',18)
+title('Spherical')
+
+
+figure
+plot(fitStruct.calc.data)
+hold on
+plot(fitStruct.calc.bestVals)
+legend({'data','theory'})
+title('Spherical')
+set(gca,'fontsize',18)
+
