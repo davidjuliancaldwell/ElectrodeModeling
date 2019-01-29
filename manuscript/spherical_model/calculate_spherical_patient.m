@@ -9,6 +9,7 @@ saveIt = 1;
 shrinkStruct = 1;
 eliminateBadChannels = 0;
 getRidOfFullData = 1;
+prolateBool = 1;
 
 %% load in the data and define common constants, run single subject fits
 [subStruct] = prepare_data_single_subj(eliminateBadChannels);
@@ -18,7 +19,18 @@ if getRidOfFullData
     field = {'data','extractCell','stdEveryPoint','meanEveryTrial'};
     subStruct = rmfield(subStruct,field);
 end
+%%
 
+if prolateBool
+    [version, executable, isloaded] = pyversion;
+    if ~isloaded
+    pyversion C:\Users\david\Anaconda3\envs\py36\python.exe
+    end
+    py.importlib.import_module('scipy')
+    
+    %%
+fitIndGlobalProlate = fit_individual_global_coords_prolate(subStruct);
+end
 %% fit the individual subject data with one rhoA and coordinates
 fitIndGlobalCoords = fit_individual_global_coords(subStruct);
 
@@ -31,6 +43,8 @@ fitIndBinsCoords = fit_individual_coords(subStruct,plotIt,saveIt);
 fitIndGlobalCoordsSphereCart = fit_individual_global_coords_spherical(subStruct);
 %%
 fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(subStruct);
+
+
 
 %%
 fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);
