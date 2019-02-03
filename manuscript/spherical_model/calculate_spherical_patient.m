@@ -9,7 +9,7 @@ saveIt = 1;
 shrinkStruct = 1;
 eliminateBadChannels = 0;
 getRidOfFullData = 1;
-prolateBool = 1;
+prolateBool = 0;
 
 %% load in the data and define common constants, run single subject fits
 [subStruct] = prepare_data_single_subj(eliminateBadChannels);
@@ -47,7 +47,7 @@ fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(s
 
 
 %%
-fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);
+%fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);
 
 
 %% fit the individual subject data with rhoA for different bins using coordinates

@@ -48,8 +48,8 @@ global ProjectFile; ProjectFile = [];
 global FirstNontrivial;
      
 %   Electrodes (12 max)                           
-strge.NumberOfElectrodes     = 3;             
-strge.TypeOfElectrodes       = ['V'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'];
+strge.NumberOfElectrodes     = 2;             
+strge.TypeOfElectrodes       = ['I'; 'I'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'; 'V'];
 strge.VoltageOfElectrodes    = [1 -1 1 -1 1 -1 1 -1 1 -1 1 -1];                                       
 strge.PositionOfElectrodes   = [[0.0 -0.025 0.0]; [0.0 0.025 0.0]; [0.0 -0.1 0.0]; [0.0 -0.1 0.0]; [0.0 -0.1 0.0]; [0.0 -0.1 0.0]; [0.0 -0.1 0.0]; [0.0 -0.1 0.0]; [0.0 -0.1 0.0]];  
 strge.RadiusOfElectrodes     = [0.005 0.005 0.005 0.005 0.005 0.005 0.005 0.005 0.005 0.005 0.005 0.005]; 
@@ -73,7 +73,9 @@ strge.Indicator     = 0;
 strge.OuterSize     = 0; 
 strge.Tracker       = [];
 
-strge.FileName{1}      = 'thin_csf_outer.mat';
+strge.FileName{1}      = 'sphere_6cm.mat';
+
+%strge.FileName{1}      = 'thin_csf_outer.mat';
 strge.FileName{2}      = 'gray_matter_inner.mat';
 strge.FileName{3}      = 'cylinder2_15cm_7cm.mat';
 strge.FileName{4}      = 'MIT_cyl_mesh_highD.mat';

@@ -2,7 +2,7 @@
 
 function [subStruct] = prepare_data_single_subj(eliminateBadChannels)
 
-useMNI = 1;
+useMNI = 0;
 cd(fileparts(which('prepare_data_single_subj')));
 locationsDir = pwd;
 folderData = fullfile(locationsDir, '..','data');
@@ -70,20 +70,67 @@ for index = 1:numIndices
     
     subStruct.meanData{index} = subStruct.meanMat(:,1,index);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % get electrode locations
+    % get electrode locations CT first and then MNI
+    
+    % CT
+    load(fullfile(folderCoords,['subj_' num2str(subStruct.subjectNum(index)) '_bis_trodes.mat']));
+    AllTrodes = AllTrodes(1:64,:);
+    subStruct.CTlocs{index} = AllTrodes;
+    [Center,Radius] = sphereFit(AllTrodes);
+    % figure out center of sphere
+    
+    [x,y,z] = sphere;
+    x = Radius*x  + Center(1);
+    y = Radius*y + Center(2);
+    z = Radius*z + Center(3);
+    figure
+    s = surf(x,y,z);
+    %set(s,'EdgeColor','none');
+    set(s,'FaceAlpha',0.25);
+    set(s,'FaceColor',[0.5 0.5 0.5]);
+    hold on
+    locs = AllTrodes(1:64,:);
+    
+    % take labeling from plot dots direct
+    scatter3(locs(:,1),locs(:,2),locs(:,3),[100],[1 0 0],'filled');
+    %
+    gridSize = 64;
+    trodeLabels = [1:gridSize];
+    for chan = 1:gridSize
+        txt = num2str(trodeLabels(chan));
+        t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
+        set(t,'clipping','on');
+    end
+    title(['Subject ' num2str(index)])
+    
+    AllTrodes = [AllTrodes(:,1) - Center(1) AllTrodes(:,2) - Center(2) AllTrodes(:,3) - Center(3)];
+    [az,el,r]  = cart2sph(AllTrodes(:,1),AllTrodes(:,2),AllTrodes(:,3));
+    subStruct.CTlocsSpherical{index}(:,1) = az;
+    subStruct.CTlocsSpherical{index}(:,2) = el;
+    subStruct.CTlocsSpherical{index}(:,3) = r;
+    
+    % MNI
+    load(fullfile(folderCoords,['subj' num2str(subStruct.subjectNum(index)) '_trode_coords_MNIandTal.mat']));
+    MNIcoords = MNIcoords(1:64,:);
+    subStruct.MNIlocs{index} = MNIcoords;
+    
+    [az,el,r]  = cart2sph(MNIcoords(:,1),MNIcoords(:,2),MNIcoords(:,3));
+    subStruct.MNIlocsSpherical{index}(:,1) = az;
+    subStruct.MNIlocsSpherical{index}(:,2) = el;
+    subStruct.MNIlocsSpherical{index}(:,3) = r;
+    
+    % determine whether to use MNI or CT for further calculations
     if ~useMNI
-        load(fullfile(folderCoords,['subj_' num2str(subStruct.subjectNum(index)) '_bis_trodes.mat']));
-        subStruct.locs{index} = AllTrodes;
-        locs = AllTrodes;
+        subStruct.locs{index} = subStruct.CTlocs{index};
+        subStruct.locsSpherical{index}(:,1) = subStruct.CTlocsSpherical{index}(:,1);
+        subStruct.locsSpherical{index}(:,2) = subStruct.CTlocsSpherical{index}(:,2);
+        subStruct.locsSpherical{index}(:,3) = subStruct.CTlocsSpherical{index}(:,3);
     else
-        load(fullfile(folderCoords,['subj' num2str(subStruct.subjectNum(index)) '_trode_coords_MNIandTal.mat']));
-        subStruct.locs{index} = MNIcoords;
-        locs = MNIcoords;
-        [az,el,r]  = cart2sph(locs(:,1),locs(:,2),locs(:,3));
-        subStruct.locsSpherical{index}(:,1) = az;
-        subStruct.locsSpherical{index}(:,2) = el;
-        subStruct.locsSpherical{index}(:,3) = r;
-
+        subStruct.locs{index} = subStruct.MNIlocs{index};
+        subStruct.locsSpherical{index}(:,1) = subStruct.MNIlocsSpherical{index}(:,1);
+        subStruct.locsSpherical{index}(:,2) = subStruct.MNIlocsSpherical{index}(:,2);
+        subStruct.locsSpherical{index}(:,3) = subStruct.MNIlocsSpherical{index}(:,3);
+        
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % one layer theory fitlm
