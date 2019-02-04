@@ -76,14 +76,24 @@ for index = 1:numIndices
     load(fullfile(folderCoords,['subj_' num2str(subStruct.subjectNum(index)) '_bis_trodes.mat']));
     AllTrodes = AllTrodes(1:64,:);
     subStruct.CTlocs{index} = AllTrodes;
-    [Center,Radius] = sphereFit(AllTrodes);
+    % [Center,Radius] = sphereFit(AllTrodes);
+    highPolyModel = fullfile(folderCoords,['subj' num2str(index) '_cortex_both_hires.mat']);
+    load(highPolyModel);
+    
+    
+    [Center,Radius] = sphereFit(cortex.vertices);
     % figure out center of sphere
     
     [x,y,z] = sphere;
     x = Radius*x  + Center(1);
     y = Radius*y + Center(2);
     z = Radius*z + Center(3);
+    
+    %    x = Radius*x ;
+    %   y = Radius*y;
+    %   z = Radius*z;
     figure
+    subplot(2,1,1)
     s = surf(x,y,z);
     %set(s,'EdgeColor','none');
     set(s,'FaceAlpha',0.25);
@@ -101,9 +111,9 @@ for index = 1:numIndices
         t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
         set(t,'clipping','on');
     end
-    title(['Subject ' num2str(index)])
-    
+    title(['CT Coords - Subject ' num2str(index)])
     AllTrodes = [AllTrodes(:,1) - Center(1) AllTrodes(:,2) - Center(2) AllTrodes(:,3) - Center(3)];
+    
     [az,el,r]  = cart2sph(AllTrodes(:,1),AllTrodes(:,2),AllTrodes(:,3));
     subStruct.CTlocsSpherical{index}(:,1) = az;
     subStruct.CTlocsSpherical{index}(:,2) = el;
@@ -111,10 +121,40 @@ for index = 1:numIndices
     
     % MNI
     load(fullfile(folderCoords,['subj' num2str(subStruct.subjectNum(index)) '_trode_coords_MNIandTal.mat']));
-    MNIcoords = MNIcoords(1:64,:);
+   MNIcoords = MNIcoords(1:64,:);
     subStruct.MNIlocs{index} = MNIcoords;
     
-    [az,el,r]  = cart2sph(MNIcoords(:,1),MNIcoords(:,2),MNIcoords(:,3));
+    load('MNI_cortex_both_hires.mat')
+        [Center,Radius] = sphereFit(cortex.vertices);
+
+   % [Center,Radius] = sphereFit(MNIcoords);
+    % figure out center of sphere
+    
+    [x,y,z] = sphere;
+    x = Radius*x  + Center(1);
+    y = Radius*y + Center(2);
+    z = Radius*z + Center(3);
+    subplot(2,1,2)
+    s = surf(x,y,z);
+    %set(s,'EdgeColor','none');
+    set(s,'FaceAlpha',0.25);
+    set(s,'FaceColor',[0.5 0.5 0.5]);
+    hold on
+    locs = MNIcoords(1:64,:);
+    
+    % take labeling from plot dots direct
+    scatter3(locs(:,1),locs(:,2),locs(:,3),[100],[1 0 0],'filled');
+    %
+    gridSize = 64;
+    trodeLabels = [1:gridSize];
+    for chan = 1:gridSize
+        txt = num2str(trodeLabels(chan));
+        t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
+        set(t,'clipping','on');
+    end
+    title(['MNI Coords - Subject ' num2str(index)])
+    
+    [az,el,r]  = cart2sph(MNIcoords(:,1) - Center(1),MNIcoords(:,2)-Center(2),MNIcoords(:,3)-Center(3));
     subStruct.MNIlocsSpherical{index}(:,1) = az;
     subStruct.MNIlocsSpherical{index}(:,2) = el;
     subStruct.MNIlocsSpherical{index}(:,3) = r;

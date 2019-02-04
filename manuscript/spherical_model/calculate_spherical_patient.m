@@ -5,7 +5,7 @@
 %close all;clear all;clc
 
 plotIt = 1;
-saveIt = 1;
+saveIt = 0;
 shrinkStruct = 1;
 eliminateBadChannels = 0;
 getRidOfFullData = 1;
@@ -19,6 +19,23 @@ if getRidOfFullData
     field = {'data','extractCell','stdEveryPoint','meanEveryTrial'};
     subStruct = rmfield(subStruct,field);
 end
+%%
+figure
+for index = 1:7
+    subplot(2,1,1)
+    hold on
+    plot(subStruct.CTlocsSpherical{index}(:,3))
+    ylim([40 85])
+    title('CT')
+    subplot(2,1,2)
+    hold on
+    plot(subStruct.MNIlocsSpherical{index}(:,3))
+    title('MNI')
+        ylim([40 95])
+xlabel('electrode')
+    
+end
+legend({'1','2','3','4','5','6','7'})
 %%
 
 if prolateBool
@@ -47,7 +64,7 @@ fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(s
 
 
 %%
-%fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);
+fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);
 
 
 %% fit the individual subject data with rhoA for different bins using coordinates
