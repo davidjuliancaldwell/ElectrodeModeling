@@ -31,8 +31,8 @@ for index = 1:7
     hold on
     plot(subStruct.MNIlocsSpherical{index}(:,3))
     title('MNI')
-        ylim([40 95])
-xlabel('electrode')
+    ylim([40 95])
+    xlabel('electrode')
     
 end
 legend({'1','2','3','4','5','6','7'})
@@ -41,12 +41,12 @@ legend({'1','2','3','4','5','6','7'})
 if prolateBool
     [version, executable, isloaded] = pyversion;
     if ~isloaded
-    pyversion C:\Users\david\Anaconda3\envs\py36\python.exe
+        pyversion C:\Users\david\Anaconda3\envs\py36\python.exe
     end
     py.importlib.import_module('scipy')
     
     %%
-fitIndGlobalProlate = fit_individual_global_coords_prolate(subStruct);
+    fitIndGlobalProlate = fit_individual_global_coords_prolate(subStruct);
 end
 %% fit the individual subject data with one rhoA and coordinates
 fitIndGlobalCoords = fit_individual_global_coords(subStruct);

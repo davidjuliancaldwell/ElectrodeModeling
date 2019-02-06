@@ -1,6 +1,7 @@
 %% script to prepare the data for the one layer point theory
 
 function [subStruct] = prepare_data_single_subj(eliminateBadChannels)
+load('america')
 
 useMNI = 0;
 cd(fileparts(which('prepare_data_single_subj')));
@@ -92,7 +93,7 @@ for index = 1:numIndices
     %    x = Radius*x ;
     %   y = Radius*y;
     %   z = Radius*z;
-    figure
+    ctMNIFig = figure;
     subplot(2,1,1)
     s = surf(x,y,z);
     %set(s,'EdgeColor','none');
@@ -119,21 +120,46 @@ for index = 1:numIndices
     subStruct.CTlocsSpherical{index}(:,2) = el;
     subStruct.CTlocsSpherical{index}(:,3) = r;
     
+    gridSize = [8,8];
+    [X,Y] = meshgrid(1:gridSize(1),1:gridSize(2));
+    X = X(:);
+    Y = Y(:);
+    DT = delaunayTriangulation(X,Y);
+    TR = triangulation(DT.ConnectivityList,locs(:,1),locs(:,2),locs(:,3));
+    
+    [GC MC]= curvatures(locs(:,1),locs(:,2),locs(:,3),DT.ConnectivityList);
+    GCreshape = reshape(GC,[8 8]);
+    MCreshape = reshape(MC,[8 8]);
+    figure
+    subplot(2,1,1)
+    trisurf(TR,GC);
+    caxis([-max(abs(GC)) max(abs(GC))])
+    colorbar()
+    title(['Subject ' num2str(index) ' Gaussian Curvature'])
+    
+    subplot(2,1,2)
+    trisurf(TR,MC);
+    colorbar()
+    caxis([-max(abs(MC)) max(abs(MC))])
+    title(['Subject ' num2str(index) ' Mean Curvature'])
+    colormap(cm)
+
     % MNI
     load(fullfile(folderCoords,['subj' num2str(subStruct.subjectNum(index)) '_trode_coords_MNIandTal.mat']));
-   MNIcoords = MNIcoords(1:64,:);
+    MNIcoords = MNIcoords(1:64,:);
     subStruct.MNIlocs{index} = MNIcoords;
     
     load('MNI_cortex_both_hires.mat')
-        [Center,Radius] = sphereFit(cortex.vertices);
-
-   % [Center,Radius] = sphereFit(MNIcoords);
+    [Center,Radius] = sphereFit(cortex.vertices);
+    
+    % [Center,Radius] = sphereFit(MNIcoords);
     % figure out center of sphere
     
     [x,y,z] = sphere;
     x = Radius*x  + Center(1);
     y = Radius*y + Center(2);
     z = Radius*z + Center(3);
+    figure(ctMNIFig);
     subplot(2,1,2)
     s = surf(x,y,z);
     %set(s,'EdgeColor','none');
