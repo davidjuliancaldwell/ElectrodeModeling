@@ -128,20 +128,20 @@ for index = 1:numIndices
     TR = triangulation(DT.ConnectivityList,locs(:,1),locs(:,2),locs(:,3));
     
     [GC MC]= curvatures(locs(:,1),locs(:,2),locs(:,3),DT.ConnectivityList);
-    GCreshape = reshape(GC,[8 8]);
-    MCreshape = reshape(MC,[8 8]);
+    subStruct.CT_GC{index} = GC;
+    subStruct.CT_MC{index} = MC;
     figure
     subplot(2,1,1)
     trisurf(TR,GC);
     caxis([-max(abs(GC)) max(abs(GC))])
     colorbar()
-    title(['Subject ' num2str(index) ' Gaussian Curvature'])
+    title(['Subject ' num2str(index) ' CT Gaussian Curvature'])
     
     subplot(2,1,2)
     trisurf(TR,MC);
     colorbar()
     caxis([-max(abs(MC)) max(abs(MC))])
-    title(['Subject ' num2str(index) ' Mean Curvature'])
+    title(['Subject ' num2str(index) ' CT Mean Curvature'])
     colormap(cm)
 
     % MNI
@@ -184,6 +184,31 @@ for index = 1:numIndices
     subStruct.MNIlocsSpherical{index}(:,1) = az;
     subStruct.MNIlocsSpherical{index}(:,2) = el;
     subStruct.MNIlocsSpherical{index}(:,3) = r;
+    
+     gridSize = [8,8];
+    [X,Y] = meshgrid(1:gridSize(1),1:gridSize(2));
+    X = X(:);
+    Y = Y(:);
+    DT = delaunayTriangulation(X,Y);
+    TR = triangulation(DT.ConnectivityList,locs(:,1),locs(:,2),locs(:,3));
+    
+    [GC MC]= curvatures(locs(:,1),locs(:,2),locs(:,3),DT.ConnectivityList);
+    subStruct.MNI_GC{index} = GC;
+    subStruct.MNI_MC{index} = MC;
+    figure
+    subplot(2,1,1)
+    trisurf(TR,GC);
+    caxis([-max(abs(GC)) max(abs(GC))])
+    colorbar()
+    title(['Subject ' num2str(index) ' MNI Gaussian Curvature'])
+    
+    subplot(2,1,2)
+    trisurf(TR,MC);
+    colorbar()
+    caxis([-max(abs(MC)) max(abs(MC))])
+    title(['Subject ' num2str(index) ' MNI Mean Curvature'])
+    colormap(cm)
+
     
     % determine whether to use MNI or CT for further calculations
     if ~useMNI
