@@ -4,7 +4,7 @@
 %% initialize output and meta dir
 % clear workspace, get rid of extraneous information
 %close all; clear all; clc
-saveIt = 1;
+saveIt = 0;
 
 % load in the datafile of interest!
 % have to have a value assigned to the file to have it wait to finish
@@ -19,6 +19,8 @@ else
     data = 4.*[structureData.ECO1.data(1:end-1,:) structureData.ECO2.data(1:end-1,:) structureData.ECO3.data]; % add in factor of 4 10.10.2018
 
 end
+
+data = data(:,1:99);
 fsData = structureData.ECO1.info.SamplingRateHz;
 Sing = structureData.Sing;
 Stim = structureData.Stim;
@@ -33,7 +35,7 @@ prompt = {'how many channels did we record from? e.g 64 ', 'what were the stimul
     'what is the subject ID?'};
 dlgTitle = 'StimChans';
 numLines = 1;
-defaultans = {'112','1 15 16 23 24 65 82 83 84','1000','1000',''};
+defaultans = {'99','21 23 24','1000','1000',''};
 answer = inputdlg(prompt,dlgTitle,numLines,defaultans);
 numChans = str2num(answer{1});
 stimChans = str2num(answer{2});
@@ -45,7 +47,7 @@ postSamps = round(postTime/1000 * fsData); % post time in sec,
 
 %%
 
-for reref = 1:1
+for reref = 0:0
     % get sampling rates
     fsStim = Stim.info.SamplingRateHz;
     fsSing = Sing.info.SamplingRateHz;
@@ -67,7 +69,7 @@ for reref = 1:1
     %% stimulation voltage monitor
     plotIt = 0;
     savePlot = 0;
-    [stim1Epoched,t,fs,labels,uniqueLabels] = voltage_monitor(Stim,Sing,plotIt,savePlot,'','','');
+    [stim1Epoched,t,fs,labels,uniqueLabels] = voltage_monitor_pos_neg(Stim,Sing,plotIt,savePlot,'','','');
     
     %% extract average signals
     

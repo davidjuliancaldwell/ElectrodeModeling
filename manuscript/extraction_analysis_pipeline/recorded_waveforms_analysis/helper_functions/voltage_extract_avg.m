@@ -76,14 +76,14 @@ for chan = 1:size(waveformMatrix,2)
     if plotIt && ~isempty(beginInd)
         figure
         ax = axes;
-        plot(1e3*tSamps/fs,signalInt,'linewidth',3)
+        linePlot = plot(1e3*tSamps/fs,signalInt,'linewidth',3);
         ylim([-3e-2 3e-2])
         beg = vline(1e3*beginInd/fs,'g');
         trans = vline(1e3*transitionPt/fs,'k');
         en = vline(1e3*endInd/fs,'r');
         high1 = highlight(ax,[1e3*(beginInd+preSamps)/fs,1e3*(transitionPt-postSamps)/fs],[],[180 180 180]/256);
         high2 = highlight(ax,[1e3*(transitionPt+preSamps)/fs,1e3*(endInd-postSamps)/fs],[],[180 180 180]/256);
-        legend('signal','beginning','transition','end','extracted period')
+        legend([linePlot,beg,trans,en,high1],{'signal','beginning','transition','end','extracted period'})
         xlabel('time (ms)');
         ylabel(['Voltage (V)']);
         title(['Signal Extraction - channel ' num2str(chan)]);

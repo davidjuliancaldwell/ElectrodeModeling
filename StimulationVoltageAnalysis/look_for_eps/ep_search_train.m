@@ -174,8 +174,6 @@ for subjNum = subjsNumericVec
                 
             end
             
-            
-          
             obj = vizFunc.scalebar;
             obj.XLen = 200;              %X-Length, 10.
             obj.XUnit = 'ms';            %X-Unit, 'm'.
@@ -190,10 +188,7 @@ for subjNum = subjsNumericVec
             obj.hLineX(2).LineWidth = 5;
             obj.hLineX(1).LineWidth = 5;
             obj.Border = 'LL';          %'LL'(default), 'LR', 'UL', 'UR'
-            
-            
-            
-            
+
         end
         
         

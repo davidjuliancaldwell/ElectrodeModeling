@@ -20,7 +20,7 @@ numRows = 4;
 numColumns = 2;
 
 
-for ii = 2:2
+for ii = 1:1
     sid = SIDS{ii};
     fprintf(['running for subject ' sid '\n']);
     fs = 12207;
@@ -30,7 +30,7 @@ for ii = 2:2
     ECoGData = permute(ECoGData,[1 3 2]);
     %%
     [meanMat,stdMat,stdCellEveryPoint,meanEveryTrial,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',...
-        fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
+        fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',1);
         %%
     [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
         meanMat,stdMat,numberStims,stdCellEveryPoint,meanEveryTrial,extractCell,...

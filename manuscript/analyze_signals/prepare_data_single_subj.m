@@ -131,6 +131,8 @@ for index = 1:numIndices
     subStruct.CT_GC{index} = GC;
     subStruct.CT_MC{index} = MC;
     figure
+    set(gcf,'position',[378.3333 123.6667 664.6667 1.2047e+03])
+    
     subplot(2,1,1)
     trisurf(TR,GC);
     caxis([-max(abs(GC)) max(abs(GC))])
@@ -143,7 +145,7 @@ for index = 1:numIndices
     caxis([-max(abs(MC)) max(abs(MC))])
     title(['Subject ' num2str(index) ' CT Mean Curvature'])
     colormap(cm)
-
+    
     % MNI
     load(fullfile(folderCoords,['subj' num2str(subStruct.subjectNum(index)) '_trode_coords_MNIandTal.mat']));
     MNIcoords = MNIcoords(1:64,:);
@@ -185,7 +187,7 @@ for index = 1:numIndices
     subStruct.MNIlocsSpherical{index}(:,2) = el;
     subStruct.MNIlocsSpherical{index}(:,3) = r;
     
-     gridSize = [8,8];
+    gridSize = [8,8];
     [X,Y] = meshgrid(1:gridSize(1),1:gridSize(2));
     X = X(:);
     Y = Y(:);
@@ -196,6 +198,7 @@ for index = 1:numIndices
     subStruct.MNI_GC{index} = GC;
     subStruct.MNI_MC{index} = MC;
     figure
+    set(gcf,'position',[378.3333 123.6667 664.6667 1.2047e+03])
     subplot(2,1,1)
     trisurf(TR,GC);
     caxis([-max(abs(GC)) max(abs(GC))])
@@ -208,7 +211,7 @@ for index = 1:numIndices
     caxis([-max(abs(MC)) max(abs(MC))])
     title(['Subject ' num2str(index) ' MNI Mean Curvature'])
     colormap(cm)
-
+    
     
     % determine whether to use MNI or CT for further calculations
     if ~useMNI
