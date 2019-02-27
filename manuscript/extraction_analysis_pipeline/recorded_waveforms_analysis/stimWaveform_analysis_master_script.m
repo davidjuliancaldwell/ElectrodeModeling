@@ -12,7 +12,7 @@ plotIt = 0; % plot and save plots
 preExtract = 1; % how many ms before for extracting
 postExtract = 10; % how many ms after stim to extract
 
-% have processed off mean before below! 
+% should have processed off mean before below! 
 
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -21,7 +21,7 @@ postExtract = 10; % how many ms after stim to extract
 subj_first_7_waveform
 
 %%
-saveIt = 0;
+saveIt = 1;
 if saveIt
     Folder = fullfile(locationsDir, '..','..','data');
     save(fullfile(Folder, 'recorded_voltages_onlyProcessed.mat'),'first_7_struct','-v7.3')

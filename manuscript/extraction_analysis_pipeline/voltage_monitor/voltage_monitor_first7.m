@@ -1,7 +1,6 @@
 function [stim1Epoched,t,fs_stim] = voltage_monitor_first7(Stim,Sing,plotIt,savePlot,title_toUse,OUTPUT_DIR,saveName)
 
-%VOLTAGE_MONITOR Summary of this function goes here
-%   Detailed explanation goes here
+%VOLTAGE_MONITOR_FIRST7
 
 % build a burst table with the timing of stimuli
 bursts = [];
@@ -37,7 +36,7 @@ end
 
 %% Plot stims with info from above, and find the delay!
 
-stim1stChan = Stim.data(:,1);
+stim1stChan = Stim.data(1,:)';
 stim1Epoched = squeeze(getEpochSignal(stim1stChan,(bursts(2,:)-1),(bursts(3,:))+60));
 
 % put around 0 

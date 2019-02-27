@@ -51,6 +51,8 @@ if plotIt
     xlabel('electrode')
     ylabel('Voltage (V)')
     SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7']),'png');
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7']),'eps');
+
 end
 
 [first_7_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,meanEveryTrialAll,stimChansVec,...
