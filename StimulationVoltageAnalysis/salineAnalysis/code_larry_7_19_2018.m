@@ -41,7 +41,8 @@ jp=5;
 kp=4;
 jm=4;
 km=4;
-
+jLength = 8;
+kLength = 8;
 % perform 1d optimization
 j = 1;
 for rhoA = rhoA_vec
