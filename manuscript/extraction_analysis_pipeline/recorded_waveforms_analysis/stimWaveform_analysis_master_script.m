@@ -21,7 +21,7 @@ postExtract = 10; % how many ms after stim to extract
 subj_first_7_waveform
 
 %%
-saveIt = 1;
+saveIt = 0;
 if saveIt
     Folder = fullfile(locationsDir, '..','..','data');
     save(fullfile(Folder, 'recorded_voltages_onlyProcessed.mat'),'first_7_struct','-v7.3')

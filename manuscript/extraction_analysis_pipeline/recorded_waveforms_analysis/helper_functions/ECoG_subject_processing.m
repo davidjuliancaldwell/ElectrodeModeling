@@ -45,8 +45,8 @@ if plotIt
     figure(figTotal)
     subplot(numRows,numColumns,counterIndex)
     errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)
-    hold on
-    errorbar(chanVec,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
+  %  hold on
+    %errorbar(chanVec,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
     v2 = vline(stimChans(1),'g');
     v3 = vline(stimChans(2),'b');
     title(['Subject ' num2str(ii) ' subject ID ' sid ' stim channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)),...
@@ -100,8 +100,8 @@ if plotIt
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% new version of scatter plot
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     figure('units','normalized','outerposition',[0 0 1 1])
     subplot(2,1,1)
     hold on
@@ -155,19 +155,19 @@ if plotIt
         SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_v2_' sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_current_' num2str(1e6*currentMat(ii,jj))]),'png');
     end
     
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% new version of scatter, mean across waveform 
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% new version of scatter, mean across waveform
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     figure('units','normalized','outerposition',[0 0 1 1])
     
     for chan = chanVec
         for phase = 1:2
-    mWT(chan,phase) = mean(meanEveryTrial(chan,phase,:));
-    stdWT(chan,phase) = std(meanEveryTrial(chan,phase,:));
+            mWT(chan,phase) = mean(meanEveryTrial(chan,phase,:));
+            stdWT(chan,phase) = std(meanEveryTrial(chan,phase,:));
         end
     end
-
+    
     subplot(2,1,1)
     hold on
     plot(chanVec,abs(mWT(:,1)),'linewidth',2)
@@ -213,7 +213,7 @@ if plotIt
     
     xlabel('electrode')
     ylabel('Voltage (V)')
-    title({'standard Deviation across trials','of the extracted average voltage for recorded biphasic pulse'})
+    title({'Standard Deviation across trials','of the extracted average voltage for recorded biphasic pulse'})
     % legend([h1{1} h2{1} v2 v3],{'first phase','second phase','- chan','+ chan'})
     set(gca,'fontsize',16)
     if saveIt
@@ -221,13 +221,19 @@ if plotIt
     end
     
     %%
-    figure
+    figVariation = figure;
+    figVariation.Units = "inches";
+    figVariation.Position = [1 1 8.5 6];
     for chan = chanVec
+        % smplot(8,8,chan)
         subplot(8,8,chan)
-       plot(squeeze(meanEveryTrial(chan,1,:)))
-       title([num2str(chan)])
-       set(gca,'fontsize',14)
+        plot(1e3*squeeze(meanEveryTrial(chan,1,:)))
+        title([num2str(chan)])
+%        yticks([min(1e3*squeeze(meanEveryTrial(chan,1,:))),max(1e3*squeeze(meanEveryTrial(chan,1,:)))])
+        set(gca,'fontsize',8)
     end
+    xlabel('Trial')
+    ylabel('Voltage (mV)')
     sgtitle('Variation across stimulation pulses')
     
 end
