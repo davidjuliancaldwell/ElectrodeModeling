@@ -8,7 +8,7 @@ stdEveryPoint = {};
 extractCellAll = {};
 meanEveryTrialAll = {};
 subjectNum = [];
-figTotal =  figure('units','normalized','outerposition',[0 0 1 1]);
+figTotal =  figure('units','inches','outerposition',[1 1 8.5 11]);
 
 % stimulation currents in A
 stimChansVec = [30 22;14 13;12 11;60 59;55 56;62 54;56 64];
@@ -18,9 +18,10 @@ numChansInt = 64;
 counterIndex = 1;
 numRows = 4;
 numColumns = 2;
+saveIt = 1;
 
 
-for ii = 4:4
+for ii = 1:7
     sid = SIDS{ii};
     fprintf(['running for subject ' sid '\n']);
     fs = 12207;
@@ -31,16 +32,16 @@ for ii = 4:4
     %%
     [meanMat,stdMat,stdCellEveryPoint,meanEveryTrial,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',...
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
-        %%
+    %%
     [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
         meanMat,stdMat,numberStims,stdCellEveryPoint,meanEveryTrial,extractCell,...
         meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,1,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
-      %%
+    %%
     [dataSubset,tSubset] = data_subset(ECoGData,1e3*t,preExtract,postExtract);
     dataSubsetCell{counterIndex} = dataSubset;
     
-    sidCell{counterIndex} = sid; 
+    sidCell{counterIndex} = sid;
     subjectNum(ii) = ii;
     counterIndex = counterIndex + 1;
 end
@@ -48,11 +49,12 @@ end
 if plotIt
     figure(figTotal)
     legend('first phase','second phase')
-    xlabel('electrode')
+    xlabel('Electrode')
     ylabel('Voltage (V)')
-    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7']),'png');
-        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7']),'eps');
-
+    if saveIt
+    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7_v2']),'png','-r600');
+    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7_v2']),'eps','-r600');
+    end
 end
 
 [first_7_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,meanEveryTrialAll,stimChansVec,...

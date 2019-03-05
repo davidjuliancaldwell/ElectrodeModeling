@@ -49,8 +49,11 @@ if plotIt
     %errorbar(chanVec,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
     v2 = vline(stimChans(1),'g');
     v3 = vline(stimChans(2),'b');
-    title(['Subject ' num2str(ii) ' subject ID ' sid ' stim channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)),...
-        ' current ' num2str(1e6*currentMat(ii,jj)) '\muA' ])
+   % title(['Subject ' num2str(ii) ' subject ID ' sid ' stim channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)),...
+    %    ' current ' num2str(1e6*currentMat(ii,jj)) '\muA' ])
+    
+       title(['Subject ' num2str(ii) ' Stim Channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)),...
+       ' Current ' num2str(1e3*currentMat(ii,jj)) 'mA' ])
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     figure('units','normalized','outerposition',[0 0 1 1])

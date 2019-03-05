@@ -2,7 +2,7 @@
 %% resistivity analysis for all subjects
 %
 % David.J.Caldwell 11.23.2018
-%close all;clear all;clc
+close all;clear all;clc
 
 plotIt = 1;
 saveIt = 0;
@@ -36,18 +36,7 @@ for index = 1:7
     
 end
 legend({'1','2','3','4','5','6','7'})
-%%
 
-if prolateBool
-    [version, executable, isloaded] = pyversion;
-    if ~isloaded
-        pyversion C:\Users\david\Anaconda3\envs\py36\python.exe
-    end
-    py.importlib.import_module('scipy')
-    
-    %%
-    fitIndGlobalProlate = fit_individual_global_coords_prolate(subStruct);
-end
 %% fit the individual subject data with one rhoA and coordinates
 fitIndGlobalCoords = fit_individual_global_coords(subStruct);
 
@@ -60,8 +49,6 @@ fitIndBinsCoords = fit_individual_coords(subStruct,plotIt,saveIt);
 fitIndGlobalCoordsSphereCart = fit_individual_global_coords_spherical(subStruct);
 %%
 fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(subStruct);
-
-
 
 %%
 fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);

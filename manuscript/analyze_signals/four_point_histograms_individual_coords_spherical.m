@@ -1,6 +1,7 @@
 function histStruct = four_point_histograms_individual_coords_spherical(subStruct,plotIt,saveIt)
 
 numIndices = size(subStruct.meanMat,3);
+    bins = [0:0.25:10];
 
 for index = 1:numIndices
     % setup temporary structure
@@ -27,7 +28,6 @@ for index = 1:numIndices
     
     histStruct.hist{index} = rhoHist;
     
-    bins = [0:0.1:10];
     % plot histogram
     if plotIt
         figure
@@ -42,7 +42,9 @@ for index = 1:numIndices
 end
 
 if plotIt
-    figure;
+   figTotal = figure;
+   figTotal.Units = "inches";
+   figTotal.Position = [1 1 8 5];
     for index = 1:numIndices
         subplot(2,4,index);histogram(histStruct.hist{index}.vals,bins,'normalization','pdf');
         set(gca,'fontsize',16)

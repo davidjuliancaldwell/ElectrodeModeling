@@ -3,6 +3,7 @@
 function [subStruct] = prepare_data_single_subj(eliminateBadChannels)
 load('america')
 
+plotText = 0;
 useMNI = 0;
 cd(fileparts(which('prepare_data_single_subj')));
 locationsDir = pwd;
@@ -94,11 +95,13 @@ for index = 1:numIndices
     %   y = Radius*y;
     %   z = Radius*z;
     ctMNIFig = figure;
-    subplot(2,1,1)
+    ctMNIFig.Units = "inches";
+    ctMNIFig.Position = [1 1 8 3];
+    subplot(1,2,1)
     s = surf(x,y,z);
     %set(s,'EdgeColor','none');
-    set(s,'FaceAlpha',0.25);
-    set(s,'FaceColor',[0.5 0.5 0.5]);
+    % set(s,'FaceAlpha',0.25);
+    set(s,'FaceColor','none');
     hold on
     locs = AllTrodes(1:64,:);
     
@@ -107,10 +110,13 @@ for index = 1:numIndices
     %
     gridSize = 64;
     trodeLabels = [1:gridSize];
-    for chan = 1:gridSize
-        txt = num2str(trodeLabels(chan));
-        t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
-        set(t,'clipping','on');
+    
+    if plotText
+        for chan = 1:gridSize
+            txt = num2str(trodeLabels(chan));
+            t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
+            set(t,'clipping','on');
+        end
     end
     title(['CT Coords - Subject ' num2str(index)])
     AllTrodes = [AllTrodes(:,1) - Center(1) AllTrodes(:,2) - Center(2) AllTrodes(:,3) - Center(3)];
@@ -130,21 +136,23 @@ for index = 1:numIndices
     [GC MC]= curvatures(locs(:,1),locs(:,2),locs(:,3),DT.ConnectivityList);
     subStruct.CT_GC{index} = GC;
     subStruct.CT_MC{index} = MC;
-    figure
-    set(gcf,'position',[378.3333 123.6667 664.6667 1.2047e+03])
     
-    subplot(2,1,1)
+    curveCTFig = figure;
+    curveCTFig.Units = "inches";
+    curveCTFig.Position = [1 1 8 3];
+    subplot(1,2,1)
     trisurf(TR,GC);
     caxis([-max(abs(GC)) max(abs(GC))])
     colorbar()
     title(['Subject ' num2str(index) ' CT Gaussian Curvature'])
-    
-    subplot(2,1,2)
+    %   set(gca,'fontsize',14)
+    subplot(1,2,2)
     trisurf(TR,MC);
     colorbar()
     caxis([-max(abs(MC)) max(abs(MC))])
     title(['Subject ' num2str(index) ' CT Mean Curvature'])
     colormap(cm)
+    %     set(gca,'fontsize',12)
     
     % MNI
     load(fullfile(folderCoords,['subj' num2str(subStruct.subjectNum(index)) '_trode_coords_MNIandTal.mat']));
@@ -162,11 +170,13 @@ for index = 1:numIndices
     y = Radius*y + Center(2);
     z = Radius*z + Center(3);
     figure(ctMNIFig);
-    subplot(2,1,2)
+    subplot(1,2,2)
     s = surf(x,y,z);
     %set(s,'EdgeColor','none');
-    set(s,'FaceAlpha',0.25);
-    set(s,'FaceColor',[0.5 0.5 0.5]);
+    %    set(s,'FaceAlpha',0.25);
+    %  set(s,'FaceColor',[0.5 0.5 0.5]);
+    set(s,'FaceColor','none');
+    
     hold on
     locs = MNIcoords(1:64,:);
     
@@ -175,10 +185,12 @@ for index = 1:numIndices
     %
     gridSize = 64;
     trodeLabels = [1:gridSize];
-    for chan = 1:gridSize
-        txt = num2str(trodeLabels(chan));
-        t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
-        set(t,'clipping','on');
+    if plotText
+        for chan = 1:gridSize
+            txt = num2str(trodeLabels(chan));
+            t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
+            set(t,'clipping','on');
+        end
     end
     title(['MNI Coords - Subject ' num2str(index)])
     
@@ -197,15 +209,16 @@ for index = 1:numIndices
     [GC MC]= curvatures(locs(:,1),locs(:,2),locs(:,3),DT.ConnectivityList);
     subStruct.MNI_GC{index} = GC;
     subStruct.MNI_MC{index} = MC;
-    figure
-    set(gcf,'position',[378.3333 123.6667 664.6667 1.2047e+03])
-    subplot(2,1,1)
+    curveMNIFig = figure;
+    curveMNIFig.Units = "inches";
+    curveMNIFig.Position = [1 1 8 3];
+    subplot(1,2,1)
     trisurf(TR,GC);
     caxis([-max(abs(GC)) max(abs(GC))])
     colorbar()
     title(['Subject ' num2str(index) ' MNI Gaussian Curvature'])
     
-    subplot(2,1,2)
+    subplot(1,2,2)
     trisurf(TR,MC);
     colorbar()
     caxis([-max(abs(MC)) max(abs(MC))])
