@@ -51,7 +51,7 @@ fitIndGlobalCoordsSphereCart = fit_individual_global_coords_spherical(subStruct)
 fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(subStruct);
 
 %%
-fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);
+%fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);
 
 
 %% fit the individual subject data with rhoA for different bins using coordinates

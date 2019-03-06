@@ -1,5 +1,5 @@
 %%
-close all;clear all;clc
+%close all;clear all;clc
 Z_Constants_Resistivity
 currentMatVec = [0.00175 0.00075 0.0035 0.00075 0.003 0.0025 0.00175];
 

@@ -5,6 +5,7 @@ function fitStruct = fit_individual_coords(subStruct,plotIt,saveIt)
 % optimization for 1 layer
 
 bins = (repmat([1:8],2,1)+[0;1])';
+binCenter = mean(bins,2);
 rhoA = 1;
 dataSelect = subStruct.dataSelect;
 numIndices = size(subStruct.meanMat,3);
@@ -51,16 +52,18 @@ end
 
 if plotIt
     
-    figure
+    figInd = figure;
+    figInd.Units = "Inches";
+    figInd.Position = [1 1 4 4];
     hold on
     for index = 1:numIndices
-        plot(fitStruct.calc{index}.rhoAcalc(1:5),'-o','linewidth',2)
+        plot(binCenter(1:5),fitStruct.calc{index}.rhoAcalc(1:5),'-o','linewidth',2)
     end
     legend({'1','2','3','4','5','6','7'})
     xlabel('bin')
     ylabel('rhoA (ohm-m)')
     title('one layer apparent resistivity by subject and bin')
-    set(gca,'fontsize',18)
+    set(gca,'fontsize',14)
     
     if saveIt
     end
@@ -71,24 +74,25 @@ end
 
 if plotIt
     
-    figure
-    
+  figTotal = figure;
+    figTotal.Units = "Inches";
+    figTotal.Position = [1 1 8 5];    
     for index = 1:numIndices
         
         subplot(2,4,index)
-        plot(fitStruct.calc{index}.rhoAcalc(1:5),'-o','linewidth',2)
+        plot(binCenter(1:5),fitStruct.calc{index}.rhoAcalc(1:5),'-o','linewidth',2)
         
         title(['subject ' num2str(index)])
-        set(gca,'fontsize',18)
+        set(gca,'fontsize',12)
         ylim([0 6])
         xlim([0 6])
         yticks([0 1 2 3 4 5 6])
         xticks([0 1 2 3 4 5 6])
         
     end
-    xlabel('bin')
-    ylabel('rhoA (ohm-m)')
-    sgtitle('one layer apparent resistivity by subject and bin','fontsize',18)
+    xlabel('Bin (cm)')
+    ylabel('\rho_a (ohm-m)')
+    sgtitle('Flat One Layer Apparent Resistivity by Subject and Bin','fontsize',18)
     
     if saveIt
         
