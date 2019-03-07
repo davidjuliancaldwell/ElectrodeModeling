@@ -32,7 +32,8 @@ ylabel('Voltage (V)')
 set(gca,'fontsize',14)
 title('Concatenated Jump Voltages for all Subjects')
 
-correction = 0.98;
+%correction = 0.98;
+correction = 1;
 
 figJump = figure;
 figJump.Units = "inches";
