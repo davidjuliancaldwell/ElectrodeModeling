@@ -100,13 +100,13 @@ for chan = 1:size(waveformMatrix,2)
     stdMatrix(chan,1) = std(firstPhase);
     stdMatrix(chan,2) = std(secondPhase);
     
-    % get the means at every point 
+    % get the means at every point
     firstPhaseSig = channelSig(beginInd+preSamps:transitionPt-postSamps,:);
     secondPhaseSig = channelSig(transitionPt+preSamps:endInd-postSamps,:);
     
     meanEveryTrial(chan,1,:) = mean(firstPhaseSig,1);
     meanEveryTrial(chan,2,:) = mean(secondPhaseSig,1);
-   
+    
     % now get the standard deviation at every point in the recorded
     % waveform
     stdCellEveryPoint{chan}{1} = std(channelSig(beginInd+preSamps:transitionPt-postSamps,:),[],2);
@@ -114,4 +114,6 @@ for chan = 1:size(waveformMatrix,2)
     
     
 end
+
+
 

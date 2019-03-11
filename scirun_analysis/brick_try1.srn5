@@ -4,7 +4,7 @@
 <networkFile class_id="0" tracking_level="0" version="6">
 	<networkInfo class_id="1" tracking_level="0" version="0">
 		<modules class_id="2" tracking_level="0" version="0">
-			<count>8</count>
+			<count>7</count>
 			<item_version>0</item_version>
 			<item class_id="3" tracking_level="0" version="0">
 				<first>CreateStandardColorMap:0</first>
@@ -86,50 +86,83 @@
 				</second>
 			</item>
 			<item>
-				<first>ReadField:0</first>
+				<first>ImportFieldsFromMatlab:0</first>
 				<second>
 					<module>
 						<package_name_>SCIRun</package_name_>
-						<category_name_>DataIO</category_name_>
-						<module_name_>ReadField</module_name_>
+						<category_name_>Matlab</category_name_>
+						<module_name_>ImportFieldsFromMatlab</module_name_>
 					</module>
 					<state>
 						<stateMap>
-							<count>3</count>
+							<count>2</count>
 							<item_version>0</item_version>
 							<item>
 								<first>
-									<name>FileTypeName</name>
-								</first>
-								<second>
-									<name>FileTypeName</name>
-									<value>
-										<which>2</which>
-										<value>Matlab Field</value>
-									</value>
-								</second>
-							</item>
-							<item>
-								<first>
 									<name>Filename</name>
 								</first>
 								<second>
 									<name>Filename</name>
 									<value>
 										<which>2</which>
-										<value>G:/My Drive/GRIDLabDavidShared/resistivityDataSets/sciRun/block/block_mesh.mat</value>
+										<value>G:/My Drive/GRIDLabDavidShared/resistivityDataSets/sciRun/block/block_mesh_nodes.mat</value>
 									</value>
 								</second>
 							</item>
 							<item>
 								<first>
-									<name>ScriptEnvironmentVariable</name>
+									<name>PortChoices</name>
 								</first>
 								<second>
-									<name>ScriptEnvironmentVariable</name>
+									<name>PortChoices</name>
 									<value>
-										<which>2</which>
-										<value></value>
+										<which>5</which>
+										<value>
+											<count>6</count>
+											<item_version>0</item_version>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+										</value>
 									</value>
 								</second>
 							</item>
@@ -138,29 +171,17 @@
 				</second>
 			</item>
 			<item>
-				<first>ReadMatrix:0</first>
+				<first>ImportMatricesFromMatlab:1</first>
 				<second>
 					<module>
 						<package_name_>SCIRun</package_name_>
-						<category_name_>DataIO</category_name_>
-						<module_name_>ReadMatrix</module_name_>
+						<category_name_>Matlab</category_name_>
+						<module_name_>ImportMatricesFromMatlab</module_name_>
 					</module>
 					<state>
 						<stateMap>
-							<count>3</count>
+							<count>2</count>
 							<item_version>0</item_version>
-							<item>
-								<first>
-									<name>FileTypeName</name>
-								</first>
-								<second>
-									<name>FileTypeName</name>
-									<value>
-										<which>2</which>
-										<value>Matlab Matrix</value>
-									</value>
-								</second>
-							</item>
 							<item>
 								<first>
 									<name>Filename</name>
@@ -169,38 +190,67 @@
 									<name>Filename</name>
 									<value>
 										<which>2</which>
-										<value>G:/My Drive/GRIDLabDavidShared/resistivityDataSets/sciRun/block/block_result.mat</value>
+										<value>G:/My Drive/GRIDLabDavidShared/resistivityDataSets/sciRun/block/block_mesh_nodes.mat</value>
 									</value>
 								</second>
 							</item>
 							<item>
 								<first>
-									<name>ScriptEnvironmentVariable</name>
+									<name>PortChoices</name>
 								</first>
 								<second>
-									<name>ScriptEnvironmentVariable</name>
+									<name>PortChoices</name>
 									<value>
-										<which>2</which>
-										<value></value>
+										<which>5</which>
+										<value>
+											<count>6</count>
+											<item_version>0</item_version>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+											<item>
+												<name></name>
+												<value>
+													<which>2</which>
+													<value>&lt;none&gt;</value>
+												</value>
+											</item>
+										</value>
 									</value>
 								</second>
 							</item>
-						</stateMap>
-					</state>
-				</second>
-			</item>
-			<item>
-				<first>ReportMatrixInfo:0</first>
-				<second>
-					<module>
-						<package_name_>SCIRun</package_name_>
-						<category_name_>Math</category_name_>
-						<module_name_>ReportMatrixInfo</module_name_>
-					</module>
-					<state>
-						<stateMap>
-							<count>0</count>
-							<item_version>0</item_version>
 						</stateMap>
 					</state>
 				</second>
@@ -1053,7 +1103,7 @@
 									<name>ScaleBarFontSize</name>
 									<value>
 										<which>0</which>
-										<value>99</value>
+										<value>1</value>
 									</value>
 								</second>
 							</item>
@@ -1065,7 +1115,7 @@
 									<name>ScaleBarHeight</name>
 									<value>
 										<which>1</which>
-										<value>9.99899999999999950e+001</value>
+										<value>0.00000000000000000e+000</value>
 									</value>
 								</second>
 							</item>
@@ -1173,7 +1223,7 @@
 									<name>ShowViewer</name>
 									<value>
 										<which>3</which>
-										<value>1</value>
+										<value>0</value>
 									</value>
 								</second>
 							</item>
@@ -1255,7 +1305,7 @@
 			</item>
 		</modules>
 		<connections class_id="13" tracking_level="0" version="0">
-			<count>8</count>
+			<count>7</count>
 			<item_version>0</item_version>
 			<item class_id="14" tracking_level="0" version="0">
 				<moduleId1_>CreateStandardColorMap:0</moduleId1_>
@@ -1270,9 +1320,9 @@
 				</port2_>
 			</item>
 			<item>
-				<moduleId1_>ReadField:0</moduleId1_>
+				<moduleId1_>ImportFieldsFromMatlab:0</moduleId1_>
 				<port1_>
-					<name>Field</name>
+					<name>Field1</name>
 					<id>0</id>
 				</port1_>
 				<moduleId2_>SwapFieldDataWithMatrixEntries:0</moduleId2_>
@@ -1282,21 +1332,9 @@
 				</port2_>
 			</item>
 			<item>
-				<moduleId1_>ReadMatrix:0</moduleId1_>
+				<moduleId1_>ImportMatricesFromMatlab:1</moduleId1_>
 				<port1_>
-					<name>Matrix</name>
-					<id>0</id>
-				</port1_>
-				<moduleId2_>ReportMatrixInfo:0</moduleId2_>
-				<port2_>
-					<name>InputMatrix</name>
-					<id>0</id>
-				</port2_>
-			</item>
-			<item>
-				<moduleId1_>ReadMatrix:0</moduleId1_>
-				<port1_>
-					<name>Matrix</name>
+					<name>Matrix1</name>
 					<id>0</id>
 				</port1_>
 				<moduleId2_>SwapFieldDataWithMatrixEntries:0</moduleId2_>
@@ -1356,7 +1394,7 @@
 		</connections>
 	</networkInfo>
 	<modulePositions class_id="16" tracking_level="0" version="0">
-		<count>8</count>
+		<count>7</count>
 		<item_version>0</item_version>
 		<item class_id="17" tracking_level="0" version="0">
 			<first>CreateStandardColorMap:0</first>
@@ -1366,24 +1404,17 @@
 			</second>
 		</item>
 		<item>
-			<first>ReadField:0</first>
+			<first>ImportFieldsFromMatlab:0</first>
 			<second>
-				<first>-7.70000000000000000e+001</first>
-				<second>-6.85000000000000000e+002</second>
-			</second>
-		</item>
-		<item>
-			<first>ReadMatrix:0</first>
-			<second>
-				<first>3.04000000000000000e+002</first>
+				<first>-7.60000000000000000e+001</first>
 				<second>-6.84000000000000000e+002</second>
 			</second>
 		</item>
 		<item>
-			<first>ReportMatrixInfo:0</first>
+			<first>ImportMatricesFromMatlab:1</first>
 			<second>
-				<first>4.56000000000000000e+002</first>
-				<second>-4.56000000000000000e+002</second>
+				<first>4.36521173591898500e+002</first>
+				<second>-6.20973742387564020e+002</second>
 			</second>
 		</item>
 		<item>
@@ -1424,22 +1455,18 @@
 		<item_version>0</item_version>
 	</connectionNotes>
 	<moduleTags class_id="20" tracking_level="0" version="0">
-		<count>8</count>
+		<count>7</count>
 		<item_version>0</item_version>
 		<item class_id="21" tracking_level="0" version="0">
 			<first>CreateStandardColorMap:0</first>
 			<second>-1</second>
 		</item>
 		<item>
-			<first>ReadField:0</first>
+			<first>ImportFieldsFromMatlab:0</first>
 			<second>-1</second>
 		</item>
 		<item>
-			<first>ReadMatrix:0</first>
-			<second>-1</second>
-		</item>
-		<item>
-			<first>ReportMatrixInfo:0</first>
+			<first>ImportMatricesFromMatlab:1</first>
 			<second>-1</second>
 		</item>
 		<item>

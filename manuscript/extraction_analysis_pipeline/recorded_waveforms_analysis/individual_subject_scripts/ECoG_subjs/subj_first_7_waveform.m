@@ -19,6 +19,7 @@ counterIndex = 1;
 numRows = 4;
 numColumns = 2;
 saveIt = 1;
+plotIt = 1;
 
 
 for ii = 1:7
@@ -32,6 +33,11 @@ for ii = 1:7
     %%
     [meanMat,stdMat,stdCellEveryPoint,meanEveryTrial,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',...
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
+    
+    %%
+   if plotIt
+       
+   end
     %%
     [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
         meanMat,stdMat,numberStims,stdCellEveryPoint,meanEveryTrial,extractCell,...
