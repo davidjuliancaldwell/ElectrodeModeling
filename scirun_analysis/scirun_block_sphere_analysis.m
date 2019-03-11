@@ -167,7 +167,7 @@ for index = 1:size(vecOrig,1)
 end
 
 figure
-scatter3(xNew,yNew,zNew)
+scatter3(xOrig,yOrig,zOrig)
 hold on
 scatter3(vecNew(:,1),vecNew(:,2),vecNew(:,3))
 
@@ -185,11 +185,25 @@ Fsphere1 = scatteredInterpolant(sphereGeo1(:,1),sphereGeo1(:,2),sphereGeo1(:,3),
 blockValuesInt = Fblock(pointsGrid(:,1),pointsGrid(:,2),pointsGrid(:,3));
 sphereValuesInt = Fsphere1(vecNew(:,1),vecNew(:,2),vecNew(:,3));
 %%
+
+
 figure
 subplot(1,2,1)
 scatter3(pointsGrid(:,1),pointsGrid(:,2),pointsGrid(:,3),25,log(blockValuesInt),'filled');
 subplot(1,2,2)
 scatter3(vecNew(:,1),vecNew(:,2),vecNew(:,3),25,log(sphereValuesInt),'filled');
+
+
+
+figure
+subplot(1,2,1)
+scatter3(blockGeo(:,1),blockGeo(:,2),blockGeo(:,3),25,blockV,'filled')
+hold on
+scatter3(pointsGrid(:,1),pointsGrid(:,2),pointsGrid(:,3),50,blockValuesInt,'filled','MarkerEdgeColor',[0 0 0]);
+subplot(1,2,2)
+scatter3(sphereGeo1_1(:,1),sphereGeo1_1(:,2),sphereGeo1_1(:,3),25,sphereV1_1,'filled');
+hold on
+scatter3(vecNew(:,1),vecNew(:,2),vecNew(:,3),50,sphereValuesInt,'filled','MarkerEdgeColor',[0 0 0]);
 
 %%
 bins = 10*(repmat([1:8],2,1)+[0;1])';
@@ -214,8 +228,30 @@ tempStruct.bestVals = bestVals;
 tempStruct.MSE = MSE;
 tempStruct.rhoAcalc = rhoAoutput;
 tempStruct.offset = offset;
-
+% bin
 fprintf(['rhoA = ' num2str(rhoAoutput) ' offset = ' num2str(offset) ' \n ']);
+
+% global
+intercept = false;
+tempStruct = struct;
+
+% use MSE
+if ~intercept
+    dlm=fitlm(l1,blockValuesInt,'intercept',false);
+    tempStruct.rhoAcalc=dlm.Coefficients{1,1};
+    tempStruct.offset = 0;
+else
+    dlm=fitlm(l1,blockValuesInt);
+    tempStruct.rhoAcalc=dlm.Coefficients{2,1};
+    tempStruct.offset = dlm.Coefficients{1,1};
+end
+tempStruct.MSE = dlm.RMSE;
+tempStruct.bestVals = dlm.Fitted;
+
+
+fitStruct.calc{index} = tempStruct;
+fprintf([ ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
+
 
 
 %%
@@ -238,6 +274,32 @@ tempStruct.bestVals = bestVals;
 tempStruct.MSE = MSE;
 tempStruct.rhoAcalc = rhoAoutput;
 tempStruct.offset = offset;
-
+% bin
 fprintf(['rhoA = ' num2str(rhoAoutput) ' offset = ' num2str(offset) ' \n ']);
+
+% global
+
+
+% global
+intercept = true;
+tempStruct = struct;
+
+% use MSE
+if ~intercept
+    dlm=fitlm(l1,sphereValuesInt,'intercept',false);
+    tempStruct.rhoAcalc=dlm.Coefficients{1,1};
+    tempStruct.offset = 0;
+else
+    dlm=fitlm(l1,sphereValuesInt);
+    tempStruct.rhoAcalc=dlm.Coefficients{2,1};
+    tempStruct.offset = dlm.Coefficients{1,1};
+end
+tempStruct.MSE = dlm.RMSE;
+tempStruct.bestVals = dlm.Fitted;
+
+
+
+fitStruct.calc{index} = tempStruct;
+fprintf([ ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
+
 
