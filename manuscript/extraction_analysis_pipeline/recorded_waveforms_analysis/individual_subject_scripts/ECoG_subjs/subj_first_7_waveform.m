@@ -18,7 +18,7 @@ numChansInt = 64;
 counterIndex = 1;
 numRows = 4;
 numColumns = 2;
-saveIt = 1;
+saveIt = 0;
 plotIt = 1;
 
 
@@ -35,9 +35,14 @@ for ii = 1:7
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
     
     %%
-   if plotIt
-       
-   end
+    if plotIt
+        figure
+        ECoGDataAverage = mean(ECoGData,3);
+        ECoGDataAverage(:,stimChans,:) = nan;
+        smallMultiplesModeling(ECoGDataAverage,t,'type1',stimChans,'average',1);
+        currentDirec = pwd;
+        SaveFig(currentDirec,['subject_' num2str(ii) '_average_signal'],'eps')
+    end
     %%
     [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
         meanMat,stdMat,numberStims,stdCellEveryPoint,meanEveryTrial,extractCell,...
@@ -58,8 +63,8 @@ if plotIt
     xlabel('Electrode')
     ylabel('Voltage (V)')
     if saveIt
-    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7_v2']),'png','-r600');
-    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7_v2']),'eps','-r600');
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7_v2']),'png','-r600');
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7_v2']),'eps','-r600');
     end
 end
 
