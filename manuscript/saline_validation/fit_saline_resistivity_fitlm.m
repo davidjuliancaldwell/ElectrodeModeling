@@ -6,6 +6,11 @@ dataDir = 'G:\My Drive\GRIDLabDavidShared\SummerStudents2018\chris_and_sonia\7-1
 highResist = '2-91ms-cm-solution5';
 lowResist = '19-57ms-cm-solution1';
 
+vJumpMat = [];
+vJumpCell = {};
+vJumpAvgMat = [];
+currentMatVec = [];
+correction = 1;
 for ii = [1:2]
     stimChansVec = [28 29; 28 36];
     badChansVec = {[27],[27]};
@@ -21,6 +26,10 @@ for ii = [1:2]
         jm=4;
         km=4;
         
+        uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
+        uniqueStimLabels = uniqueStimLabels(:);
+        
+        
     elseif ii == 2
         load(fullfile(dataDir,lowResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
         
@@ -29,13 +38,37 @@ for ii = [1:2]
         jm=4;
         km=4;
         
+        uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
+        uniqueStimLabels = uniqueStimLabels(:);
+        
+        
+        
     end
     %%
+    fsStim = 24414;
     
     conditionInterest = 6; % condition of interest
     i0 = uniqueLabels(conditionInterest)/1e6; % current in uA to A
-        dataInt = meanMatAll(:,1,conditionInterest);
+    currentMatVec = [currentMatVec i0];
+    %% 2 point
+    stimEpochedInt = stim1Epoched(:,uniqueStimLabels==conditionInterest);
+ 
+    [vJumpAvg,vJumpInd] = stimChan_calculate_jumpR(stimEpochedInt,fsStim);
+    vJumpMat = [vJumpMat vJumpInd];
+    vJumpCell{ii} = vJumpInd;
+    vJumpAvgMat = [vJumpAvgMat vJumpAvg];
+    
+        dividedVICell{ii} = vJumpCell{ii}/currentMatVec(ii);
+    twoPointRCell{ii} = 2*.00115*dividedVICell{ii}/(correction);
+    stdVJump(ii) = std(vJumpCell{ii});
+    
+    
+dividedVI = vJumpAvgMat./currentMatVec;
+twoPointR = (2*.00115*dividedVI/(correction));
 
+    %% 3 point
+    dataInt = meanMatAll(:,1,conditionInterest);
+    
     % multiply by 4
     dataInt = 4*dataInt;
     dataInt(stimChans) = nan;

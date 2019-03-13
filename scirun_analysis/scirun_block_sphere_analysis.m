@@ -183,7 +183,19 @@ scatter3(vecNew(:,1),vecNew(:,2),vecNew(:,3),50,'k','filled')
 
 %% scattered interpolation to get idea of voltage values at arbitrary points
 
-Fblock = scatteredInterpolant(blockGeo(:,1),blockGeo(:,2),blockGeo(:,3),blockV);
+electrodeCenter(:,1) = [-5,0,100];
+electrodeCenter(:,2) = [5,0,100];
+blockDistances(:,1) = vecnorm((blockGeo - repmat(electrodeCenter(:,1)',length(blockGeo(:,1)),1)),2,2);
+blockDistances(:,2) = vecnorm((blockGeo - repmat(electrodeCenter(:,2)',length(blockGeo(:,1)),1)),2,2);
+
+blockSubsetIndices = blockDistances(:,1) > 9 & blockDistances(:,2) > 9;
+
+figure
+scatter3(blockGeo(blockSubsetIndices,1),blockGeo(blockSubsetIndices,2),blockGeo(blockSubsetIndices,3),[],blockV(blockSubsetIndices),'filled')
+
+
+%%
+Fblock = scatteredInterpolant(blockGeo(blockSubsetIndices,1),blockGeo(blockSubsetIndices,2),blockGeo(blockSubsetIndices,3),blockV(blockSubsetIndices));
 Fsphere1 = scatteredInterpolant(sphereGeo2(:,1),sphereGeo2(:,2),sphereGeo2(:,3),sphereV2);
 %Fblock.Method = 'nearest';
 %Fsphere1.Method = 'nearest';
@@ -304,5 +316,4 @@ tempStruct.bestVals = dlm.Fitted;
 
 fitStruct.calc{index} = tempStruct;
 fprintf([ ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
-
 
