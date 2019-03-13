@@ -123,7 +123,7 @@ end
 
 %%
 centerB = [0 0 100];
-cutOffLow = 99.5;
+cutOffLow = 90;
 cutOffHigh = 100;
 blockIndex = (blockGeo(:,3)<=cutOffHigh & blockGeo(:,3)>=cutOffLow);
 geoB = blockGeo(blockIndex,:);
@@ -139,7 +139,7 @@ scatter3(blockGeo(:,1),blockGeo(:,2),blockGeo(:,3),25,(blockV),'filled')
 colorbar()
 title('Block Linear Voltage')
 hold on
-scatter3(gridX(:),gridY(:),repmat(100,length(gridX(:)),1),50,'k','filled')
+scatter3(pointsGrid(:,1),pointsGrid(:,2),pointsGrid(:,3),50,'k','filled')
 
 %% define anonymous functions to allow for conversion to mercator, and subsequent rotation
 vRot = @(v,theta,k)(v*cos(theta) + cross(k,v)*sin(theta) + k*(dot(k,v))*(1-cos(theta)));
@@ -176,10 +176,15 @@ scatter3(sphereGeo1_1(:,1),sphereGeo1_1(:,2),sphereGeo1_1(:,3),25,sphereV1_1,'fi
 hold on
 scatter3(vecNew(:,1),vecNew(:,2),vecNew(:,3),50,'k','filled')
 
+figure
+scatter3(sphereGeo1(:,1),sphereGeo1(:,2),sphereGeo1(:,3),25,sphereV1,'filled');
+hold on
+scatter3(vecNew(:,1),vecNew(:,2),vecNew(:,3),50,'k','filled')
+
 %% scattered interpolation to get idea of voltage values at arbitrary points
 
 Fblock = scatteredInterpolant(blockGeo(:,1),blockGeo(:,2),blockGeo(:,3),blockV);
-Fsphere1 = scatteredInterpolant(sphereGeo1(:,1),sphereGeo1(:,2),sphereGeo1(:,3),sphereV1);
+Fsphere1 = scatteredInterpolant(sphereGeo2(:,1),sphereGeo2(:,2),sphereGeo2(:,3),sphereV2);
 %Fblock.Method = 'nearest';
 %Fsphere1.Method = 'nearest';
 blockValuesInt = Fblock(pointsGrid(:,1),pointsGrid(:,2),pointsGrid(:,3));
@@ -192,8 +197,6 @@ subplot(1,2,1)
 scatter3(pointsGrid(:,1),pointsGrid(:,2),pointsGrid(:,3),25,log(blockValuesInt),'filled');
 subplot(1,2,2)
 scatter3(vecNew(:,1),vecNew(:,2),vecNew(:,3),25,log(sphereValuesInt),'filled');
-
-
 
 figure
 subplot(1,2,1)
