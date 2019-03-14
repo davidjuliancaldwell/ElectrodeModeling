@@ -91,7 +91,7 @@ twoPointR = (2*.00115*dividedVI/(correction))
 end
 
     %% 3 point
-        conditionInterest = 6; % condition of interest
+        conditionInterest = 5; % condition of interest
     i0 = uniqueLabels(conditionInterest)/1e6; % current in uA to A
     
     dataInt = meanMatAll(:,1,conditionInterest);

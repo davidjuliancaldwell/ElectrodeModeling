@@ -1,10 +1,11 @@
+close all;clear all;clc
 DATA_DIR = 'G:\My Drive\GRIDLabDavidShared\resistivityDataSets\sciRun';
 
 %%
 %If you want to plot the potential, use Geometry.node from file X_mesh.mat
 % and V from file X_result.mat.
-load(fullfile(DATA_DIR,'block','block_mesh.mat'));
-load(fullfile(DATA_DIR,'block','block_result.mat'));
+load(fullfile(DATA_DIR,'block','block2_mesh.mat'));
+load(fullfile(DATA_DIR,'block','block2_result.mat'));
 
 blockGeo = Geometry.node;
 blockV = V;
@@ -188,7 +189,8 @@ electrodeCenter(:,2) = [5,0,100];
 blockDistances(:,1) = vecnorm((blockGeo - repmat(electrodeCenter(:,1)',length(blockGeo(:,1)),1)),2,2);
 blockDistances(:,2) = vecnorm((blockGeo - repmat(electrodeCenter(:,2)',length(blockGeo(:,1)),1)),2,2);
 
-blockSubsetIndices = blockDistances(:,1) > 9 & blockDistances(:,2) > 9;
+%blockSubsetIndices = blockDistances(:,1) > 9 & blockDistances(:,2) > 9;
+blockSubsetIndices = logical(ones(length(blockDistances(:,1)),1));
 
 figure
 scatter3(blockGeo(blockSubsetIndices,1),blockGeo(blockSubsetIndices,2),blockGeo(blockSubsetIndices,3),[],blockV(blockSubsetIndices),'filled')
@@ -263,8 +265,6 @@ end
 tempStruct.MSE = dlm.RMSE;
 tempStruct.bestVals = dlm.Fitted;
 
-
-fitStruct.calc{index} = tempStruct;
 fprintf([ ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
 
 
@@ -313,7 +313,5 @@ tempStruct.MSE = dlm.RMSE;
 tempStruct.bestVals = dlm.Fitted;
 
 
-
-fitStruct.calc{index} = tempStruct;
 fprintf([ ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
 

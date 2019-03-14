@@ -7,7 +7,7 @@ close all;clear all;clc
 plotIt = 0;
 saveIt = 0;
 shrinkStruct = 1;
-eliminateBadChannels = 0;
+eliminateBadChannels = 1;
 getRidOfFullData = 1;
 prolateBool = 0;
 
