@@ -43,8 +43,9 @@ end
 if plotIt
    figTotal = figure;
    figTotal.Units = "inches";
-   figTotal.Position = [1 1 8 5];    for index = 1:numIndices
-        subplot(2,4,index);histogram(histStruct.hist{index}.vals,bins,'normalization','pdf');
+   figTotal.Position = [1 1 8 10];
+   for index = 1:numIndices
+        subplot(4,2,index);histogram(histStruct.hist{index}.vals,bins,'normalization','pdf');
         set(gca,'fontsize',16)
         title(['Subject ' num2str(index)])
         xlim([0 10])

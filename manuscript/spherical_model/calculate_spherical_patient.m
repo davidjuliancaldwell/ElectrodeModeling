@@ -4,7 +4,7 @@
 % David.J.Caldwell 11.23.2018
 close all;clear all;clc
 
-plotIt = 1;
+plotIt = 0;
 saveIt = 0;
 shrinkStruct = 1;
 eliminateBadChannels = 0;

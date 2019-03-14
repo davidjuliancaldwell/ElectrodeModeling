@@ -1,17 +1,17 @@
 function [] = plot_ind_fits_sphereCompare(dataStruct,fitFlat,fitSphere,saveIt)
 
 OUTPUT_DIR = getenv('output_dir');
-masterPlot = figure('units','inches','position',[1 1 8 6]);
+masterPlot = figure('units','inches','position',[1 1 8 10]);
 
 for index = 1:7
     
-    subplot(2,4,index)
+    subplot(4,2,index)
     plot(dataStruct.meanData{index},'linewidth',2)
     hold on
     plot(fitSphere.calc{index}.bestVals,'linewidth',2)
     plot(fitFlat.calc{index}.bestVals,'linewidth',2)
     title(['subject ' num2str(index)])
-    set(gca,'fontsize',8)
+    set(gca,'fontsize',12)
 end
 ylabel('Voltage (V)')
 xlabel('Electrode')

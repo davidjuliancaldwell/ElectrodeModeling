@@ -11,9 +11,9 @@ vJumpCell = {};
 vJumpAvgMat = [];
 currentMatVec = [];
 correction = 1;
-for ii = [1:2]
-    stimChansVec = [28 29; 28 36];
-    badChansVec = {[27],[27]};
+for ii = [1,2,3,4]
+    stimChansVec = [28 29; 28 36; 36 37; 28 36];
+    badChansVec = {[27],[27],[27],[27]};
     
     stimChans = stimChansVec(ii,:);
     badChans = badChansVec{ii};
@@ -41,14 +41,37 @@ for ii = [1:2]
         uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
         uniqueStimLabels = uniqueStimLabels(:);
         
+    elseif ii == 3
+        load(fullfile(dataDir,highResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
+    
+        jp=5;
+        kp=5;
+        jm=4;
+        km=5;
+        
+        uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
+        uniqueStimLabels = uniqueStimLabels(:);
+        
+            elseif ii == 4
+        load(fullfile(dataDir,highResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
+    
+    
+        jp=5;
+        kp=4;
+        jm=4;
+        km=4;
+        
+        uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
+        uniqueStimLabels = uniqueStimLabels(:);
         
         
     end
     %%
     fsStim = 24414;
     
-    conditionInterest = 6; % condition of interest
-    i0 = uniqueLabels(conditionInterest)/1e6; % current in uA to A
+for conditionInterest = 1:7
+        i0 = uniqueLabels(conditionInterest)/1e6; % current in uA to A
+
     currentMatVec = [currentMatVec i0];
     %% 2 point
     stimEpochedInt = stim1Epoched(:,uniqueStimLabels==conditionInterest);
@@ -64,9 +87,13 @@ for ii = [1:2]
     
     
 dividedVI = vJumpAvgMat./currentMatVec;
-twoPointR = (2*.00115*dividedVI/(correction));
+twoPointR = (2*.00115*dividedVI/(correction))
+end
 
     %% 3 point
+        conditionInterest = 6; % condition of interest
+    i0 = uniqueLabels(conditionInterest)/1e6; % current in uA to A
+    
     dataInt = meanMatAll(:,1,conditionInterest);
     
     % multiply by 4
