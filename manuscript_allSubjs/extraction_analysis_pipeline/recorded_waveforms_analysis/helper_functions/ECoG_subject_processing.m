@@ -18,27 +18,28 @@ stdMatAll(:,:,ii,jj) = stdMat;
 numberStimsAll(ii,jj) = numberStims;
 stdEveryPoint{ii,jj} = stdCellEveryPoint;
 
+saveIt = 1;
 
 if plotIt
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     chanVec = [1:numChansInt];
-%     figure
-%     errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)
-%     hold on
-%     errorbar(chanVec+0.3,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
-%     legend('first phase','second phase')
-%     xlabel('electrode')
-%     ylabel('Voltage (V)')
-%     % title(['Subject ' num2str(ii)])
-%     title(['Mean and Standard Deviation for Recorded Biphasic Pulse'])
-%     vline(stimChans(1),'g');
-%     vline(stimChans(2),'b');
-%     legend('- chan','+ chan')
-%     
-%     set(gca,'fontsize',16)
-    %%%%%%%%%%%%%%%%%%%%%%%%%     
+    %     chanVec = [1:numChansInt];
+    %     figure
+    %     errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)
+    %     hold on
+    %     errorbar(chanVec+0.3,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
+    %     legend('first phase','second phase')
+    %     xlabel('electrode')
+    %     ylabel('Voltage (V)')
+    %     % title(['Subject ' num2str(ii)])
+    %     title(['Mean and Standard Deviation for Recorded Biphasic Pulse'])
+    %     vline(stimChans(1),'g');
+    %     vline(stimChans(2),'b');
+    %     legend('- chan','+ chan')
+    %
+    %     set(gca,'fontsize',16)
+    %%%%%%%%%%%%%%%%%%%%%%%%%
     chanVec = [1:numChansInt];
-
+    
     figure(figTotal)
     subplot(numRows,numColumns,counterIndex)
     errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)
@@ -92,8 +93,10 @@ if plotIt
     title({'Standard Deviation for each sample in the stable part','of the artifact for Recorded Biphasic Pulse'})
     legend([h1{1} h2{1} v2 v3],{'first phase','second phase','- chan','+ chan'})
     set(gca,'fontsize',16)
-    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_current_' num2str(1e6*currentMat(ii,jj))]),'png');
     
+    if saveIt
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid '_stimChans_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '_current_' num2str(1e6*currentMat(ii,jj))]),'png');
+    end
 end
 
 end

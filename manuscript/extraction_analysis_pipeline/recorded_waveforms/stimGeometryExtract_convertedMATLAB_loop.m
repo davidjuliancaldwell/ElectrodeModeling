@@ -1,10 +1,10 @@
 %% updated 6-15-2018 loop through 3ada8b
 %% initialize output and meta dir
 % clear workspace
-close all; clear all; clc
+%close all; clear all; clc
 
 % set input output working directories
-Z_ConstantsStimSpacing;
+%Z_ConstantsStimSpacing;
 
 % subject directory, change as needed
 SUB_DIR = fullfile(myGetenv('subject_dir'));
@@ -13,10 +13,10 @@ SUB_DIR = fullfile(myGetenv('subject_dir'));
 
 % this is from my z_constants
 
-sid = SIDS{6};
+sid = '3ada8b';
 
 stimChannels = [
-    3 4;
+   % 3 4;
     4 3;
     4 12;
     12 4;
@@ -75,7 +75,7 @@ for trial = 1:numTrials
     
     stimChans = stimChannels(trial,:);
     %
-    sSing = Sing.info.SamplingRateHz;
+    fSing = Sing.info.SamplingRateHz;
     
     % stim data
     stim = Stim.data;
@@ -141,7 +141,7 @@ for trial = 1:numTrials
     %% 2d plot
     
      plot_2d_heatmap(meanMatAll(1:64,:,:),64,uniqueLabels,stimChans)
-     saveIt = 1;
+     saveIt = 0;
      
      if saveIt
      SaveFig(OUTPUT_DIR,[sid '_stimulationChannels_' num2str(stimChans(1)) '_' num2str(stimChans(2))])   
@@ -150,7 +150,7 @@ for trial = 1:numTrials
     
     
     %%
-    saveIt = 1;
+    saveIt = 0;
     if saveIt
         
         save(fullfile(OUTPUT_DIR, [sid '_' num2str(stimChans(1)) '_' num2str(stimChans(2))]),...

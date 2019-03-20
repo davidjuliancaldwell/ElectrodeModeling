@@ -52,12 +52,12 @@ for stimChans = stimChansVec'
     ECoGData = ECoGData(:,1:92,:);
     fs = fsData;
     [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
-    
+    %%
     [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
         meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
         meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
-    
+    %%
     [dataSubset,tSubset] = data_subset(ECoGData,t,preExtract,postExtract);
     dataSubsetCell{counterIndex} = dataSubset;
     
@@ -66,16 +66,21 @@ for stimChans = stimChansVec'
     ii = ii + 1;
     counterIndex = counterIndex + 1;
 end
+%%
 if plotIt
     figure(figTotal)
     legend('first phase','second phase')
     xlabel('electrode')
     ylabel('Voltage (V)')
-    SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png');
+    if saveIt
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png','-r600');
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'eps');
+        
+    end
     
 end
 
-
+%%
 [subj_3ada8b_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,...
     currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset);
 

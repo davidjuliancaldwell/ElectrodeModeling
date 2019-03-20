@@ -23,6 +23,9 @@ dmode(end-1) = dmode(end);
 bursts(2,:) = find(dmode==1);
 bursts(3,:) = find(dmode==-1);
 
+pulseWidths = 1e6*(bursts(3,:)-bursts(2,:))/(2*fsStim);
+uniquePulseWidths = unique(pulseWidths); % DIVIDE BY TWO SINCE IT'S BIPHASIC
+
 % get all to be the same length, so no cell required. 
 bursts(3,:) =  bursts(2,:) + max(bursts(3,:) - bursts(2,:));
 
@@ -54,9 +57,6 @@ if EPscreen
 end
 
 uniqueLabels = unique(labels);
-
-pulseWidths = 1e6*(bursts(3,:)-bursts(2,:))/(2*fsStim);
-uniquePulseWidths = unique(pulseWidths); % DIVIDE BY TWO SINCE IT'S BIPHASIC
 %
 % get the delay in stim times - looks to be 7 samples or so
 % if fsStim > 14000

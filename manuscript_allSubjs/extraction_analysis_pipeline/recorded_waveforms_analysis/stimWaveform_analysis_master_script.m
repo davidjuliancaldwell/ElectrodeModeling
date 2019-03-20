@@ -6,7 +6,8 @@ addpath(SUBJECT_DIR)
 %% global parameters
 preSamps = 3; % for voltage extaction algorithm
 postSamps = 3; % for voltage extraction algorithm 
-plotIt = 0; % plot and save plots
+plotIt = 1; % plot  plots
+saveIt = 1; % save plots
 preExtract = 1; % how many ms before for extracting 
 postExtract = 10; % how many ms after stim to extract 
 
@@ -28,9 +29,9 @@ subj_20f8a3_waveform
 %
 subj_2fd831_waveform
 
-%
+%%
 subj_3ada8b_waveform
-
+%%
 %
 subj_a7a181_waveform
 
