@@ -15,7 +15,7 @@ for index = 1:numIndices
     dataInt = dataSelect(:,index);
     badTotal = subStruct.badTotal{index};
     dataInt(badTotal) = nan;
-
+    
     % select particular values for constants
     
     stimChans = subStruct.stimChans(index,:);
@@ -26,10 +26,14 @@ for index = 1:numIndices
     % extract measured data and calculate theoretical ones
     
     %[l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChansTotal,offset,jLength,kLength);
-    l1 = compute_1layer_theory_coords_spherical_sphereCoords(locs,stimChans);
+    [l1,correctionFactor] = compute_1layer_theory_coords_spherical_sphereCoords(locs,stimChans);
+    correctionFactor(stimChans) = nan;
+    
     scaleA=(i0*rhoA)/(4*pi);
+    correctionFactor = correctionFactor*scaleA;
+    
     l1 = scaleA*l1;
-
+    
     intercept = true;
     tempStruct = struct;
     
@@ -55,6 +59,7 @@ for index = 1:numIndices
     
     fitStruct.calc{index} = tempStruct;
     fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(tempStruct.rhoAcalc(index)) ' offset = ' num2str(tempStruct.offset(index)) ' \n ']);
+    fitStruct.correctionFactor{index} = correctionFactor;
     
 end
 

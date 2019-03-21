@@ -1,9 +1,10 @@
-function [thy1] = compute_1layer_theory_coords_spherical(locs,stimChans)
+function [thy1,correctionFactor] = compute_1layer_theory_coords_spherical(locs,stimChans)
 
 plotIt = 0;
 
 sizeData = size(locs,1);
 thy1 = zeros(sizeData,1);
+correctionFactor = zeros(sizeData,1);
 
 % default scale to 1 because will fitlm later
 scale = 1;
@@ -35,6 +36,8 @@ for j=1:sizeData
     
     denom = dp + R - R*(locs(j,:)*locs(jp,:)')/(norm(locs(j,:))*norm(locs(jp,:)));
     thy1(j)=scale*((2/dp)-(2/dm)+(1/R)*log(numer/denom));
+    correctionFactor(j)  = (1/R)*log(numer/denom);
+    correctionFactorTopBottom(j) = log(numer) - log(denom);
 end
 
 thy1 = real(thy1);

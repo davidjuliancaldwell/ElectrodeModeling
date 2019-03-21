@@ -71,154 +71,91 @@ for index = 1:numIndices
     
     % CT
     load(fullfile(folderCoords,['3ada8b_bis_trodes.mat']));
+    
     AllTrodes = AllTrodes(1:64,:);
     subStruct.CTlocs{index} = AllTrodes;
     % [Center,Radius] = sphereFit(AllTrodes);
-    highPolyModel = fullfile(folderCoords,['3ada8b_cortex_both_hires.mat']);
-    load(highPolyModel);
-    
-    [Center,Radius] = sphereFit(cortex.vertices);
-    % figure out center of sphere
-    
-    [x,y,z] = sphere;
-    x = Radius*x  + Center(1);
-    y = Radius*y + Center(2);
-    z = Radius*z + Center(3);
-    
-    %    x = Radius*x ;
-    %   y = Radius*y;
-    %   z = Radius*z;
-    ctMNIFig = figure;
-    ctMNIFig.Units = "inches";
-    ctMNIFig.Position = [1 1 8 3];
-    subplot(1,2,1)
-    s = surf(x,y,z);
-    %set(s,'EdgeColor','none');
-    % set(s,'FaceAlpha',0.25);
-    set(s,'FaceColor','none');
-    hold on
-    locs = AllTrodes(1:64,:);
-    
-    % take labeling from plot dots direct
-    scatter3(locs(:,1),locs(:,2),locs(:,3),[100],[1 0 0],'filled');
-    %
-    gridSize = 64;
-    trodeLabels = [1:gridSize];
-    
-    if plotText
-        for chan = 1:gridSize
-            txt = num2str(trodeLabels(chan));
-            t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
-            set(t,'clipping','on');
+    if index == 1
+        highPolyModel = fullfile(folderCoords,['3ada8b_cortex_both_hires.mat']);
+        load(highPolyModel);
+        
+        [Center,Radius] = sphereFit(cortex.vertices);
+        % figure out center of sphere
+        
+        [x,y,z] = sphere;
+        x = Radius*x  + Center(1);
+        y = Radius*y + Center(2);
+        z = Radius*z + Center(3);
+        
+        %    x = Radius*x ;
+        %   y = Radius*y;
+        %   z = Radius*z;
+        ctMNIFig = figure;
+        ctMNIFig.Units = "inches";
+        ctMNIFig.Position = [1 1 8 3];
+        subplot(1,2,1)
+        s = surf(x,y,z);
+        %set(s,'EdgeColor','none');
+        % set(s,'FaceAlpha',0.25);
+        set(s,'FaceColor','none');
+        hold on
+        locs = AllTrodes(1:64,:);
+        
+        % take labeling from plot dots direct
+        scatter3(locs(:,1),locs(:,2),locs(:,3),[100],[1 0 0],'filled');
+        %
+        gridSize = 64;
+        trodeLabels = [1:gridSize];
+        
+        if plotText
+            for chan = 1:gridSize
+                txt = num2str(trodeLabels(chan));
+                t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
+                set(t,'clipping','on');
+            end
         end
+        title(['CT Coords - Subject ' num2str(index)])
+        
     end
-    title(['CT Coords - Subject ' num2str(index)])
     AllTrodes = [AllTrodes(:,1) - Center(1) AllTrodes(:,2) - Center(2) AllTrodes(:,3) - Center(3)];
     
     [az,el,r]  = cart2sph(AllTrodes(:,1),AllTrodes(:,2),AllTrodes(:,3));
+    
     subStruct.CTlocsSpherical{index}(:,1) = az;
     subStruct.CTlocsSpherical{index}(:,2) = el;
     subStruct.CTlocsSpherical{index}(:,3) = r;
     
-    gridSize = [8,8];
-    [X,Y] = meshgrid(1:gridSize(1),1:gridSize(2));
-    X = X(:);
-    Y = Y(:);
-    DT = delaunayTriangulation(X,Y);
-    TR = triangulation(DT.ConnectivityList,locs(:,1),locs(:,2),locs(:,3));
-    
-    [GC MC]= curvatures(locs(:,1),locs(:,2),locs(:,3),DT.ConnectivityList);
+    if index == 1
+        gridSize = [8,8];
+        [X,Y] = meshgrid(1:gridSize(1),1:gridSize(2));
+        X = X(:);
+        Y = Y(:);
+        DT = delaunayTriangulation(X,Y);
+        TR = triangulation(DT.ConnectivityList,locs(:,1),locs(:,2),locs(:,3));
+        
+        [GC MC]= curvatures(locs(:,1),locs(:,2),locs(:,3),DT.ConnectivityList);
+    end
     subStruct.CT_GC{index} = GC;
     subStruct.CT_MC{index} = MC;
     
-    curveCTFig = figure;
-    curveCTFig.Units = "inches";
-    curveCTFig.Position = [1 1 8 3];
-    subplot(1,2,1)
-    trisurf(TR,GC);
-    caxis([-max(abs(GC)) max(abs(GC))])
-    colorbar()
-    title(['Subject ' num2str(index) ' CT Gaussian Curvature'])
-    %   set(gca,'fontsize',14)
-    subplot(1,2,2)
-    trisurf(TR,MC);
-    colorbar()
-    caxis([-max(abs(MC)) max(abs(MC))])
-    title(['Subject ' num2str(index) ' CT Mean Curvature'])
-    colormap(cm)
+    if index == 1
+        curveCTFig = figure;
+        curveCTFig.Units = "inches";
+        curveCTFig.Position = [1 1 8 3];
+        subplot(1,2,1)
+        trisurf(TR,GC);
+        caxis([-max(abs(GC)) max(abs(GC))])
+        colorbar()
+        title(['Subject ' num2str(index) ' CT Gaussian Curvature'])
+        %   set(gca,'fontsize',14)
+        subplot(1,2,2)
+        trisurf(TR,MC);
+        colorbar()
+        caxis([-max(abs(MC)) max(abs(MC))])
+        title(['Subject ' num2str(index) ' CT Mean Curvature'])
+        colormap(cm)
+    end
     %     set(gca,'fontsize',12)
-    %
-    %     % MNI
-    %     load(fullfile(folderCoords,['subj' num2str(subStruct.subjectNum(index)) '_trode_coords_MNIandTal.mat']));
-    %     MNIcoords = MNIcoords(1:64,:);
-    %     subStruct.MNIlocs{index} = MNIcoords;
-    %
-    %     load('MNI_cortex_both_hires.mat')
-    %     [Center,Radius] = sphereFit(cortex.vertices);
-    %
-    %     % [Center,Radius] = sphereFit(MNIcoords);
-    %     % figure out center of sphere
-    %
-    %     [x,y,z] = sphere;
-    %     x = Radius*x  + Center(1);
-    %     y = Radius*y + Center(2);
-    %     z = Radius*z + Center(3);
-    %     figure(ctMNIFig);
-    %     subplot(1,2,2)
-    %     s = surf(x,y,z);
-    %     %set(s,'EdgeColor','none');
-    %     %    set(s,'FaceAlpha',0.25);
-    %     %  set(s,'FaceColor',[0.5 0.5 0.5]);
-    %     set(s,'FaceColor','none');
-    %
-    %     hold on
-    %     locs = MNIcoords(1:64,:);
-    %
-    %     % take labeling from plot dots direct
-    %     scatter3(locs(:,1),locs(:,2),locs(:,3),[100],[1 0 0],'filled');
-    %     %
-    %     gridSize = 64;
-    %     trodeLabels = [1:gridSize];
-    %     if plotText
-    %         for chan = 1:gridSize
-    %             txt = num2str(trodeLabels(chan));
-    %             t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
-    %             set(t,'clipping','on');
-    %         end
-    %     end
-    %     title(['MNI Coords - Subject ' num2str(index)])
-    %
-    %     [az,el,r]  = cart2sph(MNIcoords(:,1) - Center(1),MNIcoords(:,2)-Center(2),MNIcoords(:,3)-Center(3));
-    %     subStruct.MNIlocsSpherical{index}(:,1) = az;
-    %     subStruct.MNIlocsSpherical{index}(:,2) = el;
-    %     subStruct.MNIlocsSpherical{index}(:,3) = r;
-    %
-    %     gridSize = [8,8];
-    %     [X,Y] = meshgrid(1:gridSize(1),1:gridSize(2));
-    %     X = X(:);
-    %     Y = Y(:);
-    %     DT = delaunayTriangulation(X,Y);
-    %     TR = triangulation(DT.ConnectivityList,locs(:,1),locs(:,2),locs(:,3));
-    %
-    %     [GC MC]= curvatures(locs(:,1),locs(:,2),locs(:,3),DT.ConnectivityList);
-    %     subStruct.MNI_GC{index} = GC;
-    %     subStruct.MNI_MC{index} = MC;
-    %     curveMNIFig = figure;
-    %     curveMNIFig.Units = "inches";
-    %     curveMNIFig.Position = [1 1 8 3];
-    %     subplot(1,2,1)
-    %     trisurf(TR,GC);
-    %     caxis([-max(abs(GC)) max(abs(GC))])
-    %     colorbar()
-    %     title(['Subject ' num2str(index) ' MNI Gaussian Curvature'])
-    %
-    %     subplot(1,2,2)
-    %     trisurf(TR,MC);
-    %     colorbar()
-    %     caxis([-max(abs(MC)) max(abs(MC))])
-    %     title(['Subject ' num2str(index) ' MNI Mean Curvature'])
-    %     colormap(cm)
-    
     
     % determine whether to use MNI or CT for further calculations
     if ~useMNI
@@ -237,7 +174,6 @@ for index = 1:numIndices
     % one layer theory fitlm
     
     %  subStruct.oneLayerVals{index} = compute_1layer_theory_coords(subStruct.locs{index},subStruct.stimChans(index,:));
-    clearvars AllTrodes MNIcoords
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

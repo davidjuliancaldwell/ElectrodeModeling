@@ -40,23 +40,23 @@ fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(s
 fitIndBinsCoordsSphere = fit_individual_coords_spherical(subStruct,plotIt,saveIt);
 
 %%
-plot_ind_fits(subStruct,fitIndGlobalCoords,fitIndBinsCoords,saveIt)
+plot_ind_fits_3ada8b(subStruct,fitIndGlobalCoords,fitIndBinsCoords,saveIt)
 %%
-plot_ind_fits(subStruct,fitIndGlobalCoordsSphereCart,fitIndBinsCoordsSphere,saveIt)
+plot_ind_fits_3ada8b(subStruct,fitIndGlobalCoordsSphereCart,fitIndBinsCoordsSphere,saveIt)
 
 %%
-plot_ind_fits_sphereCompare(subStruct,fitIndGlobalCoords,fitIndGlobalCoordsSphereCart,saveIt)
+plot_ind_fits_sphereCompare_3ada8b(subStruct,fitIndGlobalCoords,fitIndGlobalCoordsSphereCart,saveIt)
 %%
-plot_ind_fits_sphereCompare(subStruct,fitIndBinsCoords,fitIndBinsCoordsSphere,saveIt)
+plot_ind_fits_sphereCompare_3ada8b(subStruct,fitIndBinsCoords,fitIndBinsCoordsSphere,saveIt)
 
 
 %% 4 point histograms using the CT coordinates
-histStructCoords = four_point_histograms_individual_coords(subStruct,plotIt,saveIt);
+histStructCoords = four_point_histograms_individual_coords_3ada8b(subStruct,plotIt,saveIt);
 
 %%
-histStructCoordsSpherical = four_point_histograms_individual_coords_spherical(subStruct,plotIt,saveIt);
+histStructCoordsSpherical = four_point_histograms_individual_coords_spherical_3ada8b(subStruct,plotIt,saveIt);
 %%
-compare_four_points(histStructCoords,histStructCoordsSpherical)
+compare_four_points_3ada8b(histStructCoords,histStructCoordsSpherical,subStruct)
 %% average E/T, then fit
 
 fitStruct = fit_all_at_once(subStruct);
