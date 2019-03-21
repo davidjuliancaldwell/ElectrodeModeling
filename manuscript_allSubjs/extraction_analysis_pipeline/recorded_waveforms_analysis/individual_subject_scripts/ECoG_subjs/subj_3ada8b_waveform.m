@@ -31,9 +31,9 @@ numCurrents = size(currentMatVec,2);
 ii = 1;
 jj = 1;
 counterIndex = 1;
-meanMatAll = zeros(92,2,numStimChans,numCurrents);
-stdMatAll =  zeros(92,2,numStimChans,numCurrents);
-numberStimsAll =  zeros(numStimChans,numCurrents,1);
+meanMatAllTemp = zeros(92,2,numStimChans);
+stdMatAll =  zeros(92,2,numStimChans);
+numberStimsAll =  zeros(numStimChans,1);
 numRows = 4;
 numColumns = 4;
 stdEveryPoint = {};
@@ -53,9 +53,9 @@ for stimChans = stimChansVec'
     fs = fsData;
     [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
     
-    [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
+    [meanMatAllTemp,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
         meanMat,stdMat,numberStims,stdCellEveryPoint,extractCell,...
-        meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
+        meanMatAllTemp,stdMatAll,numberStimsAll,stdEveryPoint,extractCellAll,...
         stimChans,currentMatVec,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
     
     [dataSubset,tSubset] = data_subset(ECoGData,t,preExtract,postExtract);
@@ -76,7 +76,7 @@ if plotIt
 end
 
 
-[subj_3ada8b_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,stimChansVec,...
+[subj_3ada8b_struct] =  convert_mats_to_struct(meanMatAllTemp,stdMatAll,stdEveryPoint,stimChansVec,...
     currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset);
 
 clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex tSubset dataSubset dataSubsetCell
