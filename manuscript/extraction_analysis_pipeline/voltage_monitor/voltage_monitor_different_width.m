@@ -46,11 +46,30 @@ t = t*1e3;
 
 % delay looks to be 7 samples
 
+% if iscell(singEpoched)
+%     labels = cellfun(@max,singEpoched);
+% elseif isnumeric(singEpoched)
+%     labels = max(singEpoched);
+% end
+
+% account for positive/negative current being used within same file
 if iscell(singEpoched)
-    labels = cellfun(@max,singEpoched);
+    for indexOuter = 1:length(singEpoched)
+        singEpochedTemp = singEpoched{indexOuter};
+        for index = 1:size(singEpochedTemp,2)
+            [val(index),ind(index)] = max(abs(diff(singEpochedTemp(:,index))));
+            singEpochedTempTemp = singEpochedTemp(1:ind(index),index);
+            labels(index) = unique(singEpochedTempTemp(singEpochedTempTemp~=0));
+        end
+    end
 elseif isnumeric(singEpoched)
-    labels = max(singEpoched);
+    for index = 1:size(singEpoched,2)
+        [val(index),ind(index)] = max(abs(diff(singEpoched(:,index))));
+        singEpochedTemp = singEpoched(1:ind(index),index);
+        labels(index) = unique(singEpochedTemp(singEpochedTemp~=0));
+    end
 end
+
 
 if EPscreen
     labels = 3.*labels;

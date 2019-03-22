@@ -7,15 +7,17 @@ close all;clear all;clc
 plotIt = 0;
 saveIt = 0;
 shrinkStruct = 1;
-eliminateBadChannels = 0;
-getRidOfFullData = 0;
+eliminateBadChannels = 1;
+getRidOfFullData = 1;
 
 %% load in the data and define common constants, run single subject fits
 [subStruct] = prepare_data_single_subj_3ada8b(eliminateBadChannels);
-
+%%
 if getRidOfFullData
     % clean up sub struct for saving
-    field = {'data','extractCell','stdEveryPoint','meanEveryTrial'};
+   % field = {'data','extractCell','stdEveryPoint','meanEveryTrial'};
+       field = {'data','extractCell','stdEveryPoint'};
+
     subStruct = rmfield(subStruct,field);
 end
 
