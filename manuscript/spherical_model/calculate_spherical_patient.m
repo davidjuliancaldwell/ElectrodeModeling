@@ -6,7 +6,6 @@
 
 plotIt = 0;
 saveIt = 0;
-shrinkStruct = 1;
 eliminateBadChannels = 0;
 getRidOfFullData = 0;
 prolateBool = 0;
