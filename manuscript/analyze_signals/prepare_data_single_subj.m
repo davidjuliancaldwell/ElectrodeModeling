@@ -10,7 +10,7 @@ locationsDir = pwd;
 folderData = fullfile(locationsDir, '..','data');
 folderCoords = fullfile(locationsDir,'..','coordinates');
 
-totalData = load(fullfile(folderData,'recorded_voltages.mat'));
+totalData = load(fullfile(folderData,'recorded_voltages_onlyProcessed.mat'));
 
 subStruct = struct;
 totalDataInd = fieldnames(totalData)';

@@ -2,13 +2,13 @@
 %% resistivity analysis for all subjects
 %
 % David.J.Caldwell 11.23.2018
-close all;clear all;clc
+%close all;clear all;clc
 
 plotIt = 0;
 saveIt = 0;
 shrinkStruct = 1;
-eliminateBadChannels = 1;
-getRidOfFullData = 1;
+eliminateBadChannels = 0;
+getRidOfFullData = 0;
 prolateBool = 0;
 
 %% load in the data and define common constants, run single subject fits

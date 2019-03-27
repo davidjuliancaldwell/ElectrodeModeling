@@ -1,7 +1,7 @@
 function [] = compare_four_points(histStruct1,histStruct2)
 
-saveIt = 1;
-outputDir = getenv('OUTPUT_DIR')
+saveIt = 0;
+outputDir = getenv('OUTPUT_DIR');
 
 bins = [0:0.1:10];
 
