@@ -26,10 +26,13 @@ for index = 1:numIndices
     % extract measured data and calculate theoretical ones
     
     %[l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChansTotal,offset,jLength,kLength);
-    [l1,correctionFactor]= compute_1layer_theory_coords_spherical(locs,stimChans);
+    [l1,correctionFactor,l1Scaled,correctionFactorScaled]= compute_1layer_theory_coords_spherical(locs,stimChans);
     correctionFactor(stimChans) = nan;
+    correctionFactorScaled(stimChans) = nan;
+    
     scaleA=(i0*rhoA)/(4*pi);
     correctionFactor = correctionFactor*scaleA;
+    correctionFactorScaled = correctionFactorScaled*scaleA;
     
     l1 = scaleA*l1;
     
@@ -58,7 +61,40 @@ for index = 1:numIndices
     
     fitStruct.calc{index} = tempStruct;
     fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
+    
+    
+    l1Scaled = scaleA*l1Scaled;
+    
+    intercept = true;
+    tempStruct = struct;
+    
+    % use MSE
+    if ~isempty(dataInt)
+        if ~intercept
+            dlm=fitlm(l1Scaled,dataInt,'intercept',false);
+            tempStruct.rhoAcalc=dlm.Coefficients{1,1};
+            tempStruct.offset = 0;
+        else
+            dlm=fitlm(l1Scaled,dataInt);
+            tempStruct.rhoAcalc=dlm.Coefficients{2,1};
+            tempStruct.offset = dlm.Coefficients{1,1};
+        end
+        tempStruct.MSE = dlm.RMSE;
+        tempStruct.bestVals = dlm.Fitted;
+        
+    else
+        tempStruct.rhoAcalc = nan;
+        tempStruct.MSE = nan;
+        tempStruct.offset = nan;
+    end
+    
+    fitStruct.calcScaled{index} = tempStruct;
+    
+    
+    fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
+    
     fitStruct.correctionFactor{index} = correctionFactor;
+    fitStruct.correctionFactorScaled{index} = correctionFactorScaled;
     
 end
 
