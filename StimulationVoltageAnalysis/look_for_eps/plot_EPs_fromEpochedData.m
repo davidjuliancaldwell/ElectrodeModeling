@@ -62,15 +62,18 @@ q = subPlots(2);
 k = 1;
 
 for i=uniqueLabels
-    figure;
+    figLabels = figure;
+    figLabels.Units = "inches";
+    figLabels.Position = [1 1 8 8];
+    
     dataInterest = dataEpoched(:,:,labels==i);
     for j = 1:numChans
-        subplot(14,8,j);
+        smplot(14,8,j,'top',0.1);
         plot(t,mean(squeeze(dataInterest(:,j,:)),2),'linewidth',2);
         xlim([min(t) max(t)]);
         xlim([-50 150])
         % change y axis scaling if necessary
-        ylim([-600 600])
+    ylim([-1500 1500])
         
         % put a box around the stimulation channels of interest if need be
         if ismember(j,stimChans)
@@ -86,13 +89,16 @@ for i=uniqueLabels
             
         end
         vline(0);
-        
+        if j < numChans
+        set(gca,'Yticklabel',[]) 
+set(gca,'Xticklabel',[]) 
+        end
     end
-    
+
     % label axis
     xlabel('time (ms)');
     ylabel(['voltage (\muV)']);
-    subtitle(['average traces - Current set to ',num2str(uniqueLabels(k)),' \muA']);
+   sgtitle(['average traces - Current set to ',num2str(uniqueLabels(k)),' \muA']);
     
     % get cell of raw values, can use this to analyze later
     dataRaw{k} = dataInterest;

@@ -3,7 +3,7 @@
 % David.J.Caldwell 10.10.2018
 %% initialize output and meta dir
 % clear workspace, get rid of extraneous information
-%close all; clear all; clc
+close all; clear all; clc
 saveIt = 0;
 
 % load in the datafile of interest!
@@ -21,6 +21,9 @@ else
 end
 
 data = data(:,1:99);
+dataCopy = data;
+data(:,1:16) = dataCopy(:,17:32);
+data(:,17:32) = dataCopy(:,1:16);
 fsData = structureData.ECO1.info.SamplingRateHz;
 Sing = structureData.Sing;
 Stim = structureData.Stim;
