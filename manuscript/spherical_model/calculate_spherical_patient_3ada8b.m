@@ -31,7 +31,7 @@ fitIndBinsCoords = fit_individual_coords(subStruct,plotIt,saveIt);
 
 fitIndGlobalCoordsSphereCart = fit_individual_global_coords_spherical(subStruct);
 %%
-fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(subStruct);
+%fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(subStruct);
 
 %%
 %fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);

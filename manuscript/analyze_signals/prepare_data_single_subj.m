@@ -90,7 +90,7 @@ for index = 1:numIndices
     x = Radius*x  + Center(1);
     y = Radius*y + Center(2);
     z = Radius*z + Center(3);
-    
+    subStruct.rFixed{index} = Radius;
     %    x = Radius*x ;
     %   y = Radius*y;
     %   z = Radius*z;

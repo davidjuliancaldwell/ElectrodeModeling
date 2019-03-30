@@ -9,7 +9,7 @@ pt = pt_function(I,rho,r);
 % cc
 cc = cc_function(I,rho,r,R);
 
-% cv 
+% cv
 cv = cv_function(I,rho,r,R);
 
 %%
@@ -43,9 +43,15 @@ V(~logicalR) = ((I*rho)/(2*R).*asin(R./r(r>R)));
 end
 
 
-
 function V = cc_function(I,rho,r,R)
 V = zeros(size(r,2),1);
-%V(~logicalR) = ((2.*I)./(rho.*pi).*asin(R./r(r>R)));
-V = ((I.*rho)/(2.*R).*(1./(r.^2)).* besselj(1,r.*R));
+index = 1;
+for ii = r
+    alpha = 0.001:0.01:100;
+    tempBessel = sum((1./(alpha)).*besselj(0,alpha.*ii).*besselj(1,alpha.*R));
+    V(index) = ((I.*rho)/(pi.*R)).*tempBessel;
+    index = index + 1;
 end
+end
+
+

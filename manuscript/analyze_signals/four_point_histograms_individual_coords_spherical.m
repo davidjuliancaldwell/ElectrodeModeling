@@ -1,7 +1,7 @@
 function histStruct = four_point_histograms_individual_coords_spherical(subStruct,plotIt,saveIt)
 
 numIndices = size(subStruct.meanMat,3);
-    bins = [0:0.25:10];
+bins = [0:0.25:10];
 
 for index = 1:numIndices
     % setup temporary structure
@@ -16,7 +16,8 @@ for index = 1:numIndices
     dataScreened = meanMat(:,1);
     dataScreened(channelSelect) = nan;
     
-    [rho1] = four_point_histogram_calculation_coords_spherical(current,locs,stimChans,dataScreened);
+    rFixed = subStruct.rFixed{index}/1000;
+    [rho1] = four_point_histogram_calculation_coords_spherical(current,locs,stimChans,dataScreened,rFixed);
     rho1 = rho1(~isnan(rho1) & ~isinf(rho1));
     rho1 = rho1(rho1<=10 & rho1>0);
     
@@ -42,9 +43,9 @@ for index = 1:numIndices
 end
 
 if plotIt
-   figTotal = figure;
-   figTotal.Units = "inches";
-   figTotal.Position = [1 1 8 10];
+    figTotal = figure;
+    figTotal.Units = "inches";
+    figTotal.Position = [1 1 8 10];
     for index = 1:numIndices
         subplot(4,2,index);histogram(histStruct.hist{index}.vals,bins,'normalization','pdf');
         set(gca,'fontsize',16)

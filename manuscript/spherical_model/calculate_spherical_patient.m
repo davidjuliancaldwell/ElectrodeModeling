@@ -2,7 +2,7 @@
 %% resistivity analysis for all subjects
 %
 % David.J.Caldwell 11.23.2018
-%close all;clear all;clc
+close all;clear all;clc
 
 plotIt = 0;
 saveIt = 0;
@@ -47,7 +47,7 @@ fitIndBinsCoords = fit_individual_coords(subStruct,plotIt,saveIt);
 
 fitIndGlobalCoordsSphereCart = fit_individual_global_coords_spherical(subStruct);
 %%
-fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(subStruct);
+%fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(subStruct);
 
 %%
 %fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);

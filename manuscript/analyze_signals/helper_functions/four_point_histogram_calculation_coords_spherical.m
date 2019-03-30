@@ -1,4 +1,4 @@
-function [rho1] = four_point_histogram_calculation_coords_spherical(i0,locs,stimChans,data)
+function [rho1] = four_point_histogram_calculation_coords_spherical(i0,locs,stimChans,data,rFixed)
 %% function to compute four point model free histograms using the coordinate values
 % David.J.Caldwell 9.26.2018
 
@@ -9,7 +9,7 @@ logicalVec = true(length(goodChans),1);
 logicalVec(stimChans) = 0;
 goodChans = goodChans(logicalVec);
 
-T1 = compute_1layer_theory_coords_spherical(locs,stimChans);
+T1 = compute_1layer_theory_coords_spherical(locs,stimChans,rFixed);
 
 combos = nchoosek(goodChans,2);
 deltaT = nan(size(combos,1),1);

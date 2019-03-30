@@ -23,13 +23,14 @@ for index = 1:numIndices
     i0 = subStruct.currentMat(index);
     locs = subStruct.locs{index};
     locs = locs(1:64,:);
-
+    
     centerSpace = mean([locs(stimChans(1),:);locs(stimChans(2),:)],1);
     distances = vecnorm((locs-repmat(centerSpace,64,1)),2,2)./10;
     % perform 1d optimization
     % extract measured data and calculate theoretical ones
     
-    l1 = compute_1layer_theory_coords_spherical(locs,stimChans);
+    rFixed = subStruct.rFixed{index}/1000;
+    [l1,correctionFactor,l1Dot,correctionFactorDot,l1DotScaled,correctionFactorDotScaled]= compute_1layer_theory_coords_spherical(locs,stimChans,rFixed);
     scaleA=(i0*rhoA)/(4*pi);
     l1 = scaleA*l1;
     
@@ -75,9 +76,9 @@ end
 
 if plotIt
     
-   figTotal = figure;
+    figTotal = figure;
     figTotal.Units = "Inches";
-    figTotal.Position = [1 1 8 5];    
+    figTotal.Position = [1 1 8 5];
     
     for index = 1:numIndices
         
