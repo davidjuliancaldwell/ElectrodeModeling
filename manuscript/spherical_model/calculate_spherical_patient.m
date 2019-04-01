@@ -117,7 +117,6 @@ ylabel('experiment')
 set(gca,'fontsize',18)
 title('Spherical')
 
-
 figure
 plot(fitStruct.calc.data)
 hold on

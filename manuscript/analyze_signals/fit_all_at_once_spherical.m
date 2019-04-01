@@ -27,11 +27,13 @@ for index = 1:numIndices
     % only use grid electrodes
     locs = locs(1:64,:);
     % extract measured data and calculate theoretical ones
-    
+       
+    rFixed = subStruct.rFixed{index}/1000;
+
     %[l1,tp] = computePotentials_1layer(jp,kp,jm,km,rhoA,i0,stimChansTotal,offset,jLength,kLength);
-    l1 = compute_1layer_theory_coords_spherical(locs,stimChans);
+    [l1,correctionFactor,l1Dot,correctionFactorDot,l1DotScaled,correctionFactorDotScaled]= compute_1layer_theory_coords_spherical(locs,stimChans,rFixed);
     scaleA=(i0*rhoA)/(4*pi);
-    l1 = scaleA*l1;
+    l1 = scaleA*l1';
     
     dataIntConcat = [dataIntConcat; dataInt];
     l1Concat = [l1Concat; l1];
