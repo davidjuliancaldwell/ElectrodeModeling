@@ -18,18 +18,25 @@ numChansInt = 64;
 counterIndex = 1;
 numRows = 4;
 numColumns = 2;
-saveIt = 0;
-plotIt = 0;
+saveIt = 1;
+plotIt = 1;
 sameScale = 1;
 
-for ii = 4:4
+for ii = 1:7
     sid = SIDS{ii};
     fprintf(['running for subject ' sid '\n']);
     fs = 12207;
     jj =1;
     stimChans = stimChansVec(ii,:);
-    load(fullfile([sid '_StimulationAndCCEPs.mat']))
+    load(fullfile(folderData,[sid '_StimulationAndCCEPs.mat']))
+    
+    % rebaseine these to just be 25 to 5 ms before
+    for chan = 1:size(ECoGData,3)
+        ECoGData(:,:,chan) =  ECoGData(:,:,chan)-repmat(mean(ECoGData((t<0-0.005 & t>-0.025),:,chan),1), [size(ECoGData, 1),1]);
+    end
     ECoGData = permute(ECoGData,[1 3 2]);
+    
+    
     %%
     [meanMat,stdMat,stdCellEveryPoint,meanEveryTrial,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',...
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);

@@ -205,7 +205,7 @@ for ii = 1:7
         
         %   clear awins
         % added DJC 3/9/2016 to save individual responses, want signals x
-        ECoGData(:,:,chan) = wins-repmat(mean(wins(t<0-0.005,:),1), [size(wins, 1), 1]);
+        ECoGData(:,:,chan) = wins-repmat(mean(wins(t<0-0.005 & t>-0.1,:),1), [size(wins, 1), 1]);
     end
     
     ECoGDataAverage = squeeze(mean(ECoGData,2));

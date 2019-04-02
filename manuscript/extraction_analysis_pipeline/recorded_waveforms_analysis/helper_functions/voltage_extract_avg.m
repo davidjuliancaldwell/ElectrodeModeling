@@ -106,7 +106,25 @@ for chan = 1:size(waveformMatrix,2)
     
     meanEveryTrial(chan,1,:) = mean(firstPhaseSig,1);
     meanEveryTrial(chan,2,:) = mean(secondPhaseSig,1);
-    
+    %%
+    if chan == 58
+        figure
+        subplot(2,2,1)
+        plot(squeeze(waveformMatrix(:,chan,:)))
+        title('Raw epoched data')
+        subplot(2,2,2)
+        plot(firstPhaseSig)
+        title('Raw extracted first phase')
+        
+        subplot(2,2,3)
+        plot(squeeze(meanEveryTrial(chan,1,:)))
+        title('Mean first phase for every trial')
+        
+         subplot(2,2,4)
+        plot(squeeze(waveformMatrix(632,chan,:)))
+        title('Voltage at middle of each pulse')
+    end
+    %%
     % now get the standard deviation at every point in the recorded
     % waveform
     stdCellEveryPoint{chan}{1} = std(channelSig(beginInd+preSamps:transitionPt-postSamps,:),[],2);
