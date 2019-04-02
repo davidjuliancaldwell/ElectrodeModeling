@@ -19,10 +19,10 @@ counterIndex = 1;
 numRows = 4;
 numColumns = 2;
 saveIt = 0;
-plotIt = 1;
+plotIt = 0;
+sameScale = 1;
 
-
-for ii = 1:7
+for ii = 4:4
     sid = SIDS{ii};
     fprintf(['running for subject ' sid '\n']);
     fs = 12207;
@@ -39,9 +39,11 @@ for ii = 1:7
         figure
         ECoGDataAverage = mean(ECoGData,3);
         ECoGDataAverage(:,stimChans,:) = nan;
-        smallMultiplesModeling(ECoGDataAverage,t,'type1',stimChans,'average',1);
+        smallMultiplesModeling(ECoGDataAverage,t,'type1',stimChans,'average',1,'sameScale',sameScale);
         currentDirec = pwd;
-        SaveFig(currentDirec,['subject_' num2str(ii) '_average_signal'],'eps')
+        if saveIt
+            SaveFig(currentDirec,['subject_' num2str(ii) '_average_signal'],'eps')
+        end
     end
     %%
     [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...

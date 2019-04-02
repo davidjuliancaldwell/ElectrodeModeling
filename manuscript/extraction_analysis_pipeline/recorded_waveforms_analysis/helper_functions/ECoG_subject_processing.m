@@ -226,7 +226,7 @@ if plotIt
     %%
     figVariation = figure;
     figVariation.Units = "inches";
-    figVariation.Position = [1 1 8.5 6];
+    figVariation.Position = [1 1 8 8];
     for chan = chanVec
         % smplot(8,8,chan)
         subplot(8,8,chan)
@@ -237,7 +237,7 @@ if plotIt
     end
     xlabel('Trial')
     ylabel('Voltage (mV)')
-    sgtitle('Variation across stimulation pulses')
+  % sgtitle('Variation across stimulation pulses')
     
 end
 

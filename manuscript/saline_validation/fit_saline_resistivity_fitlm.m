@@ -43,7 +43,7 @@ for ii = [1,2,3,4]
         
     elseif ii == 3
         load(fullfile(dataDir,highResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
-    
+        
         jp=5;
         kp=5;
         jm=4;
@@ -52,10 +52,10 @@ for ii = [1,2,3,4]
         uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
         uniqueStimLabels = uniqueStimLabels(:);
         
-            elseif ii == 4
+    elseif ii == 4
         load(fullfile(dataDir,highResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
-    
-    
+        
+        
         jp=5;
         kp=4;
         jm=4;
@@ -69,29 +69,29 @@ for ii = [1,2,3,4]
     %%
     fsStim = 24414;
     
-for conditionInterest = 1:7
+    for conditionInterest = 1:7
         i0 = uniqueLabels(conditionInterest)/1e6; % current in uA to A
-
-    currentMatVec = [currentMatVec i0];
-    %% 2 point
-    stimEpochedInt = stim1Epoched(:,uniqueStimLabels==conditionInterest);
- 
-    [vJumpAvg,vJumpInd] = stimChan_calculate_jumpR(stimEpochedInt,fsStim);
-    vJumpMat = [vJumpMat vJumpInd];
-    vJumpCell{ii} = vJumpInd;
-    vJumpAvgMat = [vJumpAvgMat vJumpAvg];
-    
+        
+        currentMatVec = [currentMatVec i0];
+        %% 2 point
+        stimEpochedInt = stim1Epoched(:,uniqueStimLabels==conditionInterest);
+        
+        [vJumpAvg,vJumpInd] = stimChan_calculate_jumpR(stimEpochedInt,fsStim);
+        vJumpMat = [vJumpMat vJumpInd];
+        vJumpCell{ii} = vJumpInd;
+        vJumpAvgMat = [vJumpAvgMat vJumpAvg];
+        
         dividedVICell{ii} = vJumpCell{ii}/currentMatVec(ii);
-    twoPointRCell{ii} = 2*.00115*dividedVICell{ii}/(correction);
-    stdVJump(ii) = std(vJumpCell{ii});
+        twoPointRCell{ii} = 2*.00115*dividedVICell{ii}/(correction);
+        stdVJump(ii) = std(vJumpCell{ii});
+        
+        
+        dividedVI = vJumpAvgMat./currentMatVec;
+        twoPointR = (2*.00115*dividedVI/(correction))
+    end
     
-    
-dividedVI = vJumpAvgMat./currentMatVec;
-twoPointR = (2*.00115*dividedVI/(correction))
-end
-
     %% 3 point
-        conditionInterest = 5; % condition of interest
+    conditionInterest = 5; % condition of interest
     i0 = uniqueLabels(conditionInterest)/1e6; % current in uA to A
     
     dataInt = meanMatAll(:,1,conditionInterest);
@@ -150,7 +150,7 @@ dataPt(1,1) = min(fitStruct.calc{1}.bestVals);
 dataPt(2,1) = max(fitStruct.calc{1}.bestVals);
 dataPt(:,2) = dataPt(:,1);
 
-subplot(1,2,1)
+subplot(2,1,1)
 scatter(fitStruct.calc{1}.bestVals,dataIntCell{1},'o')
 hold on
 plot(dataPt(:,1),dataPt(:,2))
@@ -166,7 +166,7 @@ dataPt(1,1) = min(fitStruct.calc{2}.bestVals);
 dataPt(2,1) = max(fitStruct.calc{2}.bestVals);
 dataPt(:,2) = dataPt(:,1);
 
-subplot(1,2,2)
+subplot(2,1,2)
 scatter(fitStruct.calc{2}.bestVals,dataIntCell{2},'o')
 hold on
 plot(dataPt(:,1),dataPt(:,2))

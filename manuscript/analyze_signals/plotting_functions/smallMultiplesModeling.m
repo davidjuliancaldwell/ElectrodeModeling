@@ -7,6 +7,7 @@ function smallMultiplesModeling(signal,t,varargin)
 type1 = [];
 type2 = [];
 average = 0;
+sameScale = 0;
 
 for i=1:2:(length(varargin)-1)
     if ~ischar (varargin{i}),
@@ -21,7 +22,8 @@ for i=1:2:(length(varargin)-1)
             type2 = varargin{i+1};
         case 'average'
             average = varargin{i+1};
-            
+        case 'samescale'
+            sameScale = varargin{i+1};
     end
 end
 
@@ -64,16 +66,18 @@ for idx=1:size(signal,2)
     end
     
     
-  %  axis off
-  %  axis tight
+    %  axis off
+    %  axis tight
     xlim([0 6])
     set(gca,'fontsize',10)
     
-  % ylim([-750 750])
-   % vline(0)
-
+    if sameScale
+        ylim([-22 22])
+    end
+    % vline(0)
+    
 end
-        %'LL'(default), 'LR', 'UL', 'UR'
+%'LL'(default), 'LR', 'UL', 'UR'
 % xlabel('Time (ms)')
 % ylabel('Voltage (V)')
 end

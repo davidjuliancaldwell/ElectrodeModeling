@@ -6,3 +6,5 @@
 *.zip
 *.tif
 *.fig
+*.svg
+*.eps
