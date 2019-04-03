@@ -1,5 +1,5 @@
-function [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,figTotal] = ECoG_subject_processing(ii,jj,meanMat,stdMat,numberStims,stdCellEveryPoint,meanEveryTrial,extractCell,...
-    meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,stimChans,...
+function [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,phaseSigAll,figTotal] = ECoG_subject_processing(ii,jj,meanMat,stdMat,numberStims,stdCellEveryPoint,meanEveryTrial,extractCell,phaseSig,...
+    meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,phaseSigAll,stimChans,...
     currentMat,numChansInt,sid,plotIt,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex)
 
 meanMat(stimChans,:) = nan;
@@ -8,6 +8,10 @@ extractCell{stimChans(1)}{1} = nan;
 extractCell{stimChans(1)}{2}= nan;
 extractCell{stimChans(2)}{1}= nan;
 extractCell{stimChans(2)}{2}= nan;
+phaseSig{stimChans(1)}{1} = nan;
+phaseSig{stimChans(1)}{2}= nan;
+phaseSig{stimChans(2)}{1}= nan;
+phaseSig{stimChans(2)}{2}= nan;
 stdCellEveryPoint{stimChans(1)} = {nan,nan};
 stdCellEveryPoint{stimChans(2)} =  {nan,nan};
 meanEveryTrial(stimChans(1),:,:) = nan;
@@ -20,6 +24,7 @@ stdMatAll(:,:,ii,jj) = stdMat;
 numberStimsAll(ii,jj) = numberStims;
 stdEveryPoint{ii,jj} = stdCellEveryPoint;
 meanEveryTrialAll{ii,jj} = meanEveryTrial;
+phaseSigAll{ii,jj} = phaseSig;
 
 saveIt = 0;
 if plotIt

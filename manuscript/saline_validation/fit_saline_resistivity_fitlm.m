@@ -20,51 +20,40 @@ for ii = [1,2,3,4]
     
     if ii == 1
         load(fullfile(dataDir,highResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
-        
         jp=4;
         kp=5;
         jm=4;
         km=4;
-        
         uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
         uniqueStimLabels = uniqueStimLabels(:);
         
         
     elseif ii == 2
-        load(fullfile(dataDir,lowResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
-        
+        load(fullfile(dataDir,lowResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))   
         jp=5;
         kp=4;
         jm=4;
         km=4;
-        
         uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
         uniqueStimLabels = uniqueStimLabels(:);
         
     elseif ii == 3
         load(fullfile(dataDir,highResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
-        
-        jp=5;
+              jp=5;
         kp=5;
         jm=4;
-        km=5;
-        
+        km=5; 
         uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
         uniqueStimLabels = uniqueStimLabels(:);
-        
+     
     elseif ii == 4
         load(fullfile(dataDir,highResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
-        
-        
         jp=5;
         kp=4;
         jm=4;
         km=4;
-        
         uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
-        uniqueStimLabels = uniqueStimLabels(:);
-        
-        
+        uniqueStimLabels = uniqueStimLabels(:);   
     end
     %%
     fsStim = 24414;
@@ -144,7 +133,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figValid = figure;
 figValid.Units = "inches";
-figValid.Position = [0.5 0.5 10 3];
+figValid.Position = [0.5 0.5 8 8];
 %funcLine = @(x)(fitStruct.calc{1}.offset+fitStruct.calc{1}.rhoAcalc*x)
 dataPt(1,1) = min(fitStruct.calc{1}.bestVals);
 dataPt(2,1) = max(fitStruct.calc{1}.bestVals);

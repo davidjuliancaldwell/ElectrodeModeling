@@ -19,7 +19,6 @@ hold on
 loglog(r,cv)
 loglog(r,cc)
 
-
 legend
 title('Point Electrode, Constant Voltage, Constant Current Electrode Models')
 xlabel('Distance in terms of electrode radius')
@@ -45,13 +44,30 @@ end
 
 function V = cc_function(I,rho,r,R)
 V = zeros(size(r,2),1);
+step1 = 0.001/R;
 index = 1;
+alpha = 0+0.001:step1:50/R;
+
 for ii = r
-    alpha = 0.001:0.01:100;
     tempBessel = sum((1./(alpha)).*besselj(0,alpha.*ii).*besselj(1,alpha.*R));
-    V(index) = ((I.*rho)/(pi.*R)).*tempBessel;
+    %V(index) = ((I.*rho)/(pi.*R)).*tempBessel;
+    V(index) = ((2*I.*rho)/(pi.*(R.^2))).*tempBessel;
+    
     index = index + 1;
 end
 end
+
+
+% function V = cc_function(I,rho,r,R)
+% V = zeros(size(r,2),1);
+% index = 1;
+% for ii = r
+%     alpha = 0.001:0.01:100;
+%     tempBessel = sum((1./(alpha)).*besselj(0,alpha.*ii).*besselj(1,alpha.*R));
+%     V(index) = ((I.*rho)/(pi.*R)).*tempBessel;
+%     index = index + 1;
+% end
+% end
+
 
 

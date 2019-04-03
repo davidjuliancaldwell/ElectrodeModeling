@@ -53,10 +53,10 @@ xlabel('Trial')
 ylabel('Voltage (V)')
 set(gca,'fontsize',18)
 title('Concatenated Jump Voltages for all Subjects')
-
+%%
 figCombined = figure;
 figCombined.Units = "inches";
-figCombined.Position = [0.5 0.5 10 4];
+figCombined.Position = [0.5 0.5 8.5 4];
 
 dividedVI = vJumpAvgMat./currentMatVec;
 twoPointR = (2*.00115*dividedVI/(correction));
@@ -71,8 +71,8 @@ x= [1:7];
 errorbar(x,vJumpAvgMat,stdVJump,'linewidth',2)
 xlabel('Subject')
 ylabel('Voltage (V)')
-set(gca,'fontsize',14)
-title({'Mean Jump Voltages +/-','Standard Deviation'})
+set(gca,'fontsize',12)
+%title({'Mean Jump Voltages +/-','Standard Deviation'})
 xticks([1:7])
 ylim([0 max(vJumpAvgMat)+0.5])
 xlim([0 8])
@@ -85,8 +85,8 @@ plot(dividedVI,'linewidth',2)
 %boxplot(X(:,1), X(:,2),'PlotStyle','compact')
 xlabel('Subject')
 ylabel('Resistance (ohms)')
-set(gca,'fontsize',14)
-title('Jump Voltage/Applied Current')
+set(gca,'fontsize',12)
+%title('Jump Voltage/Applied Current')
 xticks([1:7])
 ylim([0 max(dividedVI)+200])
 xlim([0 8])
@@ -98,9 +98,9 @@ plot(twoPointR,'linewidth',2)
 % X = vertcat(x{:});
 % boxplot(X(:,1), X(:,2),'PlotStyle','compact')
 xlabel('Subject')
-title('Resistivities')
+%title('Resistivities')
 ylabel('Resistivity (ohm-m)')
-set(gca,'fontsize',14)
+set(gca,'fontsize',12)
 xticks([1:7])
 ylim([0 max(twoPointR)+0.5])
 xlim([0 8])

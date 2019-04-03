@@ -1,4 +1,4 @@
-function [meanMatrix,stdMatrix,stdCellEveryPoint,meanEveryTrial,extractCell,numTrials] = voltage_extract_avg(waveformMatrix,varargin)
+function [meanMatrix,stdMatrix,stdCellEveryPoint,meanEveryTrial,extractCell,numTrials,phaseSig] = voltage_extract_avg(waveformMatrix,varargin)
 % expects time x channels x trials
 % average across trials, and find the average stimulation waveform during
 % each phase of a stimulus
@@ -106,24 +106,27 @@ for chan = 1:size(waveformMatrix,2)
     
     meanEveryTrial(chan,1,:) = mean(firstPhaseSig,1);
     meanEveryTrial(chan,2,:) = mean(secondPhaseSig,1);
+    
+    phaseSig{chan}{1} = firstPhaseSig;
+    phaseSig{chan}{2} = secondPhaseSig;
     %%
-    if chan == 58
-        figure
-        subplot(2,2,1)
-        plot(squeeze(waveformMatrix(:,chan,:)))
-        title('Raw epoched data')
-        subplot(2,2,2)
-        plot(firstPhaseSig)
-        title('Raw extracted first phase')
-        
-        subplot(2,2,3)
-        plot(squeeze(meanEveryTrial(chan,1,:)))
-        title('Mean first phase for every trial')
-        
-         subplot(2,2,4)
-        plot(squeeze(waveformMatrix(632,chan,:)))
-        title('Voltage at middle of each pulse')
-    end
+%     if chan == 58
+%         figure
+%         subplot(2,2,1)
+%         plot(squeeze(waveformMatrix(:,chan,:)))
+%         title('Raw epoched data')
+%         subplot(2,2,2)
+%         plot(firstPhaseSig)
+%         title('Raw extracted first phase')
+%         
+%         subplot(2,2,3)
+%         plot(squeeze(meanEveryTrial(chan,1,:)))
+%         title('Mean first phase for every trial')
+%         
+%          subplot(2,2,4)
+%         plot(squeeze(waveformMatrix(632,chan,:)))
+%         title('Voltage at middle of each pulse')
+%     end
     %%
     % now get the standard deviation at every point in the recorded
     % waveform

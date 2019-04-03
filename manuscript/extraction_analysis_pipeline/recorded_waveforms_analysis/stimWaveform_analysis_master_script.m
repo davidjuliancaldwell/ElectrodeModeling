@@ -8,7 +8,7 @@ folderData = fullfile(locationsDir, '..','..','data');
 %% global parameters
 preSamps = 3; % for voltage extaction algorithm
 postSamps = 3; % for voltage extraction algorithm
-plotIt = 1; % plot and save plots
+plotIt = 0; % plot and save plots
 preExtract = 1; % how many ms before for extracting
 postExtract = 10; % how many ms after stim to extract
 
@@ -21,8 +21,8 @@ postExtract = 10; % how many ms after stim to extract
 subj_first_7_waveform
 
 %%
-saveIt = 0;
+saveIt = 1;
 if saveIt
     Folder = fullfile(locationsDir, '..','..','data');
-    save(fullfile(Folder, 'recorded_voltages_onlyProcessed_v2.mat'),'first_7_struct','-v7.3')
+    save(fullfile(Folder, 'recorded_voltages_v2.mat'),'first_7_struct','-v7.3')
 end

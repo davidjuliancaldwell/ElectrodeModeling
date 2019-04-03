@@ -7,6 +7,7 @@ numberStimsAll = zeros(7,1,1);
 stdEveryPoint = {};
 extractCellAll = {};
 meanEveryTrialAll = {};
+phaseSigAll = {};
 subjectNum = [];
 figTotal =  figure('units','inches','outerposition',[1 1 8.5 11]);
 
@@ -18,9 +19,9 @@ numChansInt = 64;
 counterIndex = 1;
 numRows = 4;
 numColumns = 2;
-saveIt = 1;
-plotIt = 1;
-sameScale = 1;
+saveIt = 0;
+plotIt = 0;
+sameScale = 0;
 
 for ii = 1:7
     sid = SIDS{ii};
@@ -38,7 +39,7 @@ for ii = 1:7
     
     
     %%
-    [meanMat,stdMat,stdCellEveryPoint,meanEveryTrial,extractCell,numberStims] = voltage_extract_avg(ECoGData,'fs',...
+    [meanMat,stdMat,stdCellEveryPoint,meanEveryTrial,extractCell,numberStims,phaseSig] = voltage_extract_avg(ECoGData,'fs',...
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
     
     %%
@@ -49,13 +50,13 @@ for ii = 1:7
         smallMultiplesModeling(ECoGDataAverage,t,'type1',stimChans,'average',1,'sameScale',sameScale);
         currentDirec = pwd;
         if saveIt
-            SaveFig(currentDirec,['subject_' num2str(ii) '_average_signal'],'eps')
+            SaveFig(OUTPUT_DIR,['subject_' num2str(ii) '_average_signal'],'eps')
         end
     end
     %%
-    [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,figTotal] =  ECoG_subject_processing(ii,jj,...
-        meanMat,stdMat,numberStims,stdCellEveryPoint,meanEveryTrial,extractCell,...
-        meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,...
+    [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,phaseSigAll,figTotal] =  ECoG_subject_processing(ii,jj,...
+        meanMat,stdMat,numberStims,stdCellEveryPoint,meanEveryTrial,extractCell,phaseSig,...
+        meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,phaseSigAll,...
         stimChans,currentMatVec,numChansInt,sid,1,OUTPUT_DIR,figTotal,numRows,numColumns,counterIndex);
     %%
     [dataSubset,tSubset] = data_subset(ECoGData,1e3*t,preExtract,postExtract);
@@ -78,6 +79,6 @@ if plotIt
 end
 
 [first_7_struct] =  convert_mats_to_struct(meanMatAll,stdMatAll,stdEveryPoint,meanEveryTrialAll,stimChansVec,...
-    currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset);
+    currentMatVec,numberStimsAll,extractCellAll,sidCell,subjectNum,dataSubsetCell,tSubset,phaseSigAll);
 
-clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex tSubset dataSubset dataSubsetCell
+clearvars meanMatAll stdMatAll numberStimsAll stdEveryPoint stimChans currentMat currentMatVec stimChansVec numberStimsAll extractCellAll sidCell subjectNum sid ii jj counterIndex tSubset dataSubset dataSubsetCell phaseSigAll
