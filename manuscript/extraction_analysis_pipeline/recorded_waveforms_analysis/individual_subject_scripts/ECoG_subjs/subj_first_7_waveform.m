@@ -20,7 +20,7 @@ counterIndex = 1;
 numRows = 4;
 numColumns = 2;
 saveIt = 0;
-plotIt = 0;
+plotIt = 1;
 sameScale = 0;
 
 for ii = 1:7
@@ -43,6 +43,9 @@ for ii = 1:7
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
     
     %%
+    % scale after processing, since 4x is also in voltage_extract function
+    ECoGData = 4.*ECoGData;
+    
     if plotIt
         figure
         ECoGDataAverage = mean(ECoGData,3);

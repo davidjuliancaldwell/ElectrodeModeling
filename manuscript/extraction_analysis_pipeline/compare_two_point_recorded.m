@@ -1,38 +1,48 @@
-%close all;clear all;clc
-loadData = 0;
-chanInt = 14;
-subj = 1;
+close all;clear all;clc
+loadData = 1;
+chanInt = 53;
+subj = 4;
 cd(fileparts(which('first7_analyze_monitor')));
 currentWD = pwd;
 dataDir = fullfile(currentWD,'..','..','..','data');
 if loadData
     %first7_analyze_monitor
-        load(fullfile(dataDir,'twoPointData.mat'));
+    load(fullfile(dataDir,'twoPointData.mat'));
     load(fullfile(dataDir,'recorded_voltages_v2.mat'));
 end
 
 %%
-
 fig_compare = figure;
-fig_compare.Units = "inches"
+fig_compare.Units = "inches";
 fig_compare.Position = [1 1 8 8];
 subplot(2,2,1)
-plot(first_7_struct.t,squeeze(first_7_struct.data{subj}(:,chanInt,:)))
-title('Raw epoched data')
+plot(first_7_struct.t,1e3*squeeze(first_7_struct.data{subj}(:,chanInt,:)))
+set(gca,'fontsize',12)
 xlabel('Time (ms)')
-
+ylabel('Voltage (mV)')
+titlePar = title('Raw epoched data','fontweight','normal');
+set(titlePar,'FontSize',14);
 
 subplot(2,2,2)
-plot(squeeze(first_7_struct.phaseSigAll{subj}{chanInt}{1}))
-title('Raw extracted first phase')
+plot(1e3*squeeze(first_7_struct.phaseSigAll{subj}{chanInt}{1}))
+set(gca,'fontsize',12)
 xlabel('Sample')
+ylabel('Voltage (mV)')
+titlePar = title('Raw extracted first phase','fontweight','normal');
+set(titlePar,'FontSize',14)
 
 subplot(2,2,3)
-plot(squeeze(first_7_struct.meanEveryTrial{subj}(chanInt,1,:)))
-title('Mean first phase for every trial')
+plot(1e3*squeeze(first_7_struct.meanEveryTrial{subj}(chanInt,1,:)))
+set(gca,'fontsize',12)
 xlabel('Trial')
+ylabel('Voltage (mV)')
+titlePar = title('Mean first phase for every trial','fontweight','normal');
+set(titlePar,'FontSize',14)
 
 subplot(2,2,4)
 plot(squeeze(vJumpCell{subj}))
+set(gca,'fontsize',12)
 xlabel('Trial')
-title('Jump voltage for every trial')
+ylabel('Voltage (mV)')
+titlePar = title('Jump voltage for every trial','fontweight','normal','FontSize',14);
+set(titlePar,'FontSize',14)

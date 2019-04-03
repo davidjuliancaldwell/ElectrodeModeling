@@ -49,16 +49,25 @@ if plotIt
     
     figure(figTotal)
     subplot(numRows,numColumns,counterIndex)
-    errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)
-  %  hold on
+    
+    % this plot does the standard deviation across the flat part of the
+    % pulse after averaging
+    %errorbar(chanVec,abs(meanMat(:,1)),stdMat(:,1),'linewidth',2)
+    
+    % this plot does the
+    errorbar(chanVec,abs(meanMat(:,1)),std(squeeze(meanEveryTrial(:,1,:)),[],2),'linewidth',2)
+        ylim([0,max(abs(meanMat(:,1)))+0.01])
+
+    %  hold on
     %errorbar(chanVec,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
     v2 = vline(stimChans(1),'g');
     v3 = vline(stimChans(2),'b');
-   % title(['Subject ' num2str(ii) ' subject ID ' sid ' stim channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)),...
+    % title(['Subject ' num2str(ii) ' subject ID ' sid ' stim channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)),...
     %    ' current ' num2str(1e6*currentMat(ii,jj)) '\muA' ])
     
-       title(['Subject ' num2str(ii) ' Stim Channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)),...
-       ' Current ' num2str(1e3*currentMat(ii,jj)) 'mA' ])
+    % title(['Subject ' num2str(ii) ' Stim Channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)),...
+    % ' Current ' num2str(1e3*currentMat(ii,jj)) 'mA' ])
+    title(['Subject ' num2str(ii)],'fontweight','normal')
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     figure('units','normalized','outerposition',[0 0 1 1])
@@ -237,12 +246,12 @@ if plotIt
         subplot(8,8,chan)
         plot(1e3*squeeze(meanEveryTrial(chan,1,:)))
         title([num2str(chan)])
-%        yticks([min(1e3*squeeze(meanEveryTrial(chan,1,:))),max(1e3*squeeze(meanEveryTrial(chan,1,:)))])
+        %        yticks([min(1e3*squeeze(meanEveryTrial(chan,1,:))),max(1e3*squeeze(meanEveryTrial(chan,1,:)))])
         set(gca,'fontsize',8)
     end
     xlabel('Trial')
     ylabel('Voltage (mV)')
-  % sgtitle('Variation across stimulation pulses')
+    % sgtitle('Variation across stimulation pulses')
     
 end
 

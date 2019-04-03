@@ -72,7 +72,7 @@ for idx=1:size(signal,2)
     set(gca,'fontsize',10)
     
     if sameScale
-        ylim([-5 5])
+        ylim([-100 100])
     end
     % vline(0)
     
