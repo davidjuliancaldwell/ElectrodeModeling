@@ -67,7 +67,8 @@ if plotIt
     
     % title(['Subject ' num2str(ii) ' Stim Channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)),...
     % ' Current ' num2str(1e3*currentMat(ii,jj)) 'mA' ])
-    title(['Subject ' num2str(ii)],'fontweight','normal')
+  %  title(['Subject ' num2str(ii)],'fontweight','normal')
+      title([' Stim Channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2))])
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     figure('units','normalized','outerposition',[0 0 1 1])
