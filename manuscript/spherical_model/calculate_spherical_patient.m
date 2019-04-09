@@ -18,23 +18,6 @@ if getRidOfFullData
     field = {'data','extractCell','stdEveryPoint','meanEveryTrial'};
     subStruct = rmfield(subStruct,field);
 end
-%%
-figure
-for index = 1:7
-    subplot(2,1,1)
-    hold on
-    plot(subStruct.CTlocsSpherical{index}(:,3))
-    ylim([40 85])
-    title('CT')
-    subplot(2,1,2)
-    hold on
-    plot(subStruct.MNIlocsSpherical{index}(:,3))
-    title('MNI')
-    ylim([40 95])
-    xlabel('electrode')
-    
-end
-legend({'1','2','3','4','5','6','7'})
 
 %% fit the individual subject data with one rhoA and coordinates
 fitIndGlobalCoords = fit_individual_global_coords(subStruct);
@@ -44,14 +27,7 @@ fitIndBinsCoords = fit_individual_coords(subStruct,plotIt,saveIt);
 
 
 %% fit the individual subject data with one rhoA and spherical
-
-fitIndGlobalCoordsSphereCart = fit_individual_global_coords_spherical(subStruct);
-%%
-%fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(subStruct);
-
-%%
-%fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);
-
+fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical(subStruct);
 
 %% fit the individual subject data with rhoA for different bins using coordinates
 fitIndBinsCoordsSphere = fit_individual_coords_spherical(subStruct,plotIt,saveIt);
@@ -59,14 +35,15 @@ fitIndBinsCoordsSphere = fit_individual_coords_spherical(subStruct,plotIt,saveIt
 %%
 plot_ind_fits(subStruct,fitIndGlobalCoords,fitIndBinsCoords,saveIt)
 %%
-plot_ind_fits(subStruct,fitIndGlobalCoordsSphereCart,fitIndBinsCoordsSphere,saveIt)
+plot_ind_fits(subStruct,fitIndGlobalCoordsSphere,fitIndBinsCoordsSphere,saveIt)
 
 %%
-plot_ind_fits_sphereCompare(subStruct,fitIndGlobalCoords,fitIndGlobalCoordsSphereCart,saveIt)
+plot_ind_fits_sphereCompare(subStruct,fitIndGlobalCoords,fitIndGlobalCoordsSphere,saveIt)
 %%
-plot_ind_fits_sphereCompare(subStruct,fitIndBinsCoords,fitIndBinsCoordsSphere,saveIt)
+plot_ind_fits_sphereCompare_bins(subStruct,fitIndBinsCoords,fitIndBinsCoordsSphere,saveIt)
 
-
+%%
+compare_bins(fitIndBinsCoords,fitIndBinsCoordsSphere)
 %% 4 point histograms using the CT coordinates
 histStructCoords = four_point_histograms_individual_coords(subStruct,plotIt,saveIt);
 

@@ -77,11 +77,9 @@ for index = 1:numIndices
     % CT
     load(fullfile(folderCoords,['subj_' num2str(subStruct.subjectNum(index)) '_bis_trodes.mat']));
     AllTrodes = AllTrodes(1:64,:);
-    subStruct.CTlocs{index} = AllTrodes;
     % [Center,Radius] = sphereFit(AllTrodes);
     highPolyModel = fullfile(folderCoords,['subj' num2str(index) '_cortex_both_hires.mat']);
     load(highPolyModel);
-    
     
     [Center,Radius] = sphereFit(cortex.vertices);
     % figure out center of sphere
@@ -91,9 +89,7 @@ for index = 1:numIndices
     y = Radius*y + Center(2);
     z = Radius*z + Center(3);
     subStruct.rFixed{index} = Radius;
-    %    x = Radius*x ;
-    %   y = Radius*y;
-    %   z = Radius*z;
+
     ctMNIFig = figure;
     ctMNIFig.Units = "inches";
     ctMNIFig.Position = [1 1 8 3];
@@ -121,6 +117,8 @@ for index = 1:numIndices
     title(['CT Coords - Subject ' num2str(index)])
     AllTrodes = [AllTrodes(:,1) - Center(1) AllTrodes(:,2) - Center(2) AllTrodes(:,3) - Center(3)];
     
+    subStruct.CTlocs{index} = AllTrodes;
+
     [az,el,r]  = cart2sph(AllTrodes(:,1),AllTrodes(:,2),AllTrodes(:,3));
     subStruct.CTlocsSpherical{index}(:,1) = az;
     subStruct.CTlocsSpherical{index}(:,2) = el;
@@ -143,12 +141,13 @@ for index = 1:numIndices
     subplot(1,2,1)
     trisurf(TR,GC);
     caxis([-max(abs(GC)) max(abs(GC))])
-    colorbar()
+    h = colorbar;
+    h.Label.String = '1/mm';
     title(['Subject ' num2str(index) ' CT Gaussian Curvature'])
     %   set(gca,'fontsize',14)
     subplot(1,2,2)
     trisurf(TR,MC);
-    colorbar()
+    colorbar
     caxis([-max(abs(MC)) max(abs(MC))])
     title(['Subject ' num2str(index) ' CT Mean Curvature'])
     colormap(cm)
@@ -215,12 +214,13 @@ for index = 1:numIndices
     subplot(1,2,1)
     trisurf(TR,GC);
     caxis([-max(abs(GC)) max(abs(GC))])
-    colorbar()
+    h = colorbar;
+    h.Label.String = '1/mm';
     title(['Subject ' num2str(index) ' MNI Gaussian Curvature'])
     
     subplot(1,2,2)
     trisurf(TR,MC);
-    colorbar()
+    colorbar
     caxis([-max(abs(MC)) max(abs(MC))])
     title(['Subject ' num2str(index) ' MNI Mean Curvature'])
     colormap(cm)

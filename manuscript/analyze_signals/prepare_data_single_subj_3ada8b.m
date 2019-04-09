@@ -25,29 +25,16 @@ numIndices = size(subStruct.meanMat,3);
 diffT = diff(subStruct.t)/1e3;
 subStruct.fs =  1/diffT(1);
 
-% stimulation electrode locations, each column is a subject
-% jp_vec = [3 2 2 8 7 7 8 4 ...
-%     3 4 3 3 3];
-% kp_vec = [6 5 3 3 8 6 8 3 ...
-%     4 4 7 6 5];
-% jm_vec = [4 2 2 8 7 8 7 4 ...
-%     2 1 3 3 3];
-% km_vec = [6 6 4 4 7 6 8 4 ...
-%     4 4 2 3 4];
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% stimChansIndices = [jp_vec; kp_vec; jm_vec; km_vec];
-
 stimChansVecOnly = subStruct.stimChans;
 badTotal = {};
 if eliminateBadChannels
-    badTotal{1} = [[stimChansVecOnly{1,:}] 17 18 19];
-    badTotal{2} = [[stimChansVecOnly{2,:}] 23 27 28 29 30 32 44 52 60];
-    badTotal{3} = [[stimChansVecOnly{3,:}] 57];
-    badTotal{4} = [[stimChansVecOnly{4,:}] 2 3 31 57];
-    badTotal{5} = [[stimChansVecOnly{5,:}] 1 49 58 59];
-    badTotal{6} = [[stimChansVecOnly{6,:}] 57:64];
-    badTotal{7} = [[stimChansVecOnly{7,:}] 1 9 10 35 43];
+%     badTotal{1} = [[stimChansVecOnly{1,:}] 17 18 19];
+%     badTotal{2} = [[stimChansVecOnly{2,:}] 23 27 28 29 30 32 44 52 60];
+%     badTotal{3} = [[stimChansVecOnly{3,:}] 57];
+%     badTotal{4} = [[stimChansVecOnly{4,:}] 2 3 31 57];
+%     badTotal{5} = [[stimChansVecOnly{5,:}] 1 49 58 59];
+%     badTotal{6} = [[stimChansVecOnly{6,:}] 57:64];
+%     badTotal{7} = [[stimChansVecOnly{7,:}] 1 9 10 35 43];
 else
     for ii = 1:numIndices
         badTotal{ii} = stimChansVecOnly(ii,:);
@@ -73,51 +60,48 @@ for index = 1:numIndices
     load(fullfile(folderCoords,['3ada8b_bis_trodes.mat']));
     
     AllTrodes = AllTrodes(1:64,:);
-    subStruct.CTlocs{index} = AllTrodes;
     % [Center,Radius] = sphereFit(AllTrodes);
-    if index == 1
-        highPolyModel = fullfile(folderCoords,['3ada8b_cortex_both_hires.mat']);
-        load(highPolyModel);
-        
-        [Center,Radius] = sphereFit(cortex.vertices);
-        % figure out center of sphere
-        
-        [x,y,z] = sphere;
-        x = Radius*x  + Center(1);
-        y = Radius*y + Center(2);
-        z = Radius*z + Center(3);
-        
-        %    x = Radius*x ;
-        %   y = Radius*y;
-        %   z = Radius*z;
-        ctMNIFig = figure;
-        ctMNIFig.Units = "inches";
-        ctMNIFig.Position = [1 1 8 3];
-        subplot(1,2,1)
-        s = surf(x,y,z);
-        %set(s,'EdgeColor','none');
-        % set(s,'FaceAlpha',0.25);
-        set(s,'FaceColor','none');
-        hold on
-        locs = AllTrodes(1:64,:);
-        
-        % take labeling from plot dots direct
-        scatter3(locs(:,1),locs(:,2),locs(:,3),[100],[1 0 0],'filled');
-        %
-        gridSize = 64;
-        trodeLabels = [1:gridSize];
-        
-        if plotText
-            for chan = 1:gridSize
-                txt = num2str(trodeLabels(chan));
-                t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
-                set(t,'clipping','on');
-            end
+    highPolyModel = fullfile(folderCoords,['3ada8b_cortex_both_hires.mat']);
+    load(highPolyModel);
+    
+    [Center,Radius] = sphereFit(cortex.vertices);
+    % figure out center of sphere
+    
+    [x,y,z] = sphere;
+    x = Radius*x  + Center(1);
+    y = Radius*y + Center(2);
+    z = Radius*z + Center(3);
+    subStruct.rFixed{index} = Radius;
+    
+    
+    ctMNIFig = figure;
+    ctMNIFig.Units = "inches";
+    ctMNIFig.Position = [1 1 8 3];
+    subplot(1,2,1)
+    s = surf(x,y,z);
+    %set(s,'EdgeColor','none');
+    % set(s,'FaceAlpha',0.25);
+    set(s,'FaceColor','none');
+    hold on
+    locs = AllTrodes(1:64,:);
+    
+    % take labeling from plot dots direct
+    scatter3(locs(:,1),locs(:,2),locs(:,3),[100],[1 0 0],'filled');
+    %
+    gridSize = 64;
+    trodeLabels = [1:gridSize];
+    
+    if plotText
+        for chan = 1:gridSize
+            txt = num2str(trodeLabels(chan));
+            t = text(locs(chan,1),locs(chan,2),locs(chan,3),txt,'FontSize',10,'HorizontalAlignment','center','VerticalAlignment','middle');
+            set(t,'clipping','on');
         end
-        title(['CT Coords - Subject ' num2str(index)])
-        
     end
+    title(['CT Coords - Subject ' num2str(index)])
+    
     AllTrodes = [AllTrodes(:,1) - Center(1) AllTrodes(:,2) - Center(2) AllTrodes(:,3) - Center(3)];
+    subStruct.CTlocs{index} = AllTrodes;
     
     [az,el,r]  = cart2sph(AllTrodes(:,1),AllTrodes(:,2),AllTrodes(:,3));
     
@@ -125,16 +109,15 @@ for index = 1:numIndices
     subStruct.CTlocsSpherical{index}(:,2) = el;
     subStruct.CTlocsSpherical{index}(:,3) = r;
     
-    if index == 1
-        gridSize = [8,8];
-        [X,Y] = meshgrid(1:gridSize(1),1:gridSize(2));
-        X = X(:);
-        Y = Y(:);
-        DT = delaunayTriangulation(X,Y);
-        TR = triangulation(DT.ConnectivityList,locs(:,1),locs(:,2),locs(:,3));
-        
-        [GC MC]= curvatures(locs(:,1),locs(:,2),locs(:,3),DT.ConnectivityList);
-    end
+    gridSize = [8,8];
+    [X,Y] = meshgrid(1:gridSize(1),1:gridSize(2));
+    X = X(:);
+    Y = Y(:);
+    DT = delaunayTriangulation(X,Y);
+    TR = triangulation(DT.ConnectivityList,locs(:,1),locs(:,2),locs(:,3));
+    
+    [GC MC]= curvatures(locs(:,1),locs(:,2),locs(:,3),DT.ConnectivityList);
+    
     subStruct.CT_GC{index} = GC;
     subStruct.CT_MC{index} = MC;
     
@@ -145,12 +128,13 @@ for index = 1:numIndices
         subplot(1,2,1)
         trisurf(TR,GC);
         caxis([-max(abs(GC)) max(abs(GC))])
-        colorbar()
+        h = colorbar;
+        h.Label.String = '1/mm';
         title(['Subject ' num2str(index) ' CT Gaussian Curvature'])
         %   set(gca,'fontsize',14)
         subplot(1,2,2)
         trisurf(TR,MC);
-        colorbar()
+        colorbar
         caxis([-max(abs(MC)) max(abs(MC))])
         title(['Subject ' num2str(index) ' CT Mean Curvature'])
         colormap(cm)
@@ -169,12 +153,14 @@ for index = 1:numIndices
         subStruct.locsSpherical{index}(:,2) = subStruct.MNIlocsSpherical{index}(:,2);
         subStruct.locsSpherical{index}(:,3) = subStruct.MNIlocsSpherical{index}(:,3);
         
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % one layer theory fitlm
+        
+        %  subStruct.oneLayerVals{index} = compute_1layer_theory_coords(subStruct.locs{index},subStruct.stimChans(index,:));
     end
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % one layer theory fitlm
-    
-    %  subStruct.oneLayerVals{index} = compute_1layer_theory_coords(subStruct.locs{index},subStruct.stimChans(index,:));
 end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 subStruct.dataSelect = cell2mat(subStruct.meanData);

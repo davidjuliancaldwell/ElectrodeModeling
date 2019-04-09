@@ -25,7 +25,9 @@ for index = 1:numIndices
     rhoHist.mean = mean(rho1(:));
     rhoHist.std = std(rho1(:));
     rhoHist.median = median(rho1(:));
-    fprintf(['Subject ' num2str(index) ' spherical, mean = ' num2str(rhoHist.mean), ' std = ' num2str(rhoHist.std) ' median = ' num2str(rhoHist.median) '\n'])
+    rhoHist.mad = mad(rho1(:),1);
+
+    fprintf(['Subject ' num2str(index) ' spherical, mean = ' num2str(rhoHist.mean), ' std = ' num2str(rhoHist.std) ' median = ' num2str(rhoHist.median), ' MAD = ' num2str(rhoHist.mad) '\n'])
     
     histStruct.hist{index} = rhoHist;
     

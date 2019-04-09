@@ -1,4 +1,4 @@
-function [] = plot_ind_fits_sphereCompare(dataStruct,fitFlat,fitSphere,saveIt)
+function [] = plot_ind_fits_sphereCompare_bins(dataStruct,fitFlat,fitSphere,saveIt)
 
 OUTPUT_DIR = getenv('output_dir');
 masterPlot = figure('units','inches','position',[1 1 8 10]);
@@ -24,16 +24,13 @@ drawnow;
 pos = arrayfun(@plotboxpos, subplot_total, 'uni', 0);
 dim = cellfun(@(x) x.*[1 1 0.5 0.5], pos, 'uni',0);
 for i = 1:7
+   
+    mseFlat  = sprintf('%0.2e',nansum(fitFlat.calc{i}.MSE));
+    mseSphere = sprintf('%0.2e',nansum(fitSphere.calc{i}.MSE));
     
-    rhoAflat = sprintf('%0.2f',fitFlat.calc{i}.rhoAcalc);
-    rhoAsphere = sprintf('%0.2f',fitSphere.calc{i}.rhoAcalc);
-    mseFlat  = sprintf('%0.2e',fitFlat.calc{i}.MSE);
-    mseSphere = sprintf('%0.2e',fitSphere.calc{i}.MSE);
-    
-    annotation(masterPlot, 'textbox', dim{i}, 'String', {['\rho_{A} flat = ' rhoAflat ],['RMSE_{flat} = ' mseFlat],...
-        ['\rho_{A} spherical = ' rhoAsphere],['RMSE_{sphere} = ' mseSphere]},...
+    annotation(masterPlot, 'textbox', dim{i}, 'String', {['RMSE_{flat} = ' mseFlat],...
+        ['RMSE_{sphere} = ' mseSphere]},...
         'vert', 'bottom', 'FitBoxToText','on','EdgeColor','none');
-    
 end
 
 for index = 1:7

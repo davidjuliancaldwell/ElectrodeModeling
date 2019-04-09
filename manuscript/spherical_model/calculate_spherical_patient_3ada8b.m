@@ -26,16 +26,8 @@ fitIndGlobalCoords = fit_individual_global_coords(subStruct);
 %% fit the individual subject data with rhoA for different bins using coordinates
 fitIndBinsCoords = fit_individual_coords(subStruct,plotIt,saveIt);
 
-
 %% fit the individual subject data with one rhoA and spherical
-
-fitIndGlobalCoordsSphereCart = fit_individual_global_coords_spherical(subStruct);
-%%
-%fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical_sphereCoords(subStruct);
-
-%%
-%fitIndGlobalRushDriscoll = fit_individual_global_coords_RushDriscoll(subStruct);
-
+fitIndGlobalCoordsSphere = fit_individual_global_coords_spherical(subStruct);
 
 %% fit the individual subject data with rhoA for different bins using coordinates
 fitIndBinsCoordsSphere = fit_individual_coords_spherical(subStruct,plotIt,saveIt);
@@ -43,12 +35,12 @@ fitIndBinsCoordsSphere = fit_individual_coords_spherical(subStruct,plotIt,saveIt
 %%
 plot_ind_fits_3ada8b(subStruct,fitIndGlobalCoords,fitIndBinsCoords,saveIt)
 %%
-plot_ind_fits_3ada8b(subStruct,fitIndGlobalCoordsSphereCart,fitIndBinsCoordsSphere,saveIt)
+plot_ind_fits_3ada8b(subStruct,fitIndGlobalCoordsSphere,fitIndBinsCoordsSphere,saveIt)
 
 %%
-plot_ind_fits_sphereCompare_3ada8b(subStruct,fitIndGlobalCoords,fitIndGlobalCoordsSphereCart,saveIt)
+plot_ind_fits_sphereCompare_3ada8b(subStruct,fitIndGlobalCoords,fitIndGlobalCoordsSphere,saveIt)
 %%
-plot_ind_fits_sphereCompare_3ada8b(subStruct,fitIndBinsCoords,fitIndBinsCoordsSphere,saveIt)
+plot_ind_fits_sphereCompare_3ada8b_bins(subStruct,fitIndBinsCoords,fitIndBinsCoordsSphere,saveIt)
 
 
 %% 4 point histograms using the CT coordinates

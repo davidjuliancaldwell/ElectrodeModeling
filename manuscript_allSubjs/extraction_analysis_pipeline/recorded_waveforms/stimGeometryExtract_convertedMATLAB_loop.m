@@ -4,7 +4,7 @@
 close all; clear all; clc
 
 % set input output working directories
-Z_ConstantsStimSpacing;
+Z_Constants_Resistivity;
 
 % subject directory, change as needed
 SUB_DIR = fullfile(myGetenv('subject_dir'));
@@ -13,7 +13,7 @@ SUB_DIR = fullfile(myGetenv('subject_dir'));
 
 % this is from my z_constants
 
-sid = SIDS{6};
+sid = SIDS{9};
 
 stimChannels = [
     3 4;
@@ -117,8 +117,7 @@ for trial = 1:numTrials
 
     for i = uniqueLabels
         dataEpochedInt = dataEpoched(:,:,labels==i);
-        [meanMat,stdMat,stdCellEveryPoint,extractCell,numberStims] = voltage_extract_avg(dataEpochedInt,'fs',fsData,'preSamps',preSampsExtract,'postSamps',postSampsExtract,'plotIt',plotIt);
-        
+        [meanMat,stdMat,stdCellEveryPoint,meanEveryTrial,extractCell,numberStims,phaseSig] = voltage_extract_avg(dataEpochedInt,'fs',fsData,'preSamps',preSampsExtract,'postSamps',postSampsExtract,'plotIt',plotIt);
         meanMat(stimChans,:) = nan;
         stdMat(stimChans,:) = nan;
         extractCell{stimChans(1)}{1} = nan;
@@ -141,7 +140,7 @@ for trial = 1:numTrials
     %% 2d plot
     
      plot_2d_heatmap(meanMatAll(1:64,:,:),64,uniqueLabels,stimChans)
-     saveIt = 1;
+     saveIt = 0;
      
      if saveIt
      SaveFig(OUTPUT_DIR,[sid '_stimulationChannels_' num2str(stimChans(1)) '_' num2str(stimChans(2))])   
@@ -150,7 +149,7 @@ for trial = 1:numTrials
     
     
     %%
-    saveIt = 1;
+    saveIt = 0;
     if saveIt
         
         save(fullfile(OUTPUT_DIR, [sid '_' num2str(stimChans(1)) '_' num2str(stimChans(2))]),...

@@ -38,15 +38,19 @@ for index = 1:numIndices
     tempStruct = struct;
     
     tempStruct.bestVals = bestVals;
-    tempStruct.MSE = MSE;
+    tempStruct.MSEind = MSE;
     tempStruct.rhoAcalc = rhoAoutput;
     tempStruct.offset = offset;
+    
+    % figure out global MSE
+    tempStruct.MSE = sqrt((1/sum(~isnan(tempStruct.bestVals)))*nansum((tempStruct.bestVals - dataInt).^2));
     
     fitStruct.calc{index} = tempStruct;
     
     fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(rhoAoutput) ' offset = ' num2str(offset) ' \n ']);
     
 end
+
 
 %% plot
 

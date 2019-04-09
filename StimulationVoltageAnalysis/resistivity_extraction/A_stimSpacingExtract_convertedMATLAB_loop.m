@@ -4,7 +4,7 @@
 %close all; clear all; clc
 
 % set input output working directories
-Z_ConstantsStimSpacing;
+Z_Constants_Resistivity;
 
 % subject directory, change as needed
 SUB_DIR = fullfile(myGetenv('subject_dir'));
