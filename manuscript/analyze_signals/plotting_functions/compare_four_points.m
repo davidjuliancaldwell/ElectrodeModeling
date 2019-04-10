@@ -35,8 +35,8 @@ for index = 1:numIndices
     %    h2.Color = [1,1,1];
     
     stringV2 = findobj(gca,'Type','text');
-    stringV2(1).Color = [0,0.4470,0.7410];
-    stringV2(2).Color = [0.8500, 0.3250, 0.0980];
+    stringV2(2).Color = [0,0.4470,0.7410];
+    stringV2(1).Color = [0.8500, 0.3250, 0.0980];
     
 end
 

@@ -42,7 +42,8 @@ plot_ind_fits_sphereCompare_3ada8b(subStruct,fitIndGlobalCoords,fitIndGlobalCoor
 %%
 plot_ind_fits_sphereCompare_3ada8b_bins(subStruct,fitIndBinsCoords,fitIndBinsCoordsSphere,saveIt)
 
-
+%%
+compare_bins_3ada8b(fitIndBinsCoords,fitIndBinsCoordsSphere,subStruct)
 %% 4 point histograms using the CT coordinates
 histStructCoords = four_point_histograms_individual_coords_3ada8b(subStruct,plotIt,saveIt);
 

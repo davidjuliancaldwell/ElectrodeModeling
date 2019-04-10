@@ -8,8 +8,6 @@ plotIt = 0;
 saveIt = 0;
 eliminateBadChannels = 0;
 getRidOfFullData = 0;
-prolateBool = 0;
-
 %% load in the data and define common constants, run single subject fits
 [subStruct] = prepare_data_single_subj(eliminateBadChannels);
 
