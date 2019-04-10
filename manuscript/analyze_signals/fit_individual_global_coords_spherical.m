@@ -93,7 +93,7 @@ for index = 1:numIndices
     fitStruct.calcScaled{index} = tempStruct;
     
     
-    fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
+  %  fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
     
     fitStruct.correctionFactor{index} = correctionFactor;
     fitStruct.correctionFactorScaled{index} = correctionFactorDot;
