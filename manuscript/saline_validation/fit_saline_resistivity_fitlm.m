@@ -29,7 +29,7 @@ for ii = [1,2,3,4]
         
         
     elseif ii == 2
-        load(fullfile(dataDir,lowResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))   
+        load(fullfile(dataDir,lowResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
         jp=5;
         kp=4;
         jm=4;
@@ -39,13 +39,13 @@ for ii = [1,2,3,4]
         
     elseif ii == 3
         load(fullfile(dataDir,highResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
-              jp=5;
+        jp=5;
         kp=5;
-        jm=4;
-        km=5; 
+        jm=5;
+        km=4;
         uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
         uniqueStimLabels = uniqueStimLabels(:);
-     
+        
     elseif ii == 4
         load(fullfile(dataDir,highResist,['salineAnalysis_' num2str(stimChans(1)) '_' num2str(stimChans(2)) '.mat']))
         jp=5;
@@ -53,7 +53,7 @@ for ii = [1,2,3,4]
         jm=4;
         km=4;
         uniqueStimLabels = [repmat(1:length(uniqueLabels),20,1)];
-        uniqueStimLabels = uniqueStimLabels(:);   
+        uniqueStimLabels = uniqueStimLabels(:);
     end
     %%
     fsStim = 24414;
@@ -75,13 +75,17 @@ for ii = [1,2,3,4]
         stdVJump(ii) = std(vJumpCell{ii});
         
         
-        dividedVI = vJumpAvgMat./currentMatVec;
-        twoPointR = (2*.00115*dividedVI/(correction))
+        dividedVI = vJumpAvg./i0;
+        if conditionInterest == 5
+         %   vJumpAvg
+         dividedVI
+           twoPointR = (2*.00115*dividedVI/(correction))
+        end
     end
     
     %% 3 point
     conditionInterest = 5; % condition of interest
-    i0 = uniqueLabels(conditionInterest)/1e6; % current in uA to A
+    %i0 = uniqueLabels(conditionInterest)/1e6 % current in uA to A
     
     dataInt = meanMatAll(:,1,conditionInterest);
     
@@ -133,21 +137,21 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 figValid = figure;
 figValid.Units = "inches";
-figValid.Position = [0.5 0.5 8 8];
+figValid.Position = [0.5 0.5 8 10];
 %funcLine = @(x)(fitStruct.calc{1}.offset+fitStruct.calc{1}.rhoAcalc*x)
 dataPt(1,1) = min(fitStruct.calc{1}.bestVals);
 dataPt(2,1) = max(fitStruct.calc{1}.bestVals);
 dataPt(:,2) = dataPt(:,1);
 
-subplot(2,1,1)
+subplot(2,2,1)
 scatter(fitStruct.calc{1}.bestVals,dataIntCell{1},'o')
 hold on
 plot(dataPt(:,1),dataPt(:,2))
 text(0,0,['\rho_{apparent} = ' num2str(fitStruct.calc{1}.rhoAcalc)])
 xlabel('Theoretical Voltage (V)')
 ylabel('Experimental Voltage (V)')
-set(gca,'fontsize',14)
-title('Saline Validation Solution 3.44 ohm-m')
+set(gca,'fontsize',10)
+title(['Stim Pair 28/29 - 3.44 ohm-m saline'],'fontweight','normal')
 %
 
 %funcLine = @(x)(fitStruct.calc{2}.offset+fitStruct.calc{2}.rhoAcalc*x);
@@ -155,12 +159,42 @@ dataPt(1,1) = min(fitStruct.calc{2}.bestVals);
 dataPt(2,1) = max(fitStruct.calc{2}.bestVals);
 dataPt(:,2) = dataPt(:,1);
 
-subplot(2,1,2)
+subplot(2,2,2)
 scatter(fitStruct.calc{2}.bestVals,dataIntCell{2},'o')
 hold on
 plot(dataPt(:,1),dataPt(:,2))
 text(0,0,['\rho_{apparent} = ' num2str(fitStruct.calc{2}.rhoAcalc)])
 xlabel('Theoretical Voltage (V)')
 %ylabel('Experimental Voltage (V)')
-set(gca,'fontsize',14)
-title('Saline Solution 0.51 ohm-m')
+set(gca,'fontsize',10)
+title(['Stim Pair 28/36 - 0.51 ohm-m saline'],'fontweight','normal')
+
+%funcLine = @(x)(fitStruct.calc{2}.offset+fitStruct.calc{2}.rhoAcalc*x);
+dataPt(1,1) = min(fitStruct.calc{3}.bestVals);
+dataPt(2,1) = max(fitStruct.calc{3}.bestVals);
+dataPt(:,2) = dataPt(:,1);
+
+subplot(2,2,3)
+scatter(fitStruct.calc{2}.bestVals,dataIntCell{2},'o')
+hold on
+plot(dataPt(:,1),dataPt(:,2))
+text(0,0,['\rho_{apparent} = ' num2str(fitStruct.calc{3}.rhoAcalc)])
+xlabel('Theoretical Voltage (V)')
+%ylabel('Experimental Voltage (V)')
+set(gca,'fontsize',10)
+title(['Stim Pair 36/37 - 3.44 ohm-m saline'],'fontweight','normal')
+
+%funcLine = @(x)(fitStruct.calc{2}.offset+fitStruct.calc{2}.rhoAcalc*x);
+dataPt(1,1) = min(fitStruct.calc{4}.bestVals);
+dataPt(2,1) = max(fitStruct.calc{4}.bestVals);
+dataPt(:,2) = dataPt(:,1);
+
+subplot(2,2,4)
+scatter(fitStruct.calc{4}.bestVals,dataIntCell{4},'o')
+hold on
+plot(dataPt(:,1),dataPt(:,2))
+text(0,0,['\rho_{apparent} = ' num2str(fitStruct.calc{4}.rhoAcalc)])
+xlabel('Theoretical Voltage (V)')
+%ylabel('Experimental Voltage (V)')
+set(gca,'fontsize',10)
+title(['Stim Pair 28/36 - 3.44 ohm-m saline'],'fontweight','normal')
