@@ -38,9 +38,9 @@ V = zeros(size(r,2),1);
 scalev =(I*rho)/(4*R);
 logicalR = r<=R;
 V_o = I/rho;
-V(logicalR) = V_o;
+V(logicalR) = (scalev*V_o);
 %V(~logicalR) = ((2.*I)./(rho.*pi).*asin(R./r(r>R)));
-V(~logicalR) = (scalev*(2*(I*rho)/pi).*asin(R./r(r>R)));
+V(~logicalR) = (scalev*(2*(V_o)/pi).*asin(R./r(r>R)));
 end
 
 
