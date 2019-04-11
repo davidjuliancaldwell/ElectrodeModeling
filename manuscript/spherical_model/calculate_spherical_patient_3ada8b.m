@@ -14,9 +14,9 @@ getRidOfFullData = 0;
 %%
 if getRidOfFullData
     % clean up sub struct for saving
-   % field = {'data','extractCell','stdEveryPoint','meanEveryTrial'};
-       field = {'data','extractCell','stdEveryPoint'};
-
+    % field = {'data','extractCell','stdEveryPoint','meanEveryTrial'};
+    field = {'data','extractCell','stdEveryPoint'};
+    
     subStruct = rmfield(subStruct,field);
 end
 

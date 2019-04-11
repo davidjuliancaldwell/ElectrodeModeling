@@ -23,7 +23,7 @@ stimChansVec = [
 currentMatVec = repmat([0.0005],length(stimChansVec),1) ;
 preSamps = 3;
 postSamps = 3;
-figTotal =  figure('units','normalized','outerposition',[0 0 1 1]);
+figTotal =  figure('units','Inches','outerposition',[1 1 8 10]);
 
 numStimChans = size(stimChansVec,1);
 numCurrents = size(currentMatVec,2);
@@ -32,7 +32,7 @@ ii = 1;
 jj = 1;
 counterIndex = 1;
 sameScale = 0;
-saveIt = 1;
+saveIt = 0;
 % only do 64 channels right now
 meanMatAll = zeros(64,2,numStimChans,numCurrents);
 stdMatAll =  zeros(64,2,numStimChans,numCurrents);
@@ -62,12 +62,12 @@ for stimChans = stimChansVec'
     stimChans = stimChansVec(ii,:);
     ECoGData = dataEpoched;
     %  ECoGData = ECoGData(:,1:92,:);
-        ECoGData = ECoGData(:,1:64,:);
-
-%      % rebaseine these to just be 25 to 5 ms before
-%     for chan = 1:size(ECoGData,3)
-%         ECoGData(:,chan,:) =  ECoGData(:,chan,:)-repmat(mean(ECoGData((t<0-0.005 & t>-0.025),chan,:),1), [size(ECoGData, 1),1]);
-%     end
+    ECoGData = ECoGData(:,1:64,:);
+    
+    %      % rebaseine these to just be 25 to 5 ms before
+    %     for chan = 1:size(ECoGData,3)
+    %         ECoGData(:,chan,:) =  ECoGData(:,chan,:)-repmat(mean(ECoGData((t<0-0.005 & t>-0.025),chan,:),1), [size(ECoGData, 1),1]);
+    %     end
     
     fs = fsData;
     
@@ -80,16 +80,18 @@ for stimChans = stimChansVec'
     % scale after processing, since 4x is also in voltage_extract function
     ECoGData = 4.*ECoGData;
     
-    if plotIt
-        figure
-        ECoGDataAverage = mean(ECoGData,3);
-        ECoGDataAverage(:,stimChans,:) = nan;
-        smallMultiplesModeling(ECoGDataAverage,t,'type1',stimChans,'average',1,'sameScale',sameScale);
-        currentDirec = pwd;
-        if saveIt
-            SaveFig(OUTPUT_DIR,['3ada8b_run_' num2str(ii) '_average_signal'],'eps')
-        end
-    end
+%     if plotIt
+%         figure
+%         ECoGDataAverage = mean(ECoGData,3);
+%         ECoGDataAverage(:,stimChans,:) = nan;
+%         smallMultiplesModeling(ECoGDataAverage,t,'type1',stimChans,'average',1,'sameScale',sameScale);
+%         currentDirec = pwd;
+%         if saveIt
+%             tempFig = gcf;
+%             tempFig.Renderer = 'painters';
+%             SaveFig(OUTPUT_DIR,['3ada8b_run_' num2str(ii) '_average_signal'],'eps')
+%         end
+%     end
     %%
     [meanMatAll,stdMatAll,numberStimsAll,stdEveryPoint,meanEveryTrialAll,extractCellAll,phaseSigAll,figTotal] =  ECoG_subject_processing(ii,jj,...
         meanMat,stdMat,numberStims,stdCellEveryPoint,meanEveryTrial,extractCell,phaseSig,...
@@ -112,7 +114,9 @@ if plotIt
     ylabel('Voltage (V)')
     if saveIt
         SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'png','-r600');
-        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_' sid ]),'eps');
+        tempFig = gcf;
+        tempFig.Renderer = 'painters';
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndsStds_' sid ]),'eps');
         
     end
     

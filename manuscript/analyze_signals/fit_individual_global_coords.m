@@ -54,8 +54,9 @@ for index = 1:numIndices
     end
     
     fitStruct.calc{index} = tempStruct;
-    fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
-    
+  %  fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(tempStruct.rhoAcalc) ' offset = ' num2str(tempStruct.offset) ' \n ']);
+     fprintf(['complete for subject ' num2str(index) ' rhoA = ' num2str(round(tempStruct.rhoAcalc,2)) ' offset = ' num2str(tempStruct.offset) ' \n ']);
+   
 end
 
 

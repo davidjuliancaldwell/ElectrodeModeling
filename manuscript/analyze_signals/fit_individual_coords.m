@@ -23,7 +23,7 @@ for index = 1:numIndices
     i0 = subStruct.currentMat(index);
     locs = subStruct.locs{index};
     locs = locs(1:64,:);
-
+    
     centerSpace = mean([locs(stimChans(1),:);locs(stimChans(2),:)],1);
     distances = vecnorm((locs-repmat(centerSpace,64,1)),2,2)./10;
     % perform 1d optimization
@@ -78,9 +78,9 @@ end
 
 if plotIt
     
-  figTotal = figure;
+    figTotal = figure;
     figTotal.Units = "Inches";
-    figTotal.Position = [1 1 8 5];    
+    figTotal.Position = [1 1 8 5];
     for index = 1:numIndices
         
         subplot(2,4,index)
