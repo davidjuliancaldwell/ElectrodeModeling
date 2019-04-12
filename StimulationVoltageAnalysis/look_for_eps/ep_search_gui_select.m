@@ -1,4 +1,4 @@
-%% 
+%%
 %
 % David.J.Caldwell 10.10.2018
 %% initialize output and meta dir
@@ -14,10 +14,10 @@ structureData = uiimport('-file');
 %%
 
 if size(structureData.ECO1.data,1) == size(structureData.ECO3.data,1)
-data = 4.*[structureData.ECO1.data structureData.ECO2.data structureData.ECO3.data]; % add in factor of 4 10.10.2018
+    data = 4.*[structureData.ECO1.data structureData.ECO2.data structureData.ECO3.data]; % add in factor of 4 10.10.2018
 else
     data = 4.*[structureData.ECO1.data(1:end-1,:) structureData.ECO2.data(1:end-1,:) structureData.ECO3.data]; % add in factor of 4 10.10.2018
-
+    
 end
 
 data = data(:,1:99);
@@ -68,7 +68,7 @@ for reref = 0:0
         rerefChans = mean(rerefChans,2);
         data = data - repmat(rerefChans,1,numChans);
     end
-        
+    
     %% stimulation voltage monitor
     plotIt = 0;
     savePlot = 0;
@@ -85,7 +85,20 @@ for reref = 0:0
     %% plot epoched signals
     plot_EPs_fromEpochedData(dataEpoched,t,uniqueLabels,labels,stimChans)
     
-
+    %%
+    
+    for uniq = uniqueLabels
+        boolLabels = labels==uniq;
+        average = 1;
+        %chanIntList = 3;
+        trainDuration = [];
+        modePlot = 'avg';
+        xlims = [-10 150];
+        ylims = [-1.5 1.5];
+        
+        small_multiples_time_series(1e-6.*dataEpoched(:,:,boolLabels),1e-3*t,'type1',stimChans,'type2',0,'xlims',xlims,'ylims',ylims,'modePlot',modePlot,'highlightRange',trainDuration)
+        
+    end
     %%
     if saveIt
         if reref
