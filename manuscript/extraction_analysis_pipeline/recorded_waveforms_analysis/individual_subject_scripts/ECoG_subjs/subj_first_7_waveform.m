@@ -20,7 +20,7 @@ counterIndex = 1;
 numRows = 4;
 numColumns = 2;
 saveIt = 0;
-plotIt = 1;
+plotIt = 0;
 sameScale = 0;
 
 for ii = 1:7
@@ -76,8 +76,8 @@ if plotIt
     xlabel('Electrode')
     ylabel('Voltage (V)')
     if saveIt
-        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7_v2']),'png','-r600');
-        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7_v2']),'eps','-r600');
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7_v3']),'png','-r600');
+        SaveFig(OUTPUT_DIR, sprintf(['meansAndStds_first7_v3']),'eps','-r600');
     end
 end
 

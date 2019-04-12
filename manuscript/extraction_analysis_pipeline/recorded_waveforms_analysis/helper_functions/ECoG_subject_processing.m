@@ -56,9 +56,11 @@ if plotIt
     
     % this plot does the
    % errorbar(chanVec,abs(meanMat(:,1)),std(squeeze(meanEveryTrial(:,1,:)),[],2),'linewidth',2)
-      errorbar(chanVec,abs(meanMat(:,1)),std(squeeze(meanEveryTrial(:,1,:)),[],2),'linewidth',2)
+    %  errorbar(chanVec,meanMat(:,1),std(squeeze(meanEveryTrial(:,1,:)),[],2),'linewidth',2)
+        errorbar(chanVec,meanMat(:,1),std(squeeze(meanEveryTrial(:,1,:)),[],2))
+
    % plot(chanVec,abs(meanMat(:,1)),'linewidth',2);
-        ylim([0,max(abs(meanMat(:,1)))+0.005])
+        ylim([-max(abs(meanMat(:,1))),max(abs(meanMat(:,1)))])
 
     %  hold on
     %errorbar(chanVec,abs(meanMat(:,2)),stdMat(:,2),'linewidth',2)
@@ -70,7 +72,7 @@ if plotIt
     % title(['Subject ' num2str(ii) ' Stim Channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2)),...
     % ' Current ' num2str(1e3*currentMat(ii,jj)) 'mA' ])
   %  title(['Subject ' num2str(ii)],'fontweight','normal')
-      title([' Stim Channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2))],'fontweight','normal')
+     title([' Stim Channels ' num2str(stimChans(1)) ' ' num2str(stimChans(2))],'fontweight','normal')
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     figure('units','normalized','outerposition',[0 0 1 1])

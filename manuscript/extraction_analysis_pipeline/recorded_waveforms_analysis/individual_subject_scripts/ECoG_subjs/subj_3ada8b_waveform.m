@@ -71,8 +71,8 @@ for stimChans = stimChansVec'
     
     fs = fsData;
     
-    figure
-    plot(stimEpoched)
+  %  figure
+ %   plot(stimEpoched)
     %%
     [meanMat,stdMat,stdCellEveryPoint,meanEveryTrial,extractCell,numberStims,phaseSig] = voltage_extract_avg(ECoGData,'fs',...
         fs,'preSamps',preSamps,'postSamps',postSamps,'plotIt',0);
