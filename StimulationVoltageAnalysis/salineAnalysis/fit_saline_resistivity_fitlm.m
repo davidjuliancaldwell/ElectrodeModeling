@@ -12,8 +12,8 @@ load(fullfile(dataDir,lowResist,['salineAnalysis_' num2str(stimChans(1)) '_' num
 
 %%
 
-conditionInterest = 7; % condition of interest 
-i0 = uniqueLabels(7)/1e6; % current in uA to A
+conditionInterest = 4; % condition of interest 
+i0 = uniqueLabels(4)/1e6; % current in uA to A
 dataInt(stimChans) = nan;
 dataInt(badChans) = nan;
 dataInt = meanMatAll(:,1,conditionInterest);
