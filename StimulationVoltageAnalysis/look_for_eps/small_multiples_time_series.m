@@ -59,7 +59,8 @@ end
 
 for idx=1:size(signal,2)
     %smplot(p(1),p(2),idx,'axis','on')
-    plt_sub = vizFunc.smplot(p(1),p(2),idx,'axis','on');
+    
+    plt_sub = vizFunc.smplot(p(1),p(2),65 - idx,'axis','on');
     switch modePlot
         case 'avg'
             if ismember(idx,type1)
@@ -121,7 +122,7 @@ end
 obj = vizFunc.scalebar;
 obj.XLen = 100;              %X-Length, 10.
 obj.XUnit = 'ms';            %X-Unit, 'm'.
-obj.YLen = 1;
+obj.YLen = 0.1;
 obj.YUnit = 'mV';
 
 obj.Position = [0 0];
