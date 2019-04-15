@@ -60,7 +60,7 @@ end
 for idx=1:size(signal,2)
     %smplot(p(1),p(2),idx,'axis','on')
     
-    plt_sub = vizFunc.smplot(p(1),p(2),65 - idx,'axis','on');
+    plt_sub = vizFunc.smplot(p(1),p(2),idx,'axis','on');
     switch modePlot
         case 'avg'
             if ismember(idx,type1)

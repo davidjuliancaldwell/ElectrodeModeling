@@ -20,10 +20,10 @@ else
     
 end
 
-data = data(:,1:99);
-dataCopy = data;
-data(:,1:16) = dataCopy(:,17:32);
-data(:,17:32) = dataCopy(:,1:16);
+% data = data(:,1:99);
+% dataCopy = data;
+% data(:,1:16) = dataCopy(:,17:32);
+% data(:,17:32) = dataCopy(:,1:16);
 fsData = structureData.ECO1.info.SamplingRateHz;
 Sing = structureData.Sing;
 Stim = structureData.Stim;
@@ -83,21 +83,22 @@ for reref = 0:0
     t = (-preSamps:postSamps)*1e3/fsData;
     
     %% plot epoched signals
-    plot_EPs_fromEpochedData(dataEpoched,t,uniqueLabels,labels,stimChans)
+%     plot_EPs_fromEpochedData(dataEpoched,t,uniqueLabels,labels,stimChans)
     
     %%
     
     for uniq = uniqueLabels
+        if uniq >=1500
         boolLabels = labels==uniq;
         average = 1;
         %chanIntList = 3;
         trainDuration = [];
         modePlot = 'avg';
         xlims = [-10 150];
-        ylims = [-1.5 1.5];
+        ylims = [-1 1];
         
         small_multiples_time_series(1e-6.*dataEpoched(:,:,boolLabels),1e-3*t,'type1',stimChans,'type2',0,'xlims',xlims,'ylims',ylims,'modePlot',modePlot,'highlightRange',trainDuration)
-        
+        end
     end
     %%
     if saveIt
