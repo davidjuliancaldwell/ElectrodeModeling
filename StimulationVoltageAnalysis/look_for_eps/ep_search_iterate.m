@@ -3,7 +3,7 @@
 % David.J.Caldwell 10.10.2018
 %% initialize output and meta dir
 % clear workspace, get rid of extraneous information
-%close all; clear all; clc
+close all; clear all; clc
 myDir = uigetdir; %gets directory
 myFiles = dir(fullfile(myDir,'*.mat')); %gets all mat files in struct
 
@@ -12,9 +12,12 @@ stimChans = [];
 preTime = 100;
 postTime = 200;
 saveIt = 0;
+sid = '010dcb';
+stimChansVec = {[5 7 8],[4 7 8],[4 5]};
 %%
-%for ii = 1:length(myFiles)
-for ii = [9:12 15:18]
+for ii = 1:length(myFiles)
+    %for ii = [1:3]
+    stimChans = stimChansVec{ii};
     baseFileName = myFiles(ii).name;
     myFolder = myFiles(ii).folder;
     fullFileName = fullfile(myFolder, baseFileName);
@@ -32,10 +35,10 @@ for ii = [9:12 15:18]
             
         end
         
-        % data = data(:,1:99);
-        % dataCopy = data;
-        % data(:,1:16) = dataCopy(:,17:32);
-        % data(:,17:32) = dataCopy(:,1:16);
+        data = data(:,1:99);
+        dataCopy = data;
+        data(:,1:16) = dataCopy(:,17:32);
+        data(:,17:32) = dataCopy(:,1:16);
         fsData = ECO1.info.SamplingRateHz;
         
         % get sampling rates
@@ -77,8 +80,8 @@ for ii = [9:12 15:18]
         %%
         
         for uniq = uniqueLabels
-         %   if uniq >=1500
-         if uniq>660
+            %   if uniq >=1500
+            if uniq>1500
                 boolLabels = labels==uniq;
                 average = 1;
                 %chanIntList = 3;
@@ -99,5 +102,6 @@ for ii = [9:12 15:18]
                 save([sid '_EP_' regexprep(num2str(stimChans),'  ','_','emptymatch')],'stim1Epoched','dataEpoched','t','uniqueLabels','labels')
             end
         end
+        
     end
 end
