@@ -1,4 +1,4 @@
-%%
+%% script to iterate through all of the files in a directory once they are converted
 %
 % David.J.Caldwell 10.10.2018
 %% initialize output and meta dir
@@ -9,10 +9,10 @@ myFiles = dir(fullfile(myDir,'*.mat')); %gets all mat files in struct
 
 numChans = 128;
 stimChans = [];
-preTime = 100;
-postTime = 200;
+preTime = 100; % pre time in ms
+postTime = 200; % post time in ms
 saveIt = 0;
-sid = '010dcb';
+sid = '010dcb'; % subject id
 stimChansVec = {[5 7 8],[4 7 8],[4 5]};
 %%
 for ii = 1:length(myFiles)
@@ -22,9 +22,9 @@ for ii = 1:length(myFiles)
     myFolder = myFiles(ii).folder;
     fullFileName = fullfile(myFolder, baseFileName);
     fprintf(1, 'Now reading %s\n', fullFileName);
-    load(fullfile(myDir,['stimGeometry-' num2str(ii) '.mat']));
+    load(fullfile(myDir,['stimGeometry-' num2str(ii) '.mat'])); % stim geometry converted file 
     
-    for reref = 0:0
+    for reref = 0:0 % are you referencing? boolean 
         
         %%
         
@@ -75,13 +75,13 @@ for ii = 1:length(myFiles)
         t = (-preSamps:postSamps)*1e3/fsData;
         
         %% plot epoched signals
-        %     plot_EPs_fromEpochedData(dataEpoched,t,uniqueLabels,labels,stimChans)
+            plot_EPs_fromEpochedData(dataEpoched,t,uniqueLabels,labels,stimChans)
         
         %%
         
         for uniq = uniqueLabels
             %   if uniq >=1500
-            if uniq>1500
+            if uniq>1500 % if stim level > 1500 uA
                 boolLabels = labels==uniq;
                 average = 1;
                 %chanIntList = 3;

@@ -1,26 +1,24 @@
-
+%% script to analyze extracted epoched stim geometry data for subject 010dcb in particular
 % David.J.Caldwell 10.10.2018
-%% initialize output and meta dir
-% clear workspace, get rid of extraneous information
 
-close all; clear all; clc
+close all; clear all; clc % clear workspace, get rid of extraneous information
+
 myDir = uigetdir; %gets directory
 myFiles = dir(fullfile(myDir,'*.mat')); %gets all mat files in struct
 %
 numChans = 128;
 stimChans = [];
-preTime = 100;
-postTime = 200;
-saveIt = 1;
-sid = '010dcb';
-stimChansVec = {[4,5],[4 7 8],[5 7 8]};
-
+preTime = 100; % pretime and post time in ms
+postTime = 200; % pretime and post time in ms
+saveIt = 1; % save plots
+sid = '010dcb'; % subject id
+stimChansVec = {[4,5],[4 7 8],[5 7 8]}; % cell of stimulation channel combinations
 dataChanCell = {};
 labelsCell = {};
-chanInt = 16;
+chanInt = 16; % which channel is of interest?
 
-tBegin = 15;
-tEnd = 65;
+tBegin = 15; % what time to begin looking for EPs (ms)
+tEnd = 65; % what time to stop looking for EPs (ms)
 rerefMode = 'none';
 avgTrials = 0;
 numAvg = 3;
@@ -53,32 +51,35 @@ end
 figure
 hold on
 for ii = [1:3]
-    histogram(signalPPblockST{ii}{1})
+    histogram(signalPPblockST{ii}{1}) % plot histograms
 end
-
 %
 figure
 hold on
 for ii = [1:3]
-    plot(t,mean(squeeze(dataChanCell{ii}),2),'linewidth',2)
+    plot(t,mean(squeeze(dataChanCell{ii}),2),'linewidth',2) % plot mean voltage
 end
 legend({'[4,5]','[4 7 8]','[5 7 8]'});
 xlabel('Time (ms)')
 ylabel(['Voltage (\mu V)'])
 set(gca,'fontsize',14)
 
-
 %%
 totalVec = [];
 labelTotal = [];
+% build up data structure for MATLAB statistical tests
 for ii = 1:3
     pkPk = signalPPblockST{ii}{1};
     totalVec = [totalVec pkPk];
     labelTotal = [labelTotal repmat(ii,[1,size(pkPk,2)])];
 end
 
+% kruskal wallis stats
 [p,tbl,stats] = kruskalwallis(totalVec,labelTotal);
 [c,m,h,gnames] = multcompare(stats)
 
+% anova stats
+% [p,tbl,stats] = anova1(totalVec,labelTotal);
+% [c,m,h,gnames] = multcompare(stats)
 
 
