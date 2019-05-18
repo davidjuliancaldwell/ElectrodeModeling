@@ -1,5 +1,4 @@
 %%
-%
 % David.J.Caldwell 10.10.2018
 %% initialize output and meta dir
 % clear workspace, get rid of extraneous information

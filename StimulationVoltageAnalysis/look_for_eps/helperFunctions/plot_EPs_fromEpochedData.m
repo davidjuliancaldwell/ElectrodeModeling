@@ -20,9 +20,9 @@ for i=uniqueLabels
         smplot(14,8,j,'top',0.1);
         plot(t,mean(squeeze(dataInterest(:,j,:)),2),'linewidth',2);
         xlim([min(t) max(t)]);
-        xlim([-50 150])
+        xlim([-10 80])
         % change y axis scaling if necessary
-    ylim([-1500 1500])
+        ylim([-150 150])
         
         % put a box around the stimulation channels of interest if need be
         if ismember(j,stimChans)
@@ -39,15 +39,15 @@ for i=uniqueLabels
         end
         vline(0);
         if j < numChans
-        set(gca,'Yticklabel',[]) 
-set(gca,'Xticklabel',[]) 
+            set(gca,'Yticklabel',[])
+            set(gca,'Xticklabel',[])
         end
     end
-
+    
     % label axis
     xlabel('time (ms)');
     ylabel(['voltage (\muV)']);
-   sgtitle(['average traces - Current set to ',num2str(uniqueLabels(k)),' \muA']);
+    sgtitle(['average traces - Current set to ',num2str(uniqueLabels(k)),' \muA']);
     
     % get cell of raw values, can use this to analyze later
     dataRaw{k} = dataInterest;

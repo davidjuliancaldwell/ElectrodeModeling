@@ -1,5 +1,4 @@
 %% script to iterate through all of the files in a directory once they are converted
-%
 % David.J.Caldwell 10.10.2018
 %% initialize output and meta dir
 % clear workspace, get rid of extraneous information
@@ -7,13 +6,12 @@ close all; clear all; clc
 myDir = uigetdir; %gets directory
 myFiles = dir(fullfile(myDir,'*.mat')); %gets all mat files in struct
 
-numChans = 128;
-stimChans = [];
+numChans = 100;
 preTime = 100; % pre time in ms
 postTime = 200; % post time in ms
 saveIt = 0;
-sid = '010dcb'; % subject id
-stimChansVec = {[5 7 8],[4 7 8],[4 5]};
+sid = '0569b1'; % subject id
+stimChansVec = {[11 12],[11 89 90]};
 %%
 for ii = 1:length(myFiles)
     %for ii = [1:3]
@@ -22,9 +20,9 @@ for ii = 1:length(myFiles)
     myFolder = myFiles(ii).folder;
     fullFileName = fullfile(myFolder, baseFileName);
     fprintf(1, 'Now reading %s\n', fullFileName);
-    load(fullfile(myDir,['stimGeometry-' num2str(ii) '.mat'])); % stim geometry converted file 
+    load(fullfile(myDir,['stimGeometry-' num2str(ii) '.mat'])); % stim geometry converted file
     
-    for reref = 0:0 % are you referencing? boolean 
+    for reref = 0:0 % are you referencing? boolean
         
         %%
         
@@ -32,16 +30,9 @@ for ii = 1:length(myFiles)
             data = 4.*[ECO1.data ECO2.data ECO3.data]; % add in factor of 4 10.10.2018
         else
             data = 4.*[ECO1.data(1:end-1,:) ECO2.data(1:end-1,:) ECO3.data]; % add in factor of 4 10.10.2018
-            
         end
         
-        data = data(:,1:99);
-        
-        if strcmp(sid,'010dcb')
-        dataCopy = data;
-        data(:,1:16) = dataCopy(:,17:32);
-        data(:,17:32) = dataCopy(:,1:16);
-        end
+        data = data(:,1:numChans);
         
         fsData = ECO1.info.SamplingRateHz;
         
@@ -79,21 +70,19 @@ for ii = 1:length(myFiles)
         t = (-preSamps:postSamps)*1e3/fsData;
         
         %% plot epoched signals
-            plot_EPs_fromEpochedData(dataEpoched,t,uniqueLabels,labels,stimChans)
+        plot_EPs_fromEpochedData(dataEpoched,t,uniqueLabels,labels,stimChans)
         
         %%
-        
         for uniq = uniqueLabels
             %   if uniq >=1500
-            if uniq>1500 % if stim level > 1500 uA
+            if uniq>1000 % if stim level > 1500 uA
                 boolLabels = labels==uniq;
                 average = 1;
                 %chanIntList = 3;
                 trainDuration = [];
                 modePlot = 'avg';
                 xlims = [-10 150];
-                ylims = [-1 1];
-                
+                ylims = [-0.1 0.1];              
                 small_multiples_time_series(1e-6.*dataEpoched(:,:,boolLabels),1e-3*t,'type1',stimChans,'type2',0,'xlims',xlims,'ylims',ylims,'modePlot',modePlot,'highlightRange',trainDuration)
                 sgtitle(['File ' num2str(ii) ' current ' num2str(uniq)])
             end
