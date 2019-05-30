@@ -4,7 +4,6 @@ This repository contains code to analyze human intracranial datasets from the st
 
 ---
 
-
 ### To analyze evoked potentials:
 
 An example workflow is shown for Subject ID ***010dcb***. The relevant code is under ***StimulationVoltageAnalysis/look_for_eps***.
@@ -13,7 +12,7 @@ running ***ep_search_iterate.m*** as setup will create the data files for 010dcb
 
 The functions which extract the peak to peak voltages of the EPs are in the ***analysisFunctions*** folder, while functions helpful for plotting are under ***helperFunctions***
 
-Scripts which function on single files are available with ***ep_search_gui_select.m***, which requires various parameters to be set in code, but this enables rapid loading of converted data files for further analysis. 
+Scripts which function on single files are available with ***ep_search_gui_select.m***, which requires various parameters to be set in code, but this enables rapid loading of converted data files for further analysis.
 
 ---
 

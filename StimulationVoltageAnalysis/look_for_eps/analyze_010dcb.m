@@ -83,3 +83,27 @@ end
 % [c,m,h,gnames] = multcompare(stats)
 
 
+%% for larry
+
+
+for ii = [1:3]
+    
+    stimChans = stimChansVec{ii};
+    baseFileName = myFiles(ii).name;
+    myFolder = myFiles(ii).folder;
+    fullFileName = fullfile(myFolder, baseFileName);
+    fprintf(1, 'Now reading %s\n', fullFileName);
+    load(fullFileName);
+    
+    figure
+    
+    plot(t,squeeze(dataEpoched(:,9:16,1)),'linewidth',2)
+    title(num2str(stimChansVec{ii}))
+    legend
+    xlim([-5 100])
+    ylim([-1000 1000])
+end
+xlabel('Time (ms)')
+ylabel(['Voltage (\mu V)'])
+set(gca,'fontsize',14)
+
