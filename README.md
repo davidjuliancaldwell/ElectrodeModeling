@@ -42,7 +42,7 @@ A folder with legacy code for extracting data epochs is under ***StimulationVolt
 
 ---
 ### A link to a large amount of the compiled human ECoG and DBS data is below
-https://drive.google.com/open?id=1j_J7ncKy4aAgdwGUmLxid6NIPJ8_Eytz
+https://drive.google.com/drive/folders/1YzM5Os3LHC5FsKMuOTzIqLbhQwb-0reN?usp=sharing
 ---
 
 David J Caldwell, BSD-3 License
