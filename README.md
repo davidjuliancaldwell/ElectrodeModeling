@@ -41,8 +41,7 @@ The folder ***StimulationVoltageAnalysis/salineAnalysis*** contains scripts and 
 A folder with legacy code for extracting data epochs is under ***StimulationVoltageAnalysis/resistivity_extraction***
 
 ---
-### A link to a large amount of the compiled human ECoG and DBS data is below
-https://drive.google.com/drive/folders/1YzM5Os3LHC5FsKMuOTzIqLbhQwb-0reN?usp=sharing
+### A link to a large amount of the compiled human ECoG and DBS data is available upon request
 ---
 
 David J Caldwell, BSD-3 License
